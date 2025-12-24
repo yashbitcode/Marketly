@@ -72,7 +72,38 @@ const loginValidations = z
         path: ["confirmPassword"],
     });
 
+const changePasswordValidations = z
+    .object({
+        oldPassword: z
+            .string({
+                error: (iss) => !iss.input && "Old password is required",
+            })
+            .regex(
+                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
+            ),
+        newPassword: z
+            .string({
+                error: (iss) => !iss.input && "New password is required",
+            })
+            .regex(
+                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
+            ),
+        confirmPassword: z.string({
+            error: (iss) => !iss.input && "New password is required",
+        }),
+    })
+    .refine(
+        ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+        {
+            message: "Confirm password doesn't match",
+            path: ["confirmPassword"],
+        },
+    );
+
 module.exports = {
     registerValidations,
     loginValidations,
+    changePasswordValidations,
 };

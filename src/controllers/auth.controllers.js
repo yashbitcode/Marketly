@@ -45,17 +45,17 @@ const login = asyncHandler(async (req, res) => {
         user.emailVerificationSessionId = hashedSessionId;
         user.emailVerificationTokenExpiry = expiryDate;
 
-        await user.save();
+        await user.save({ validateBeforeSave: false });
 
-        return res.status(422).json(
-            new ApiResponse(422, payload, "User is not verified"),
-        );
+        return res
+            .status(422)
+            .json(new ApiResponse(422, payload, "User is not verified"));
     }
 
     const { accessToken, refreshToken } = user.generateAccessAndRefreshTokens();
     user.refreshToken = refreshToken;
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
         .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
@@ -68,7 +68,7 @@ const logout = asyncHandler(async (req, res) => {
 
     user.refreshToken = "";
 
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     res.clearCookie("accessToken")
         .clearCookie("refreshToken")
@@ -103,7 +103,13 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
 
     const updatedUser = await userService.getEmailVerifiedById(user._id);
 
-    res.json(new ApiResponse(200, {_id: updatedUser._id}, "Email verified successfully"));
+    res.json(
+        new ApiResponse(
+            200,
+            { _id: updatedUser._id },
+            "Email verified successfully",
+        ),
+    );
 
     // const { accessToken, refreshToken } =
     //     updatedUser.generateAccessAndRefreshTokens();
@@ -125,10 +131,27 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
     //     .json(new ApiResponse(200, payload, "User logged in"));
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await userService.getUserById(_id);
+    const isPasswordCorrect = await user.verifyPassword(oldPassword);
+
+    if(!isPasswordCorrect) throw new ApiError(400, "Old password is incorrect");
+
+    user.password = newPassword;
+
+    await user.save();
+
+    res.json(new ApiResponse(200, {_id}, "Password changed successfully"));
+});
+
 module.exports = {
     register,
     login,
     logout,
     verifyEmailSessionId,
     verifyEmailCode,
+    changePassword
 };
