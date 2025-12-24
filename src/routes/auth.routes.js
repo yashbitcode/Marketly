@@ -3,6 +3,8 @@ const {
     registerValidations,
     loginValidations,
     changePasswordValidations,
+    forgotPasswordLinkValidations,
+    resetPasswordValidations,
 } = require("../validations/auth.validations");
 const { validate } = require("../middlewares/validate.middlewares");
 const {
@@ -12,6 +14,9 @@ const {
     verifyEmailSessionId,
     verifyEmailCode,
     changePassword,
+    forgotPasswordLink,
+    forgotPasswordVerification,
+    resetPassword,
 } = require("../controllers/auth.controllers");
 const { isAuthenticated } = require("../middlewares/auth.middlewares");
 const router = Router();
@@ -24,8 +29,21 @@ router.post(
     isAuthenticated,
     changePassword,
 );
+router.post(
+    "/forgot-password-link",
+    validate(forgotPasswordLinkValidations),
+    forgotPasswordLink,
+);
+
+router.post(
+    "/reset-password/:resetToken",
+    validate(resetPasswordValidations),
+    resetPassword,
+);
+
 router.post("/logout", isAuthenticated, logout);
 router.get("/verify-email/:sessionId", verifyEmailSessionId);
 router.get("/verify-email-code/:sessionId/:code", verifyEmailCode);
+router.get("/forgot-password/:resetToken", forgotPasswordVerification);
 
 module.exports = router;

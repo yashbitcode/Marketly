@@ -60,7 +60,7 @@ const UserSchema = new mongoose.Schema(
         emailVerificationSessionId: String,
         emailVerificationTokenExpiry: Date,
 
-        forgotPasswordSessionId: String,
+        forgotPasswordResetToken: String,
         forgotPasswordTokenExpiry: Date,
     },
     {

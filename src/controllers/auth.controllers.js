@@ -5,10 +5,11 @@ const ApiError = require("../utils/api-error");
 const bcrypt = require("bcrypt");
 const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS } = require("../utils/constants");
+const crypto = require("node:crypto");
 
 const register = asyncHandler(async (req, res) => {
     const user = await userService.createNewUser(req.body);
-    res.json(new ApiResponse(200, user, "User registered successfully"));
+    res.json(new ApiResponse(201, user, "User registered successfully"));
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -138,13 +139,65 @@ const changePassword = asyncHandler(async (req, res) => {
     const user = await userService.getUserById(_id);
     const isPasswordCorrect = await user.verifyPassword(oldPassword);
 
-    if(!isPasswordCorrect) throw new ApiError(400, "Old password is incorrect");
+    if (!isPasswordCorrect)
+        throw new ApiError(400, "Old password is incorrect");
 
     user.password = newPassword;
 
     await user.save();
 
-    res.json(new ApiResponse(200, {_id}, "Password changed successfully"));
+    res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
+});
+
+const forgotPasswordLink = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    const user = await userService.getUserByEmail(email);
+
+    if (!user) throw new ApiError(400, "User doesn't exist");
+
+    const {
+        sessionId: resetToken,
+        hashedSessionId: hashedResetToken,
+        expiryDate,
+    } = User.generateTokens();
+
+    user.forgotPasswordResetToken = hashedResetToken;
+    user.forgotPasswordTokenExpiry = expiryDate;
+
+    await user.save();
+
+    res.json(
+        new ApiResponse(
+            200,
+            { resetToken },
+            "Forgot password link sent successfully",
+        ),
+    );
+});
+
+const forgotPasswordVerification = asyncHandler(async (req, res) => {
+    const { resetToken } = req.params;
+
+    const user = userService.getResetPasswordDoc(resetToken);
+
+    if (!user) throw new ApiError(400, "Reset token doesn't exist or expired");
+
+    res.json(new ApiResponse(200, {}, "Valid reset token"));
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+    const { resetToken } = req.params;
+    const { newPassword } = req.body;
+
+    const user = userService.getResetPasswordDoc(resetToken);
+    if (!user) throw new ApiError(400, "Reset token doesn't exist or expired");
+
+    user.password = newPassword;
+
+    await user.save();
+
+    res.json(new ApiResponse(200, {}, "Password reset successful"));
 });
 
 module.exports = {
@@ -153,5 +206,8 @@ module.exports = {
     logout,
     verifyEmailSessionId,
     verifyEmailCode,
-    changePassword
+    changePassword,
+    forgotPasswordLink,
+    forgotPasswordVerification,
+    resetPassword
 };

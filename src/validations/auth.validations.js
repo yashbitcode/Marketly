@@ -44,7 +44,8 @@ const registerValidations = z
     .refine(({ password, confirmPassword }) => password === confirmPassword, {
         message: "Confirm password doesn't match",
         path: ["confirmPassword"],
-    });
+    })
+    .strict();
 
 const loginValidations = z
     .object({
@@ -70,7 +71,8 @@ const loginValidations = z
     .refine(({ password, confirmPassword }) => password === confirmPassword, {
         message: "Confirm password doesn't match",
         path: ["confirmPassword"],
-    });
+    })
+    .strict();
 
 const changePasswordValidations = z
     .object({
@@ -100,10 +102,48 @@ const changePasswordValidations = z
             message: "Confirm password doesn't match",
             path: ["confirmPassword"],
         },
-    );
+    )
+    .strict();
+
+const forgotPasswordLinkValidations = z
+    .object({
+        email: z
+            .email({
+                error: (iss) =>
+                    !iss.input ? "Email is required" : "Invalid email",
+            })
+            .lowercase()
+            .trim(),
+    })
+    .strict();
+
+const resetPasswordValidations = z
+    .object({
+        newPassword: z
+            .string({
+                error: (iss) => !iss.input && "New password is required",
+            })
+            .regex(
+                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
+            ),
+        confirmPassword: z.string({
+            error: (iss) => !iss.input && "New password is required",
+        }),
+    })
+    .refine(
+        ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
+        {
+            message: "Confirm password doesn't match",
+            path: ["confirmPassword"],
+        },
+    )
+    .strict();
 
 module.exports = {
     registerValidations,
     loginValidations,
     changePasswordValidations,
+    forgotPasswordLinkValidations,
+    resetPasswordValidations,
 };

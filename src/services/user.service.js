@@ -71,7 +71,23 @@ class UserService {
                 emailVerificationTokenExpiry: null,
             },
         ).select(fieldsSelection);
-        
+
+        return user;
+    }
+
+    async getResetPasswordDoc(resetToken, fieldsSelection = {}) {
+        const hashedResetToken = crypto
+            .createHmac("sha256", process.env.HASHED_MAC_SECRET)
+            .update(resetToken)
+            .digest("hex");
+
+        const user = await User.findOne({
+            forgotPasswordResetToken: hashedResetToken,
+            forgotPasswordTokenExpiry: {
+                $gt: new Date(),
+            },
+        });
+
         return user;
     }
 }
