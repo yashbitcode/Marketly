@@ -39,20 +39,40 @@ class UserService {
         return user;
     }
 
+    async getUserById(_id, fieldsSelection = {}) {
+        const user = await User.findById(_id).select(fieldsSelection);
+
+        return user;
+    }
+
     async getEmailVerifySessionDoc(sessionId, fieldsSelection = {}) {
         const hashedSessionId = crypto
             .createHmac("sha256", process.env.HASHED_MAC_SECRET)
             .update(sessionId)
             .digest("hex");
 
-        const doc = await User.findOne({
+        const user = await User.findOne({
             emailVerificationSessionId: hashedSessionId,
             emailVerificationTokenExpiry: {
                 $gt: new Date(),
             },
         }).select(fieldsSelection);
 
-        return doc;
+        return user;
+    }
+
+    async getEmailVerifiedById(_id, fieldsSelection = {}) {
+        const user = await User.findOneAndUpdate(
+            { _id },
+            {
+                isEmailVerified: true,
+                emailVerificationSessionId: "",
+                emailVerificationToken: "",
+                emailVerificationTokenExpiry: null,
+            },
+        ).select(fieldsSelection);
+        
+        return user;
     }
 }
 

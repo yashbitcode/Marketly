@@ -9,6 +9,7 @@ const {
     login,
     logout,
     verifyEmailSessionId,
+    verifyEmailCode,
 } = require("../controllers/auth.controllers");
 const { isAuthenticated } = require("../middlewares/auth.middlewares");
 const router = Router();
@@ -17,5 +18,6 @@ router.post("/register", validate(registerValidations), register);
 router.post("/login", validate(loginValidations), login);
 router.post("/logout", isAuthenticated, logout);
 router.get("/verify-email/:sessionId", verifyEmailSessionId);
+router.get("/verify-email-code/:sessionId/:code", verifyEmailCode);
 
 module.exports = router;

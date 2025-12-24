@@ -82,6 +82,7 @@ UserSchema.methods.generateAccessAndRefreshTokens = function () {
         _id: this._id,
         fullname: this.fullname,
         username: this.username,
+        email: this.email,
         avatar: this.avatar,
         role: this.role,
         isEmailVerified: this.isEmailVerified,

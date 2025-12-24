@@ -14,7 +14,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     try {
         decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     } catch(error) {
-        throw new ApiError(400, error.message);    
+        throw new ApiError(401, "Un-authenticated");    
     }
 
     req.user = decoded;
