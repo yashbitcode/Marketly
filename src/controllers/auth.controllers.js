@@ -68,11 +68,21 @@ const logout = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Logout successful"));
 });
 
-// authMW -> AT -> verify -> -OK-> set user in req -else-> unauth
+const verifyEmailSessionId = asyncHandler(async (req, res) => {
+    const { sessionId } = req.params;
+
+    if (!sessionId) throw new ApiError(422, "Session ID is required");
+
+    const doc = await userService.getEmailVerifySessionDoc(sessionId);
+
+    if (!doc) throw new ApiError(400, "Session ID doesn't exist or expired");
+
+    res.json(new ApiResponse(200, { sessionId }, "Valid session ID"));
+});
 
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    verifyEmailSessionId
 };
-

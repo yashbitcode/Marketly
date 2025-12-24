@@ -1,5 +1,6 @@
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
+const crypto = require("node:crypto");
 
 class UserService {
     async createNewUser(userData) {
@@ -36,6 +37,22 @@ class UserService {
         const user = await User.findOne({ email }).select(fieldsSelection);
 
         return user;
+    }
+
+    async getEmailVerifySessionDoc(sessionId, fieldsSelection = {}) {
+        const hashedSessionId = crypto
+            .createHmac("sha256", process.env.HASHED_MAC_SECRET)
+            .update(sessionId)
+            .digest("hex");
+
+        const doc = await User.findOne({
+            emailVerificationSessionId: hashedSessionId,
+            emailVerificationTokenExpiry: {
+                $gt: new Date(),
+            },
+        }).select(fieldsSelection);
+
+        return doc;
     }
 }
 
