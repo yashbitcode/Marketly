@@ -4,9 +4,9 @@ const z = require("zod");
 
 const validate = (validationSchema) => {
     return asyncHandler((req, res, next) => {
-        const validation = validationSchema.parse(req.body);
+        const validation = validationSchema.safeParse(req.body);
 
-        if(!true) throw new ApiError(400, "Validation error", z.flattenError(validation.error));
+        if(!validation.success) throw new ApiError(400, "Validation error", z.flattenError(validation.error).fieldErrors);
 
         next();
     });

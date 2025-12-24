@@ -1,61 +1,110 @@
 const mongoose = require("mongoose");
 const crypto = require("node:crypto");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { generateRandomNumberString } = require("../utils/helpers");
 
-const UserSchema = new mongoose.Schema({
-    fullname: {
-        type: String,
-        required: [true, "Fullname is required"],
-        min: [3, "Minimum length should be 3"],
-    },
-    email: {
-        type: String,
-        lowercase: true,
-        required: [true, "Email is required"],
-        trim: true,
-        match: [
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-            "Invalid email",
-        ],
-    },
-    password: {
-        type: String,
-        required: [true, "Password is required"],
-    },
-    role: {
-        type: String,
-        enum: {
-            values: ["user", "vendor"],
-            message: "`{VALUE}` is not valid value",
+const UserSchema = new mongoose.Schema(
+    {
+        fullname: {
+            type: String,
+            required: [true, "Fullname is required"],
+            min: [3, "Minimum length should be 3"],
         },
-        default: "user",
-    },
-    avatar: {
-        type: String,
-        match: [
-            /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
-            "Invalid avatar URL",
-        ],
-    },
-    username: {
-        type: String,
-        required: [true, "Username is required"],
-        min: [3, "Minimum length should be 3"],
-        max: [10, "Maximum length can be 10"],
-        unique: [true, "Username should be unique"],
-        match: [/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/, "Invalid username"],
-    },
-    isEmailVerified: {
-        type: Boolean,
-        default: false,
-    },
-    emailVerificationToken: String,
-    emailVerificationSessionId: String,
-    emailVerificationTokenExpiry: Date,
+        email: {
+            type: String,
+            lowercase: true,
+            required: [true, "Email is required"],
+            trim: true,
+            match: [
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                "Invalid email",
+            ],
+            unique: [true, "Email already exists"],
+        },
+        password: {
+            type: String,
+            required: [true, "Password is required"],
+        },
+        role: {
+            type: String,
+            enum: {
+                values: ["user", "vendor"],
+                message: "`{VALUE}` is not valid value",
+            },
+            default: "user",
+        },
+        avatar: {
+            type: String,
+            match: [
+                /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
+                "Invalid avatar URL",
+            ],
+            default: "",
+        },
+        username: {
+            type: String,
+            required: [true, "Username is required"],
+            min: [3, "Minimum length should be 3"],
+            max: [10, "Maximum length can be 10"],
+            unique: [true, "Username already exists"],
+            match: [/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/, "Invalid username"],
+        },
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
+        },
+        refreshToken: String,
 
-    forgotPasswordSessionId: String,
-    forgotPasswordTokenExpiry: Date,
+        emailVerificationToken: String,
+        emailVerificationSessionId: String,
+        emailVerificationTokenExpiry: Date,
+
+        forgotPasswordSessionId: String,
+        forgotPasswordTokenExpiry: Date,
+    },
+    {
+        timestamps: true,
+    },
+);
+
+UserSchema.pre("save", async function () {
+    if (this.isModified("password"))
+        this.password = await bcrypt.hash(
+            this.password,
+            +process.env.SALT_ROUNDS,
+        );
 });
+
+UserSchema.methods.generateAccessAndRefreshTokens = function () {
+    const payload = {
+        iat: Date.now(),
+        _id: this._id,
+        fullname: this.fullname,
+        username: this.username,
+        avatar: this.avatar,
+        role: this.role,
+        isEmailVerified: this.isEmailVerified,
+    };
+
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    });
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    });
+
+    return {
+        accessToken,
+        refreshToken,
+    };
+};
+
+UserSchema.methods.verifyPassword = async function(password) {
+    const result = await bcrypt.compare(password, this.password);
+    
+    return result;
+}
 
 UserSchema.statics.generateTokens = function () {
     const sessionId = crypto.randomBytes(15).toString("hex");

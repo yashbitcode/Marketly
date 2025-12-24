@@ -25,10 +25,14 @@ const registerValidations = z
         confirmPassword: z.string({
             error: (iss) => !iss.input && "Confirm password is required",
         }),
-        avatar: z.url({
-            error: (iss) =>
-                !iss.input ? "Avatar URL is required" : "Invalid avatar URL",
-        }),
+        avatar: z
+            .url({
+                error: (iss) =>
+                    !iss.input
+                        ? "Avatar URL is required"
+                        : "Invalid avatar URL",
+            })
+            .optional(),
         username: z
             .string({
                 error: (iss) => !iss.input && "Username is required",
@@ -42,6 +46,33 @@ const registerValidations = z
         path: ["confirmPassword"],
     });
 
+const loginValidations = z
+    .object({
+        email: z
+            .email({
+                error: (iss) =>
+                    !iss.input ? "Email is required" : "Invalid email",
+            })
+            .lowercase()
+            .trim(),
+        password: z
+            .string({
+                error: (iss) => !iss.input && "Password is required",
+            })
+            .regex(
+                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
+            ),
+        confirmPassword: z.string({
+            error: (iss) => !iss.input && "Confirm password is required",
+        }),
+    })
+    .refine(({ password, confirmPassword }) => password === confirmPassword, {
+        message: "Confirm password doesn't match",
+        path: ["confirmPassword"],
+    });
+
 module.exports = {
     registerValidations,
+    loginValidations,
 };

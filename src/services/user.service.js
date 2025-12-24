@@ -1,0 +1,42 @@
+const User = require("../models/user.models");
+const ApiError = require("../utils/api-error");
+
+class UserService {
+    async createNewUser(userData) {
+        try {
+            const { fullname, email, password, avatar, username } = userData;
+            const { sessionId, hashedSessionId, token, expiryDate } =
+                User.generateTokens();
+
+            const user = new User({
+                fullname,
+                email,
+                password,
+                avatar,
+                username,
+                emailVerificationToken: token,
+                emailVerificationSessionId: hashedSessionId,
+                emailVerificationTokenExpiry: expiryDate,
+            });
+
+            await user.save();
+
+            return {
+                _id: user._id,
+                email: user.email,
+                username: user.username,
+                sessionId,
+            };
+        } catch (error) {
+            throw new ApiError(400, error.message);
+        }
+    }
+
+    async getUserByEmail(email, fieldsSelection = {}) {
+        const user = await User.findOne({ email }).select(fieldsSelection);
+
+        return user;
+    }
+}
+
+module.exports = new UserService();
