@@ -42,7 +42,7 @@ const VendorSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         required: [true, "Phone number is required"],
-        match: [/^(\+\d{1,2}\s?)?1?[-.\s]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/, "Invalid phone number"]
+        match: [/^\+[1-9]\d{1,14}$/, "Invalid phone number"]
     }
 });
 

@@ -2,10 +2,8 @@ const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
-const bcrypt = require("bcrypt");
 const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS } = require("../utils/constants");
-const crypto = require("node:crypto");
 
 const register = asyncHandler(async (req, res) => {
     const user = await userService.createNewUser(req.body);
@@ -209,5 +207,5 @@ module.exports = {
     changePassword,
     forgotPasswordLink,
     forgotPasswordVerification,
-    resetPassword
+    resetPassword,
 };

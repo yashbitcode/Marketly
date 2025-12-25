@@ -1,27 +1,71 @@
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/api-error");
 const { asyncHandler } = require("../utils/asyncHandler");
+const userService = require("../services/user.service");
 
-const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const authHeader = req.get("Authorization");
+const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
 
-    if(!authHeader || !token) throw new ApiError(401, "Bearer token is required");
-    if(!authHeader.startsWith("Bearer ")) throw new ApiError(401, "Token should starts with Bearer");
+    if (!authHeader || !token)
+        throw new ApiError(401, "Bearer token is required");
+    if (!authHeader.startsWith("Bearer "))
+        throw new ApiError(401, "Token should starts with Bearer");
 
     let decoded;
 
     try {
         decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    } catch(error) {
-        throw new ApiError(401, "Un-authenticated");    
+    } catch (error) {
+        throw new ApiError(401, "Un-authenticated");
     }
 
-    req.user = decoded;
+    return decoded;
+};
+
+const isAuthenticated = asyncHandler(async (req, res, next) => {
+    const { _id: mainId, tokenVersion: mainTokenVersion } = await verifyToken(
+        req.get("Authorization"),
+    );
+    const {
+        _id,
+        fullname,
+        email,
+        username,
+        role,
+        avatar,
+        phoneNumber,
+        isEmailVerified,
+    } = await userService.getUserById(mainId);
+
+    if (tokenVersion !== mainTokenVersion) {
+        res.clearCookie("accessToken");
+        res.clearCookie("refreshToken");
+
+        throw new ApiError(401, "Un-authenticated token invalidated");
+    }
+
+    const userData = {
+        _id,
+        fullname,
+        email,
+        username,
+        role,
+        avatar,
+        phoneNumber,
+        isEmailVerified,
+    };
+
+    req.user = userData;
 
     next();
 });
 
 module.exports = {
-    isAuthenticated
+    isAuthenticated,
 };
+
+/* 
+    user -> verifyToken -> role, id, role-change->tokenVer++->tokenInvalidate
+    vendor -> verifyToken -> 
+
+*/

@@ -50,11 +50,23 @@ const UserSchema = new mongoose.Schema(
             unique: [true, "Username already exists"],
             match: [/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/, "Invalid username"],
         },
+        phoneNumber: {
+            type: String,
+            required: [true, "Phone number is required"],
+            match: [
+                /^\+[1-9]\d{1,14}$/,
+                "Invalid phone number",
+            ],
+        },
         isEmailVerified: {
             type: Boolean,
             default: false,
         },
         refreshToken: String,
+        tokenVersion: {
+            type: Number,
+            default: 0
+        },
 
         emailVerificationToken: String,
         emailVerificationSessionId: String,
@@ -80,12 +92,14 @@ UserSchema.methods.generateAccessAndRefreshTokens = function () {
     const payload = {
         iat: Date.now(),
         _id: this._id,
-        fullname: this.fullname,
-        username: this.username,
-        email: this.email,
-        avatar: this.avatar,
+        // fullname: this.fullname,
+        // username: this.username,
+        // email: this.email,
+        // avatar: this.avatar,
+        // phoneNumber: this.phoneNumber,
+        // isEmailVerified: this.isEmailVerified,
+        tokenVersion: this.tokenVersion,
         role: this.role,
-        isEmailVerified: this.isEmailVerified,
     };
 
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -101,11 +115,11 @@ UserSchema.methods.generateAccessAndRefreshTokens = function () {
     };
 };
 
-UserSchema.methods.verifyPassword = async function(password) {
+UserSchema.methods.verifyPassword = async function (password) {
     const result = await bcrypt.compare(password, this.password);
-    
+
     return result;
-}
+};
 
 UserSchema.statics.generateTokens = function () {
     const sessionId = crypto.randomBytes(15).toString("hex");

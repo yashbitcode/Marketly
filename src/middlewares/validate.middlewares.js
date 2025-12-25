@@ -6,7 +6,7 @@ const validate = (validationSchema) => {
     return asyncHandler((req, res, next) => {
         const validation = validationSchema.safeParse(req.body || {});
 
-        if(!validation.success) throw new ApiError(400, "Validation error", z.flattenError(validation.error).fieldErrors);
+        if(!validation.success) throw new ApiError(400, "Validation error", z.flattenError(validation.error));
 
         req.body = validation.data;
         next();

@@ -5,7 +5,7 @@ const crypto = require("node:crypto");
 class UserService {
     async createNewUser(userData) {
         try {
-            const { fullname, email, password, avatar, username } = userData;
+            const { fullname, email, password, avatar, username, phoneNumber } = userData;
             const { sessionId, hashedSessionId, token, expiryDate } =
                 User.generateTokens();
 
@@ -15,6 +15,7 @@ class UserService {
                 password,
                 avatar,
                 username,
+                phoneNumber,
                 emailVerificationToken: token,
                 emailVerificationSessionId: hashedSessionId,
                 emailVerificationTokenExpiry: expiryDate,

@@ -14,6 +14,14 @@ const registerValidations = z
             })
             .lowercase()
             .trim(),
+        phoneNumber: z
+            .string({
+                error: (iss) => !iss.input && "Phone number is required",
+            })
+            .regex(
+                /^\+[1-9]\d{1,14}$/,
+                "Invalid phone number",
+            ),
         password: z
             .string({
                 error: (iss) => !iss.input && "Password is required",
