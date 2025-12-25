@@ -5,7 +5,8 @@ const crypto = require("node:crypto");
 class UserService {
     async createNewUser(userData) {
         try {
-            const { fullname, email, password, avatar, username, phoneNumber } = userData;
+            const { fullname, email, password, avatar, username, phoneNumber } =
+                userData;
             const { sessionId, hashedSessionId, token, expiryDate } =
                 User.generateTokens();
 
@@ -88,6 +89,15 @@ class UserService {
                 $gt: new Date(),
             },
         });
+
+        return user;
+    }
+
+    async updateUserData(_id, payload, fieldsSelection = {}) {
+        const user = await User.findByIdAndUpdate(_id, payload, {
+            runValidators: true,
+            returnDocument: "after",
+        }).select(fieldsSelection);
 
         return user;
     }

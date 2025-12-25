@@ -1,6 +1,7 @@
 const ApiResponse = require("../utils/api-response");
 const User = require("../models/user.models");
 const { asyncHandler } = require("../utils/asyncHandler");
+const userService = require("../services/user.service");
 
 const getUser = asyncHandler(async (req, res) => {
     const user = req.user;
@@ -10,10 +11,7 @@ const getUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     
-    const user = await User.findByIdAndUpdate(_id, req.body, {
-        runValidators: true,
-        returnDocument: "after",
-    });
+    const user = await userService.updateUserData(_id, req.body);
 
     res.json(user);
 });

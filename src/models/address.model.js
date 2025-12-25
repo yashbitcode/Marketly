@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
+const User = require("./user.models");
 
 const addressSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User
+    },
     fullname: {
         type: String,
         required: [true, "Fullname is required"],
@@ -18,7 +23,7 @@ const addressSchema = new mongoose.Schema({
     },
     addressLine2: {
         type: String,
-        default: "",
+        min: [10, "Minimum length should be 10"],
     },
     city: {
         type: String,
@@ -49,6 +54,10 @@ const addressSchema = new mongoose.Schema({
         default: false,
     },
 });
+
+addressSchema.pre("save", function() {
+    if(this.isModified("userId")) this.userId = new mongoose.Types.ObjectId(this.userId);
+})
 
 const Address = mongoose.model("addresses", addressSchema);
 
