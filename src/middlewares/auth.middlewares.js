@@ -26,6 +26,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     const { _id: mainId, tokenVersion: mainTokenVersion } = await verifyToken(
         req.get("Authorization"),
     );
+
     const {
         _id,
         fullname,
@@ -35,6 +36,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         avatar,
         phoneNumber,
         isEmailVerified,
+        tokenVersion
     } = await userService.getUserById(mainId);
 
     if (tokenVersion !== mainTokenVersion) {
@@ -63,9 +65,3 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
 module.exports = {
     isAuthenticated,
 };
-
-/* 
-    user -> verifyToken -> role, id, role-change->tokenVer++->tokenInvalidate
-    vendor -> verifyToken -> 
-
-*/
