@@ -88,7 +88,7 @@ class UserService {
             forgotPasswordTokenExpiry: {
                 $gt: new Date(),
             },
-        });
+        }).select(fieldsSelection);
 
         return user;
     }

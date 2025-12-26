@@ -1,14 +1,7 @@
-const { isValidObjectId } = require("mongoose");
+const z = require("zod");
 
-const addAddressValidations = z
+const addressValidations = z
     .object({
-        // userId: z
-        //     .string({
-        //         error: (iss) => !iss.input && "User ID is required",
-        //     })
-        //     .refine((val) => isValidObjectId(val), {
-        //         message: "Invalid user ID",
-        //     }),
         fullname: z
             .string({
                 error: (iss) => !iss.input && "Fullname is required",
@@ -42,9 +35,12 @@ const addAddressValidations = z
         addressType: z
             .enum(["home", "work", "other"], "Invalid address type")
             .optional(),
-    })
-    .strict();
+    });
+
+const addAddressValidations = addressValidations.strict();
+const updateAddressValidations = addressValidations.partial();
 
 module.exports = {
     addAddressValidations,
+    updateAddressValidations
 };
