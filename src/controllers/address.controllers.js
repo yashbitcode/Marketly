@@ -32,11 +32,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
 
     const address = await addressService.deleteAddressById(addressId, _id);
 
-    if (!address)
-        throw new ApiError(
-            403,
-            "Un-Authorized address deletion or invalid address Id",
-        );
+    if (!address) throw new ApiError(400, "Address doesn't exist");
 
     res.json(
         new ApiResponse(200, { addressId }, "Address deleted successfully"),
@@ -54,14 +50,29 @@ const updateAddress = asyncHandler(async (req, res) => {
         payload,
     );
 
-    if (!updatedAddress)
-        throw new ApiError(
-            403,
-            "Un-Authorized address updation or invalid address Id",
-        );
+    if (!updatedAddress) throw new ApiError(400, "Address doesn't exist");
 
     res.json(
         new ApiResponse(200, updatedAddress, "Address updated successfully"),
+    );
+});
+
+const markDefaultAddress = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { addressId } = req.params;
+
+    const address = await addressService.getAddressById(addressId, _id);
+
+    if (!address) throw new ApiError(400, "Address doesn't exist");
+
+    await addressService.markAddressAsDefault(addressId, _id);
+
+    res.json(
+        new ApiResponse(
+            200,
+            { addressId },
+            "Address marked default successfully",
+        ),
     );
 });
 
@@ -70,4 +81,5 @@ module.exports = {
     addAddress,
     deleteAddress,
     updateAddress,
+    markDefaultAddress
 };
