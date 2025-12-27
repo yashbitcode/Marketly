@@ -4,6 +4,11 @@ const { DATATYPES } = require("../utils/constants");
 
 const SubCategorySchema = new mongoose.Schema(
     {
+        slug: {
+            type: String,
+            required: [true, "Slug is required"],
+            unique: [true, "Slug should be unique"]
+        },
         name: {
             type: String,
             required: [true, "Sub catgory name is required"],
@@ -14,24 +19,24 @@ const SubCategorySchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: ParentCategory
         },
-        attributes: {
-            name: {
-                type: String,
-                required: [true, "Attribute name is required"]
-            },
-            dataType: {
-                type: String,
-                required: [true, "Data type is required"],
-                enum: {
-                    values: DATATYPES,
-                    message: "`VALUE` is not a valid value"
-                }
-            },
-            isVariant: {
-                type: Boolean,
-                default: false
-            }
-        }
+        // attributes: {
+        //     name: {
+        //         type: String,
+        //         required: [true, "Attribute name is required"]
+        //     },
+        //     dataType: {
+        //         type: String,
+        //         required: [true, "Data type is required"],
+        //         enum: {
+        //             values: DATATYPES,
+        //             message: "`VALUE` is not a valid value"
+        //         }
+        //     },
+        //     isVariant: {
+        //         type: Boolean,
+        //         default: false
+        //     }
+        // }
     },
     {
         timestamps: true,

@@ -95,8 +95,8 @@ class UserService {
 
     async updateUserData(_id, payload, fieldsSelection = {}) {
         const user = await User.findByIdAndUpdate(_id, payload, {
+            new: true,
             runValidators: true,
-            returnDocument: "after",
         }).select(fieldsSelection);
 
         return user;

@@ -36,6 +36,7 @@ class AddressService {
                 userId,
             },
             payload,
+            {new: true, runValidators: true}
         );
         return address;
     }
