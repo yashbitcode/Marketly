@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./user.models");
+const { REGEX, ADDRESS_TYPE } = require("../utils/constants");
 
 const addressSchema = new mongoose.Schema(
     {
@@ -15,7 +16,7 @@ const addressSchema = new mongoose.Schema(
         phoneNumber: {
             type: String,
             required: [true, "Phone number is required"],
-            match: [/^\+[1-9]\d{1,14}$/, "Invalid phone number"],
+            match: [REGEX.phoneNumber, "Invalid phone number"],
         },
         addressLine1: {
             type: String,
@@ -45,7 +46,7 @@ const addressSchema = new mongoose.Schema(
         addressType: {
             type: String,
             enum: {
-                values: ["home", "work", "other"],
+                values: ADDRESS_TYPE,
                 message: "`{VALUE}` is not valid value",
             },
             default: "home",

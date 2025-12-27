@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./user.models");
+const { REGEX, VENDOR_TYPE, ACCOUNT_STATUS } = require("../utils/constants");
 
 const VendorSchema = new mongoose.Schema(
     {
@@ -10,7 +11,7 @@ const VendorSchema = new mongoose.Schema(
         vendorType: {
             type: String,
             enum: {
-                values: ["individual", "business"],
+                values: VENDOR_TYPE,
                 message: "`{VALUE}` is not valid value",
             },
             default: "individual",
@@ -18,7 +19,7 @@ const VendorSchema = new mongoose.Schema(
         avatar: {
             type: String,
             match: [
-                /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
+                REGEX.url,
                 "Invalid avatar URL",
             ],
         },
@@ -36,14 +37,14 @@ const VendorSchema = new mongoose.Schema(
         accountStatus: {
             type: String,
             enum: {
-                values: ["pending", "active", "suspended", "banned"],
+                values: ACCOUNT_STATUS,
                 message: "`{VALUE}` is not valid value",
             },
         },
         phoneNumber: {
             type: String,
             required: [true, "Phone number is required"],
-            match: [/^\+[1-9]\d{1,14}$/, "Invalid phone number"],
+            match: [REGEX.phoneNumber, "Invalid phone number"],
         },
     },
     {

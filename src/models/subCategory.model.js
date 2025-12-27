@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const ParentCategory = require("./parentCategory.model");
+const { DATATYPES } = require("../utils/constants");
 
 const SubCategorySchema = new mongoose.Schema(
     {
@@ -22,7 +23,7 @@ const SubCategorySchema = new mongoose.Schema(
                 type: String,
                 required: [true, "Data type is required"],
                 enum: {
-                    values: ["string", "number"],
+                    values: DATATYPES,
                     message: "`VALUE` is not a valid value"
                 }
             },

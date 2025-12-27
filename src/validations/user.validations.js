@@ -6,7 +6,7 @@ const updateUserValidations = z
         phoneNumber: z
             .string()
             .regex(
-                /^(\+\d{1,2}\s?)?1?[-.\s]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+                REGEX.phoneNumber,
                 "Invalid Phone Number",
             ),
         avatar: z.url({

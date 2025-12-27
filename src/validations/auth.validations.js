@@ -1,4 +1,5 @@
 const z = require("zod");
+const { REGEX } = require("../utils/constants");
 
 const registerValidations = z
     .object({
@@ -19,7 +20,7 @@ const registerValidations = z
                 error: (iss) => !iss.input && "Phone number is required",
             })
             .regex(
-                /^\+[1-9]\d{1,14}$/,
+                REGEX.phoneNumber,
                 "Invalid phone number",
             ),
         password: z
@@ -27,7 +28,7 @@ const registerValidations = z
                 error: (iss) => !iss.input && "Password is required",
             })
             .regex(
-                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                REGEX.password,
                 "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
             ),
         confirmPassword: z.string({
@@ -47,7 +48,7 @@ const registerValidations = z
             })
             .min(3, "Minimum length should be 3")
             .max(10, "Maximum length can be 10")
-            .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, "Invalid username"),
+            .regex(REGEX.username, "Invalid username"),
     })
     .refine(({ password, confirmPassword }) => password === confirmPassword, {
         message: "Confirm password doesn't match",
@@ -69,7 +70,7 @@ const loginValidations = z
                 error: (iss) => !iss.input && "Password is required",
             })
             .regex(
-                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                REGEX.password,
                 "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
             ),
         confirmPassword: z.string({
@@ -89,7 +90,7 @@ const changePasswordValidations = z
                 error: (iss) => !iss.input && "Old password is required",
             })
             .regex(
-                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                REGEX.password,
                 "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
             ),
         newPassword: z
@@ -97,7 +98,7 @@ const changePasswordValidations = z
                 error: (iss) => !iss.input && "New password is required",
             })
             .regex(
-                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                REGEX.password,
                 "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
             ),
         confirmPassword: z.string({
@@ -132,7 +133,7 @@ const resetPasswordValidations = z
                 error: (iss) => !iss.input && "New password is required",
             })
             .regex(
-                /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+                REGEX.password,
                 "Password must be at least 8 characters and contain an uppercase letter, lowercase letter, and number",
             ),
         confirmPassword: z.string({

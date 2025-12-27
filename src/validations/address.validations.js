@@ -1,4 +1,5 @@
 const z = require("zod");
+const { REGEX, ADDRESS_TYPE } = require("../utils/constants");
 
 const addressValidations = z
     .object({
@@ -11,7 +12,7 @@ const addressValidations = z
             .string({
                 error: (iss) => !iss.input && "Phone number is required",
             })
-            .regex(/^\+[1-9]\d{1,14}$/, "Invalid phone number"),
+            .regex(REGEX.phoneNumber, "Invalid phone number"),
         addressLine1: z.string({
             error: (iss) => !iss.input && "Address Line is required",
         }),
@@ -33,7 +34,7 @@ const addressValidations = z
             error: (iss) => !iss.input && "Country is required",
         }),
         addressType: z
-            .enum(["home", "work", "other"], "Invalid address type")
+            .enum(ADDRESS_TYPE, "Invalid address type")
             .optional(),
     });
 

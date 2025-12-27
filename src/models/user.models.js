@@ -3,7 +3,7 @@ const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateRandomNumberString } = require("../utils/helpers");
-const { ROLES } = require("../utils/constants");
+const { ROLES, REGEX } = require("../utils/constants");
 
 const UserSchema = new mongoose.Schema(
     {
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
             required: [true, "Email is required"],
             trim: true,
             match: [
-                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                REGEX.email,
                 "Invalid email",
             ],
             unique: [true, "Email already exists"],
@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema(
         avatar: {
             type: String,
             match: [
-                /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
+                REGEX.url,
                 "Invalid avatar URL",
             ],
             default: "",
@@ -49,12 +49,12 @@ const UserSchema = new mongoose.Schema(
             min: [3, "Minimum length should be 3"],
             max: [10, "Maximum length can be 10"],
             unique: [true, "Username already exists"],
-            match: [/^[a-zA-Z][a-zA-Z0-9_]{2,15}$/, "Invalid username"],
+            match: [REGEX.username, "Invalid username"],
         },
         phoneNumber: {
             type: String,
             required: [true, "Phone number is required"],
-            match: [/^\+[1-9]\d{1,14}$/, "Invalid phone number"],
+            match: [REGEX.phoneNumber, "Invalid phone number"],
         },
         isEmailVerified: {
             type: Boolean,
