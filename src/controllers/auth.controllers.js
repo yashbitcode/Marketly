@@ -152,7 +152,7 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
 
     const user = await userService.getUserByEmail(email);
 
-    if (!user) throw new ApiError(400, "User doesn't exist");
+    if (!user) throw new ApiError(404, "User not found");
 
     const {
         sessionId: resetToken,

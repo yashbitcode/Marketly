@@ -7,8 +7,12 @@ const COOKIE_OPTIONS = {
     secure: true
 };
 
+const ROLES = ["user", "vendor"];
+
+
 module.exports = {
     BASE_ENDPOINT,
     TOKEN_LENGTH,
-    COOKIE_OPTIONS
+    COOKIE_OPTIONS,
+    ROLES
 };

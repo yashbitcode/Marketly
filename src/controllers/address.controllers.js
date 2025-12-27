@@ -32,7 +32,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
 
     const address = await addressService.deleteAddressById(addressId, _id);
 
-    if (!address) throw new ApiError(400, "Address doesn't exist");
+    if (!address) throw new ApiError(404, "Address not found");
 
     res.json(
         new ApiResponse(200, { addressId }, "Address deleted successfully"),
@@ -50,7 +50,7 @@ const updateAddress = asyncHandler(async (req, res) => {
         payload,
     );
 
-    if (!updatedAddress) throw new ApiError(400, "Address doesn't exist");
+    if (!updatedAddress) throw new ApiError(404, "Address not found");
 
     res.json(
         new ApiResponse(200, updatedAddress, "Address updated successfully"),
@@ -63,7 +63,7 @@ const markDefaultAddress = asyncHandler(async (req, res) => {
 
     const address = await addressService.getAddressById(addressId, _id);
 
-    if (!address) throw new ApiError(400, "Address doesn't exist");
+    if (!address) throw new ApiError(404, "Address not found");
 
     await addressService.markAddressAsDefault(addressId, _id);
 

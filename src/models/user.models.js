@@ -3,6 +3,7 @@ const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateRandomNumberString } = require("../utils/helpers");
+const { ROLES } = require("../utils/constants");
 
 const UserSchema = new mongoose.Schema(
     {
@@ -29,8 +30,8 @@ const UserSchema = new mongoose.Schema(
         role: {
             type: String,
             enum: {
-                values: ["user", "vendor"],
-                message: "`{VALUE}` is not valid value",
+                values: ROLES,
+                message: "`{VALUE}` is not a valid value",
             },
             default: "user",
         },
@@ -53,10 +54,7 @@ const UserSchema = new mongoose.Schema(
         phoneNumber: {
             type: String,
             required: [true, "Phone number is required"],
-            match: [
-                /^\+[1-9]\d{1,14}$/,
-                "Invalid phone number",
-            ],
+            match: [/^\+[1-9]\d{1,14}$/, "Invalid phone number"],
         },
         isEmailVerified: {
             type: Boolean,
@@ -65,7 +63,7 @@ const UserSchema = new mongoose.Schema(
         refreshToken: String,
         tokenVersion: {
             type: Number,
-            default: 0
+            default: 0,
         },
 
         emailVerificationToken: String,
