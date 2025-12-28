@@ -1,10 +1,10 @@
 const healthCheck = (req, res) => {
     res.json({
         success: true,
-        message: "All good"
+        message: "All good",
     });
 };
 
 module.exports = {
-    healthCheck
+    healthCheck,
 };

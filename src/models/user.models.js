@@ -22,6 +22,7 @@ const UserSchema = new mongoose.Schema(
                 "Invalid email",
             ],
             unique: [true, "Email already exists"],
+            trim: true
         },
         password: {
             type: String,
@@ -49,6 +50,7 @@ const UserSchema = new mongoose.Schema(
             min: [3, "Minimum length should be 3"],
             max: [10, "Maximum length can be 10"],
             unique: [true, "Username already exists"],
+            trim: true,
             match: [REGEX.username, "Invalid username"],
         },
         phoneNumber: {

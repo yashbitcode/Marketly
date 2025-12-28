@@ -1,5 +1,5 @@
-const ParentCategory = require("../models/parentCategory.model");
-const SubCategory = require("../models/subCategory.model");
+const ParentCategory = require("../models/parentCategory.models");
+const SubCategory = require("../models/subCategory.models");
 
 class CategoryService {
     async getAllParentCategories() {
@@ -14,11 +14,25 @@ class CategoryService {
         return allCategories;
     }
 
+    async insertParentCategory({name}) {
+        const category = new ParentCategory({name});
+        await category.save()
+
+        return category;
+    }
+
+    async insertSubCategory({name, parentCategory}) {
+        const category = new SubCategory({name, parentCategory});
+        await category.save()
+
+        return category;
+    }
+
     async updateParentCategory(slug, payload) {
-        const updatedCategory = await ParentCategory.updateOne(
+        const updatedCategory = await ParentCategory.findOneAndUpdate(
             { slug },
             payload,
-            { new: true },
+            { new: true, runValidators: true },
         );
         return updatedCategory;
     }

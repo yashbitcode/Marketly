@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const ParentCategory = require("./parentCategory.model");
-const { DATATYPES } = require("../utils/constants");
+const ParentCategory = require("./parentCategory.models");
+const { generateSlug } = require("../utils/helpers");
 
 const SubCategorySchema = new mongoose.Schema(
     {
@@ -14,10 +14,12 @@ const SubCategorySchema = new mongoose.Schema(
             required: [true, "Sub catgory name is required"],
             min: [3, "Minimum length should be 3"],
             unique: [true, "Sub category already exists"],
+            trim: true
         },
         parentCategory: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: ParentCategory
+            ref: ParentCategory,
+            required: [true, "Parent category ID is required"],
         },
         // attributes: {
         //     name: {
@@ -43,6 +45,20 @@ const SubCategorySchema = new mongoose.Schema(
     },
 );
 
-const SubCategory = mongoose.model(SubCategorySchema);
+SubCategorySchema.pre("validate", function() {
+    if(this.isModified("name")) this.slug = generateSlug(this.name);
+});
+
+SubCategorySchema.pre("findOneAndUpdate", function(next) {
+    const update = this.getUpdate();
+
+    if(!update.name) next();
+
+    update.slug = generateSlug(update.name);
+
+    this.setUpdate(update);
+});
+
+const SubCategory = mongoose.model("sub-categories", SubCategorySchema);
 
 module.exports = SubCategory;

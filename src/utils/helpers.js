@@ -1,5 +1,7 @@
 const crypto = require("node:crypto");
 const { TOKEN_LENGTH } = require("./constants");
+const slugify = require("slugify");
+const { nanoid } = require("nanoid");
 
 const generateRandomNumberString = () => {
     let result = "";
@@ -15,6 +17,26 @@ const generateRandomNumberString = () => {
     return result;
 };
 
+const generateSlug = (title) => {
+    if(!title) return "";
+
+    return slugify(title, {
+        lower: true,
+        strict: false,
+    });
+};
+
+const generateUniqueSlug = (title) => {
+    if(!title) return "";
+
+    return slugify(title, {
+        lower: true,
+        strict: false,
+    }) + "-" + nanoid(6);
+};
+
 module.exports = {
     generateRandomNumberString,
+    generateSlug,
+    generateUniqueSlug,
 };

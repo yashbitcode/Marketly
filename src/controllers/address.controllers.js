@@ -1,5 +1,5 @@
 const { asyncHandler } = require("../utils/asyncHandler");
-const Address = require("../models/address.model");
+const Address = require("../models/address.models");
 const ApiResponse = require("../utils/api-response");
 const addressService = require("../services/address.service");
 const ApiError = require("../utils/api-error");

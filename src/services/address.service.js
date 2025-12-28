@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const Address = require("../models/address.model");
+const Address = require("../models/address.models");
 
 class AddressService {
     async getAllAddressesByUserId(userId) {

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { generateSlug } = require("../utils/helpers");
 
 const ParentCategorySchema = new mongoose.Schema(
     {
@@ -12,6 +13,7 @@ const ParentCategorySchema = new mongoose.Schema(
             required: [true, "Parent catgory name is required"],
             min: [3, "Minimum length should be 3"],
             unique: [true, "Parent category already exists"],
+            trim: true
         },
     },
     {
@@ -19,6 +21,20 @@ const ParentCategorySchema = new mongoose.Schema(
     },
 );
 
-const ParentCategory = mongoose.model(ParentCategorySchema);
+ParentCategorySchema.pre("validate", function() {
+    if(this.isModified("name")) this.slug = generateSlug(this.name);
+});
+
+ParentCategorySchema.pre("findOneAndUpdate", function(next) {
+    const update = this.getUpdate();
+
+    if(!update.name) next();
+
+    update.slug = generateSlug(update.name);
+
+    this.setUpdate(update);
+});
+
+const ParentCategory = mongoose.model("parent-categories", ParentCategorySchema);
 
 module.exports = ParentCategory;
