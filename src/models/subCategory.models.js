@@ -7,14 +7,14 @@ const SubCategorySchema = new mongoose.Schema(
         slug: {
             type: String,
             required: [true, "Slug is required"],
-            unique: [true, "Slug should be unique"]
+            unique: [true, "Slug should be unique"],
         },
         name: {
             type: String,
             required: [true, "Sub catgory name is required"],
             min: [3, "Minimum length should be 3"],
             unique: [true, "Sub category already exists"],
-            trim: true
+            trim: true,
         },
         parentCategory: {
             type: mongoose.Schema.Types.ObjectId,
@@ -45,14 +45,14 @@ const SubCategorySchema = new mongoose.Schema(
     },
 );
 
-SubCategorySchema.pre("validate", function() {
-    if(this.isModified("name")) this.slug = generateSlug(this.name);
+SubCategorySchema.pre("validate", function () {
+    if (this.isModified("name")) this.slug = generateSlug(this.name);
 });
 
-SubCategorySchema.pre("findOneAndUpdate", function(next) {
+SubCategorySchema.pre("findOneAndUpdate", function (next) {
     const update = this.getUpdate();
 
-    if(!update.name) next();
+    if (!update.name) next();
 
     update.slug = generateSlug(update.name);
 

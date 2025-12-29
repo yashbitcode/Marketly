@@ -6,14 +6,14 @@ const ParentCategorySchema = new mongoose.Schema(
         slug: {
             type: String,
             required: [true, "Slug is required"],
-            unique: [true, "Slug should be unique"]
+            unique: [true, "Slug should be unique"],
         },
         name: {
             type: String,
             required: [true, "Parent catgory name is required"],
             min: [3, "Minimum length should be 3"],
             unique: [true, "Parent category already exists"],
-            trim: true
+            trim: true,
         },
     },
     {
@@ -21,20 +21,23 @@ const ParentCategorySchema = new mongoose.Schema(
     },
 );
 
-ParentCategorySchema.pre("validate", function() {
-    if(this.isModified("name")) this.slug = generateSlug(this.name);
+ParentCategorySchema.pre("validate", function () {
+    if (this.isModified("name")) this.slug = generateSlug(this.name);
 });
 
-ParentCategorySchema.pre("findOneAndUpdate", function(next) {
+ParentCategorySchema.pre("findOneAndUpdate", function (next) {
     const update = this.getUpdate();
 
-    if(!update.name) next();
+    if (!update.name) next();
 
     update.slug = generateSlug(update.name);
 
     this.setUpdate(update);
 });
 
-const ParentCategory = mongoose.model("parent-categories", ParentCategorySchema);
+const ParentCategory = mongoose.model(
+    "parent-categories",
+    ParentCategorySchema,
+);
 
 module.exports = ParentCategory;

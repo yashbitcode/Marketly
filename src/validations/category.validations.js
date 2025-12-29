@@ -2,10 +2,7 @@ const z = require("zod");
 const { isValidObjectId } = require("mongoose");
 const { DATATYPES } = require("../utils/constants");
 
-const addParentCategoryValidations = z.object({
-    slug: z.string({
-        error: (iss) => !iss.input && "Slug is required",
-    }),
+const parentCategoryValidations = z.object({
     name: z
         .string({
             error: (iss) => !iss.input && "Name is required",
@@ -13,10 +10,7 @@ const addParentCategoryValidations = z.object({
         .min(3, "Minimum length should be 3"),
 });
 
-const addSubCategoryValidations = z.object({
-    slug: z.string({
-        error: (iss) => !iss.input && "Slug is required",
-    }),
+const subCategoryValidations = z.object({
     name: z
         .string({
             error: (iss) => !iss.input && "Name is required",
@@ -40,7 +34,14 @@ const addSubCategoryValidations = z.object({
     // }),
 });
 
+const addParentCategoryValidations = parentCategoryValidations.strict();
+const addSubCategoryValidations = subCategoryValidations.strict();
+const updateParentCategoryValidations = parentCategoryValidations.partial();
+const updateSubCategoryValidations = subCategoryValidations.partial();
+
 module.exports = {
     addParentCategoryValidations,
     addSubCategoryValidations,
+    updateParentCategoryValidations,
+    updateSubCategoryValidations
 };

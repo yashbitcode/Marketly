@@ -9,7 +9,7 @@ const ROLES = ["user", "vendor"];
 const VENDOR_TYPE = ["individual", "business"];
 const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
-const ACCOUNT_STATUS = ["pending", "active", "suspended", "banned"];
+const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 
 const REGEX = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,

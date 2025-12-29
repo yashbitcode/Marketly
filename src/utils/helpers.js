@@ -2,6 +2,7 @@ const crypto = require("node:crypto");
 const { TOKEN_LENGTH } = require("./constants");
 const slugify = require("slugify");
 const { nanoid } = require("nanoid");
+const jwt = require("jsonwebtoken");
 
 const generateRandomNumberString = () => {
     let result = "";
@@ -18,7 +19,7 @@ const generateRandomNumberString = () => {
 };
 
 const generateSlug = (title) => {
-    if(!title) return "";
+    if (!title) return "";
 
     return slugify(title, {
         lower: true,
@@ -27,16 +28,35 @@ const generateSlug = (title) => {
 };
 
 const generateUniqueSlug = (title) => {
-    if(!title) return "";
+    if (!title) return "";
 
-    return slugify(title, {
-        lower: true,
-        strict: false,
-    }) + "-" + nanoid(6);
+    return (
+        slugify(title, {
+            lower: true,
+            strict: false,
+        }) +
+        "-" +
+        nanoid(6)
+    );
+};
+
+const generateBaseTokens = (payload) => {
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+    });
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    });
+
+    return {
+        accessToken,
+        refreshToken,
+    };
 };
 
 module.exports = {
     generateRandomNumberString,
     generateSlug,
     generateUniqueSlug,
+    generateBaseTokens
 };

@@ -7,6 +7,9 @@ const { COOKIE_OPTIONS } = require("../utils/constants");
 
 const register = asyncHandler(async (req, res) => {
     const user = await userService.createNewUser(req.body);
+
+    if(!user) throw new ApiError();
+
     res.json(new ApiResponse(201, user, "User registered successfully"));
 });
 

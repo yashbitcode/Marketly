@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./user.models");
 const { REGEX, VENDOR_TYPE, ACCOUNT_STATUS } = require("../utils/constants");
+const { generateBaseTokens } = require("../utils/helpers");
 
 const VendorSchema = new mongoose.Schema(
     {
@@ -18,10 +19,7 @@ const VendorSchema = new mongoose.Schema(
         },
         avatar: {
             type: String,
-            match: [
-                REGEX.url,
-                "Invalid avatar URL",
-            ],
+            match: [REGEX.url, "Invalid avatar URL"],
         },
         storeName: {
             type: String,
@@ -51,6 +49,12 @@ const VendorSchema = new mongoose.Schema(
         timestamps: true,
     },
 );
+
+VendorSchema.methods.generateAccessAndRefreshTokens = function () {
+    const payload = { iat: Date.now(), _id: this._id, role: "vendor" };
+
+    return generateBaseTokens(payload);
+};
 
 const Vendor = mongoose.model("vendors", VendorSchema);
 

@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { generateRandomNumberString } = require("../utils/helpers");
+const {
+    generateRandomNumberString,
+    generateBaseTokens,
+} = require("../utils/helpers");
 const { ROLES, REGEX } = require("../utils/constants");
 
 const UserSchema = new mongoose.Schema(
@@ -17,31 +19,25 @@ const UserSchema = new mongoose.Schema(
             lowercase: true,
             required: [true, "Email is required"],
             trim: true,
-            match: [
-                REGEX.email,
-                "Invalid email",
-            ],
+            match: [REGEX.email, "Invalid email"],
             unique: [true, "Email already exists"],
-            trim: true
+            trim: true,
         },
         password: {
             type: String,
             required: [true, "Password is required"],
         },
-        role: {
-            type: String,
-            enum: {
-                values: ROLES,
-                message: "`{VALUE}` is not a valid value",
-            },
-            default: "user",
-        },
+        // role: {
+        //     type: String,
+        //     enum: {
+        //         values: ROLES,
+        //         message: "`{VALUE}` is not a valid value",
+        //     },
+        //     default: "user",
+        // },
         avatar: {
             type: String,
-            match: [
-                REGEX.url,
-                "Invalid avatar URL",
-            ],
+            match: [REGEX.url, "Invalid avatar URL"],
             default: "",
         },
         username: {
@@ -63,10 +59,10 @@ const UserSchema = new mongoose.Schema(
             default: false,
         },
         refreshToken: String,
-        tokenVersion: {
-            type: Number,
-            default: 0,
-        },
+        // tokenVersion: {
+        //     type: Number,
+        //     default: 0,
+        // },
 
         emailVerificationToken: String,
         emailVerificationSessionId: String,
@@ -98,21 +94,11 @@ UserSchema.methods.generateAccessAndRefreshTokens = function () {
         // avatar: this.avatar,
         // phoneNumber: this.phoneNumber,
         // isEmailVerified: this.isEmailVerified,
-        tokenVersion: this.tokenVersion,
-        role: this.role,
+        // tokenVersion: this.tokenVersion,
+        role: "user",
     };
 
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    });
-    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-    });
-
-    return {
-        accessToken,
-        refreshToken,
-    };
+    return generateBaseTokens(payload);
 };
 
 UserSchema.methods.verifyPassword = async function (password) {
