@@ -30,13 +30,13 @@ const baseVendor = z.object({
 
 const createVendorValidations = baseVendor
     .extend({
-        userRefId: z
-            .string({
-                error: (iss) => !iss.input && "User ID is required",
-            })
-            .refine((val) => isValidObjectId(val), {
-                message: "Invalid user ID",
-            }),
+        // userRefId: z
+        //     .string({
+        //         error: (iss) => !iss.input && "User ID is required",
+        //     })
+        //     .refine((val) => isValidObjectId(val), {
+        //         message: "Invalid user ID",
+        //     }),
         accountStatus: z.enum(ACCOUNT_STATUS, "Invalid account status"),
     })
     .strict();

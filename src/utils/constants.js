@@ -5,11 +5,22 @@ const COOKIE_OPTIONS = {
     secure: true,
 };
 
-const ROLES = ["user", "vendor"];
+const ROLES = ["user", "vendor", "super-admin"];
 const VENDOR_TYPE = ["individual", "business"];
 const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
+
+const GENERAL_USER_FIELDS = {
+    fullname: 1,
+    email: 1,
+    username: 1,
+    avatar: 1,
+    role: 1,
+    tokenVersion: 1,
+    phoneNumber: 1,
+    isEmailVerified: 1,
+};
 
 const REGEX = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -28,5 +39,6 @@ module.exports = {
     REGEX,
     ADDRESS_TYPE,
     VENDOR_TYPE,
-    ACCOUNT_STATUS
+    ACCOUNT_STATUS,
+    GENERAL_USER_FIELDS
 };

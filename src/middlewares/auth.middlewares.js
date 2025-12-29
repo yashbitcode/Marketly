@@ -3,6 +3,7 @@ const ApiError = require("../utils/api-error");
 const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
 const vendorService = require("../services/vendor.service");
+const { GENERAL_USER_FIELDS } = require("../utils/constants");
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -24,61 +25,42 @@ const verifyToken = async (authHeader) => {
 };
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const { _id: mainId, role } = await verifyToken(req.get("Authorization"));
+    const { _id, currentRole, tokenVersion } = await verifyToken(
+        req.get("Authorization"),
+    );
     let payload;
 
-    if (role === "user") {
-        payload = await userService.getUserById(mainId, {
-            fullname: 1,
-            email: 1,
-            username: 1,
-            avatar: 1,
-            phoneNumber: 1,
-            isEmailVerified: 1,
-        });
-
-        // if (tokenVersion !== mainTokenVersion) {
-        //     res.clearCookie("accessToken");
-        //     res.clearCookie("refreshToken");
-
-        //     throw new ApiError(401, "Un-authenticated token invalidated");
-        // }
-
-        // const userData = {
-        //     _id,
-        //     fullname,
-        //     email,
-        //     username,
-        //     role,
-        //     avatar,
-        //     phoneNumber,
-        //     isEmailVerified,
-        // };
-
-        // req.user = userData;
-    } else {
-        payload = await vendorService.getVendorById(
-            _id,
-            {},
-            {
-                fullname: 1,
-                email: 1,
-                username: 1,
-                avatar: 1,
-                phoneNumber: 1,
-                isEmailVerified: 1,
-            },
+    if (currentRole === "vendor")
+        payload = await userService.getUserWithVendor(
+            { _id },
+            GENERAL_USER_FIELDS,
         );
+    else payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
+
+    if (!payload) throw new ApiError(401, "Un-Authenticated");
+
+    if (payload.tokenVersion !== tokenVersion) {
+        res.clearCookie("accessToken");
+        res.clearCookie("refreshToken");
+
+        throw new ApiError(401, "Un-authenticated token invalidated");
     }
 
-    if(!payload) throw new ApiError(401, "Un-Authenticated");
-
-    payload.role = role;
+    payload.currentRole = currentRole;
     req.user = payload;
 
     next();
 });
 
+const authorise = (...allowedRoles) => {
+    return asyncHandler(async (req, res, next) => {
+        if(allowedRoles.includes(req.user.currentRole)) throw new ApiError(403, "Forbidden: insufficient permissions");
+
+        next();
+    });
+};
+
 module.exports = {
     isAuthenticated,
+    authorise
 };

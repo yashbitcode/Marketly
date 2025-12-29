@@ -5,10 +5,10 @@ const { generateBaseTokens } = require("../utils/helpers");
 
 const VendorSchema = new mongoose.Schema(
     {
-        userRefId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: User,
-        },
+        // userRefId: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: User,
+        // },
         vendorType: {
             type: String,
             enum: {
@@ -44,6 +44,7 @@ const VendorSchema = new mongoose.Schema(
             required: [true, "Phone number is required"],
             match: [REGEX.phoneNumber, "Invalid phone number"],
         },
+        refreshToken: String,
     },
     {
         timestamps: true,

@@ -1,4 +1,5 @@
 const Vendor = require("../models/vendor.model");
+const ApiError = require("../utils/api-error");
 
 class VendorService {
     async insertVendor(payload) {
@@ -39,16 +40,33 @@ class VendorService {
         return vendor;
     }
 
+    async getVendorByEmailAndVerifyPassword(
+        vendorEmail,
+        vendorPassword,
+        vendorFieldsSelection = {},
+        userFieldsSelection = {},
+    ) {
+        const vendor = Vendor.aggregate([
+            {
+                
+            }
+        ])
+    }
+
     async updateVendorDetails(
         vendorId,
         payload,
         vendorFieldsSelection = {},
         userFieldsSelection = {},
     ) {
-        const vendor = await Vendor.findOneAndUpdate({_id: vendorId}, payload, {new: true, runValidators: true})
+        const vendor = await Vendor.findOneAndUpdate(
+            { _id: vendorId },
+            payload,
+            { new: true, runValidators: true },
+        )
             .populate("userRefId", userFieldsSelection)
             .select(vendorFieldsSelection);
-        
+
         return vendor;
     }
 }

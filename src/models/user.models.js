@@ -5,7 +5,7 @@ const {
     generateRandomNumberString,
     generateBaseTokens,
 } = require("../utils/helpers");
-const { ROLES, REGEX } = require("../utils/constants");
+const { REGEX, ROLES } = require("../utils/constants");
 
 const UserSchema = new mongoose.Schema(
     {
@@ -27,14 +27,14 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: [true, "Password is required"],
         },
-        // role: {
-        //     type: String,
-        //     enum: {
-        //         values: ROLES,
-        //         message: "`{VALUE}` is not a valid value",
-        //     },
-        //     default: "user",
-        // },
+        role: {
+            type: String,
+            enum: {
+                values: ROLES,
+                message: "`{VALUE}` is not a valid value",
+            },
+            default: "user",
+        },
         avatar: {
             type: String,
             match: [REGEX.url, "Invalid avatar URL"],
@@ -59,11 +59,13 @@ const UserSchema = new mongoose.Schema(
             default: false,
         },
         refreshToken: String,
-        // tokenVersion: {
-        //     type: Number,
-        //     default: 0,
-        // },
-
+        tokenVersion: {
+            type: Number,
+            default: 0,
+        },
+        
+        vendorId: String,
+        
         emailVerificationToken: String,
         emailVerificationSessionId: String,
         emailVerificationTokenExpiry: Date,
@@ -84,7 +86,7 @@ UserSchema.pre("save", async function () {
         );
 });
 
-UserSchema.methods.generateAccessAndRefreshTokens = function () {
+UserSchema.methods.generateAccessAndRefreshTokens = function (currentRole) {
     const payload = {
         iat: Date.now(),
         _id: this._id,
@@ -94,9 +96,12 @@ UserSchema.methods.generateAccessAndRefreshTokens = function () {
         // avatar: this.avatar,
         // phoneNumber: this.phoneNumber,
         // isEmailVerified: this.isEmailVerified,
-        // tokenVersion: this.tokenVersion,
-        role: "user",
+        tokenVersion: this.tokenVersion,
+        role: this.role,
+        currentRole,
     };
+
+    if(currentRole === "vendor") payload.vendorId = this.vendorId;
 
     return generateBaseTokens(payload);
 };

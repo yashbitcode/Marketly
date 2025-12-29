@@ -47,6 +47,12 @@ class UserService {
         return user;
     }
 
+    async getUserWithVendor(filter, fieldsSelection = {}) {
+        const user = await User.find(filter).populate("vendorId").select(fieldsSelection);
+
+        return user;
+    }
+
     async getEmailVerifySessionDoc(sessionId, fieldsSelection = {}) {
         const hashedSessionId = crypto
             .createHmac("sha256", process.env.HASHED_MAC_SECRET)

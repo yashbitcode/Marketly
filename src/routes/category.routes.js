@@ -7,29 +7,57 @@ const {
     addParentCategory,
     addSubCategory,
 } = require("../controllers/category.controllers");
-const {validate} = require("../middlewares/validate.middlewares");
+const { validate } = require("../middlewares/validate.middlewares");
 const {
     addParentCategoryValidations,
     addSubCategoryValidations,
     updateParentCategoryValidations,
     updateSubCategoryValidations,
 } = require("../validations/category.validations");
+const {
+    authorise,
+    isAuthenticated,
+} = require("../middlewares/auth.middlewares");
 const router = Router();
 
-// super-admin auth
-
-router.get("/", getAllParentCategories);
-router.post("/", validate(addParentCategoryValidations), addParentCategory);
+router.get(
+    "/",
+    isAuthenticated,
+    authorise("super-admin"),
+    getAllParentCategories,
+);
+router.post(
+    "/",
+    isAuthenticated,
+    authorise("super-admin"),
+    validate(addParentCategoryValidations),
+    addParentCategory,
+);
 router.patch(
     "/:slug",
+    isAuthenticated,
+    authorise("super-admin"),
     validate(updateParentCategoryValidations),
     updateParentCategory,
 );
 
-router.get("/sub", getAllSubCategories);
-router.post("/sub", validate(addSubCategoryValidations), addSubCategory);
+router.get(
+    "/sub",
+    isAuthenticated,
+    authorise("super-admin"),
+    getAllSubCategories,
+);
+router.post(
+    "/sub",
+    isAuthenticated,
+    authorise("super-admin"),
+    validate(addSubCategoryValidations),
+    addSubCategory,
+);
 router.patch(
     "/sub/:slug",
+    isAuthenticated,
+    authorise("super-admin"),
     validate(updateSubCategoryValidations),
     updateSubCategory,
 );

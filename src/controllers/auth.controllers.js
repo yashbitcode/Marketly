@@ -4,6 +4,7 @@ const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS } = require("../utils/constants");
+const vendorService = require("../services/vendor.service");
 
 const register = asyncHandler(async (req, res) => {
     const user = await userService.createNewUser(req.body);
@@ -75,6 +76,13 @@ const logout = asyncHandler(async (req, res) => {
     res.clearCookie("accessToken")
         .clearCookie("refreshToken")
         .json(new ApiResponse(200, {}, "Logout successful"));
+});
+
+const loginVendor = asyncHandler(async (req, res) => {
+    const {email, password} = req.body;
+    const vendor = await vendorService.getVendorByEmailAndVerifyPassword(email, password);
+
+    res.json(vendor);
 });
 
 const verifyEmailSessionId = asyncHandler(async (req, res) => {
@@ -204,6 +212,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 module.exports = {
     register,
     login,
+    loginVendor,
     logout,
     verifyEmailSessionId,
     verifyEmailCode,

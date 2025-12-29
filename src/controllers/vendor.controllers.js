@@ -2,7 +2,7 @@ const vendorService = require("../services/vendor.service");
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
-const { ACCOUNT_STATUS } = require("../utils/constants");
+const { ACCOUNT_STATUS, GENERAL_USER_FIELDS } = require("../utils/constants");
 
 const createVendor = asyncHandler(async (req, res) => {
     const vendor = await vendorService.insertVendor(req.body);
@@ -17,6 +17,8 @@ const updateVendor = asyncHandler(async (req, res) => {
     const updatedVendor = await vendorService.updateVendorDetails(
         _id,
         req.body,
+        {},
+        GENERAL_USER_FIELDS
     );
 
     if (!updatedVendor) throw new ApiError();
@@ -34,7 +36,9 @@ const updateAccountStatus = asyncHandler(async (req, res) => {
 
     const updatedVendor = await vendorService.updateVendorDetails(vendorId, {
         accountStatus,
-    });
+    }, {}, GENERAL_USER_FIELDS);
+
+    if (!updatedVendor) throw new ApiError();
 
     res.json(
         new ApiResponse(
