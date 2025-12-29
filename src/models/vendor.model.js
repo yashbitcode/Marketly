@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./user.models");
 const { REGEX, VENDOR_TYPE, ACCOUNT_STATUS } = require("../utils/constants");
-const { generateBaseTokens } = require("../utils/helpers");
+// const { generateBaseTokens } = require("../utils/helpers");
 
 const VendorSchema = new mongoose.Schema(
     {
@@ -51,11 +51,11 @@ const VendorSchema = new mongoose.Schema(
     },
 );
 
-VendorSchema.methods.generateAccessAndRefreshTokens = function () {
-    const payload = { iat: Date.now(), _id: this._id, role: "vendor" };
+// VendorSchema.methods.generateAccessAndRefreshTokens = function () {
+//     const payload = { iat: Date.now(), _id: this._id, role: "vendor" };
 
-    return generateBaseTokens(payload);
-};
+//     return generateBaseTokens(payload);
+// };
 
 const Vendor = mongoose.model("vendors", VendorSchema);
 

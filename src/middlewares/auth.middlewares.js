@@ -25,9 +25,10 @@ const verifyToken = async (authHeader) => {
 };
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const { _id, currentRole, tokenVersion } = await verifyToken(
+    const {_id, currentRole, tokenVersion} = await verifyToken(
         req.get("Authorization"),
     );
+
     let payload;
 
     if (currentRole === "vendor")
@@ -46,15 +47,15 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, "Un-authenticated token invalidated");
     }
 
-    payload.currentRole = currentRole;
     req.user = payload;
+    req.user.currentRole = currentRole;
 
     next();
 });
 
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
-        if(allowedRoles.includes(req.user.currentRole)) throw new ApiError(403, "Forbidden: insufficient permissions");
+        if(!allowedRoles.includes(req.user.currentRole)) throw new ApiError(403, "Forbidden: insufficient permissions");
 
         next();
     });

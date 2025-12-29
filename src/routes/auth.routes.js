@@ -10,6 +10,8 @@ const { validate } = require("../middlewares/validate.middlewares");
 const {
     register,
     login,
+    loginVendor,
+    loginSuperAdmin,
     logout,
     verifyEmailSessionId,
     verifyEmailCode,
@@ -18,11 +20,16 @@ const {
     forgotPasswordVerification,
     resetPassword,
 } = require("../controllers/auth.controllers");
-const { isAuthenticated, authorise } = require("../middlewares/auth.middlewares");
+const {
+    isAuthenticated,
+    authorise,
+} = require("../middlewares/auth.middlewares");
 const router = Router();
 
 router.post("/register", validate(registerValidations), register);
 router.post("/login", validate(loginValidations), login);
+router.post("/vendor-login", validate(loginValidations), loginVendor);
+router.post("/super-admin-login", validate(loginValidations), loginSuperAdmin);
 router.post(
     "/change-password",
     validate(changePasswordValidations),

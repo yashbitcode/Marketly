@@ -48,7 +48,9 @@ class UserService {
     }
 
     async getUserWithVendor(filter, fieldsSelection = {}) {
-        const user = await User.find(filter).populate("vendorId").select(fieldsSelection);
+        const user = await User.findOne(filter).populate("vendorId").select(fieldsSelection);
+
+        console.log(user);
 
         return user;
     }

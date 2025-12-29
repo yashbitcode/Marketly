@@ -4,12 +4,12 @@ const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS } = require("../utils/constants");
-const vendorService = require("../services/vendor.service");
+const superAdminService = require("../services/superAdmin.service");
 
 const register = asyncHandler(async (req, res) => {
     const user = await userService.createNewUser(req.body);
 
-    if(!user) throw new ApiError();
+    if (!user) throw new ApiError();
 
     res.json(new ApiResponse(201, user, "User registered successfully"));
 });
@@ -31,6 +31,7 @@ const login = asyncHandler(async (req, res) => {
         role: user.role,
         avatar: user.avatar,
         isEmailVerified: user.isEmailVerified,
+        tokenVersion: user.tokenVersion,
     };
 
     if (!user.isEmailVerified) {
@@ -55,7 +56,8 @@ const login = asyncHandler(async (req, res) => {
             .json(new ApiResponse(422, payload, "User is not verified"));
     }
 
-    const { accessToken, refreshToken } = user.generateAccessAndRefreshTokens();
+    const { accessToken, refreshToken } =
+        user.generateAccessAndRefreshTokens("user");
     user.refreshToken = refreshToken;
 
     await user.save({ validateBeforeSave: false });
@@ -79,10 +81,72 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 const loginVendor = asyncHandler(async (req, res) => {
-    const {email, password} = req.body;
-    const vendor = await vendorService.getVendorByEmailAndVerifyPassword(email, password);
+    const { email, password } = req.body;
+    const vendorUser = await userService.getUserWithVendor({ email });
 
-    res.json(vendor);
+    if (!vendorUser) throw new ApiError(400, "Invalid credentials");
+
+    const isPasswordCorrect = await vendorUser.verifyPassword(password);
+
+    if (!isPasswordCorrect) throw new ApiError(400, "Invalid credentials");
+
+    const { accessToken, refreshToken } =
+        vendorUser.generateAccessAndRefreshTokens("vendor");
+    vendorUser.refreshToken = refreshToken;
+
+    await vendorUser.save({ validateBeforeSave: false });
+
+    const payload = {
+        _id: vendorUser._id,
+        fullname: vendorUser.fullname,
+        email: vendorUser.email,
+        role: vendorUser.role,
+        avatar: vendorUser.avatar,
+        isEmailVerified: vendorUser.isEmailVerified,
+        vendor: vendorUser.vendorId,
+        tokenVersion: vendorUser.tokenVersion,
+    };
+
+    res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
+        .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
+        .json(new ApiResponse(200, payload, "Vendor logged in"));
+});
+
+const loginSuperAdmin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    let superAdmin = await superAdminService.getSuperAdmin({ email });
+
+    if (superAdmin) {
+        const isPasswordCorrect = await superAdmin.verifyPassword(password);
+        if (!isPasswordCorrect) throw new ApiError(401, "Invalid credentials");
+    } else {
+        const isValid = await superAdminService.verifyLoginDetails(
+            email,
+            password,
+        );
+
+        if (!isValid) throw new ApiError(401, "Invalid credentials");
+
+        superAdmin = await superAdminService.createSuperAdmin({ email, password });
+        await superAdmin.save();
+    }
+
+    const payload = {
+        _id: superAdmin._id,
+        fullname: superAdmin.fullname,
+        email: superAdmin.email,
+        role: superAdmin.role,
+        avatar: superAdmin.avatar,
+        tokenVersion: superAdmin.tokenVersion,
+    };
+
+    const { accessToken, refreshToken } =
+        superAdmin.generateAccessAndRefreshTokens("super-admin");
+
+    res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
+        .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
+        .json(new ApiResponse(200, payload, "Super admin logged in"));
 });
 
 const verifyEmailSessionId = asyncHandler(async (req, res) => {
@@ -213,6 +277,7 @@ module.exports = {
     register,
     login,
     loginVendor,
+    loginSuperAdmin,
     logout,
     verifyEmailSessionId,
     verifyEmailCode,

@@ -6,6 +6,7 @@ const {
     generateBaseTokens,
 } = require("../utils/helpers");
 const { REGEX, ROLES } = require("../utils/constants");
+const Vendor = require("./vendor.model");
 
 const UserSchema = new mongoose.Schema(
     {
@@ -64,7 +65,10 @@ const UserSchema = new mongoose.Schema(
             default: 0,
         },
         
-        vendorId: String,
+        vendorId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Vendor
+        },
         
         emailVerificationToken: String,
         emailVerificationSessionId: String,
@@ -101,7 +105,7 @@ UserSchema.methods.generateAccessAndRefreshTokens = function (currentRole) {
         currentRole,
     };
 
-    if(currentRole === "vendor") payload.vendorId = this.vendorId;
+    if(currentRole === "vendor") payload.vendorId = this.vendorId._id;
 
     return generateBaseTokens(payload);
 };
