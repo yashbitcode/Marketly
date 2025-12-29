@@ -1,5 +1,4 @@
 const { asyncHandler } = require("../utils/asyncHandler");
-const ParentCategory = require("../models/parentCategory.models");
 const categoryService = require("../services/category.service");
 const ApiResponse = require("../utils/api-response");
 const ApiError = require("../utils/api-error");
@@ -52,6 +51,17 @@ const addSubCategory = asyncHandler(async (req, res) => {
     );
 });
 
+const deleteParentCategory = asyncHandler(async (req, res) => {
+    const {parentCategoryId} = req.params;
+    const canBeDeleted = await categoryService.canParentBeDeleted(parentCategoryId);
+
+    if(!canBeDeleted) throw new ApiError(403, "Sub category is attached to this parent category");
+    
+    const parentCategory = await categoryService.deleteParentCategory(parentCategoryId);
+
+    res.json(new ApiResponse(200, parentCategory, "Parent category deleted successfully"));
+});
+
 const updateParentCategory = asyncHandler(async (req, res) => {
     const { slug } = req.params;
     const updatedCategory = await categoryService.updateParentCategory(
@@ -93,6 +103,7 @@ module.exports = {
     getAllSubCategories,
     addParentCategory,
     addSubCategory,
+    deleteParentCategory,
     updateParentCategory,
     updateSubCategory,
 };

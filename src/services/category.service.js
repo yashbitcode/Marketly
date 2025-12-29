@@ -14,18 +14,35 @@ class CategoryService {
         return allCategories;
     }
 
-    async insertParentCategory({name}) {
-        const category = new ParentCategory({name});
-        await category.save()
+    async insertParentCategory({ name }) {
+        const category = new ParentCategory({ name });
+        await category.save();
 
         return category;
     }
 
-    async insertSubCategory({name, parentCategory}) {
-        const category = new SubCategory({name, parentCategory});
-        await category.save()
+    async insertSubCategory({ name, parentCategory }) {
+        const category = new SubCategory({ name, parentCategory });
+        await category.save();
 
         return category;
+    }
+
+    async canParentBeDeleted(parentCategoryId) {
+        const subCategory = await SubCategory.findOne({
+            parentCategory: parentCategoryId,
+        });
+
+        if (subCategory) return false;
+        return true;
+    }
+
+    async deleteParentCategory(parentCategoryId) {
+        const parentCategory = await ParentCategory.findByIdAndDelete(
+            parentCategoryId,
+        );
+
+        return parentCategory;
     }
 
     async updateParentCategory(slug, payload) {
