@@ -1,23 +1,24 @@
-const VendorApplicationService = require("../services/vendorApplication.service");
+const vendorApplicationService = require("../services/vendorApplication.service");
+const ApiError = require("../utils/api-error");
+const ApiResponse = require("../utils/api-response");
+const { asyncHandler } = require("../utils/asyncHandler");
 
 const getAllApplications = asyncHandler(async (req, res) => {
-    const allApplications = await VendorApplicationService.getAll();
+    const allApplications = await vendorApplicationService.getAll();
 
-    return allApplications;
+    res.json(new ApiResponse(200, allApplications, "Applications fetched successfully"));
 });
-
-/* 
-    (id, status) -> updateStatus -if rejected-> only update -if accepted-> update app. & create vendor with application details
-*/
 
 const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
     const { applicationId } = req.params;
     const { applicationStatus, remarks } = req.body;
 
-    const updatedApplication = await VendorApplicationService.updateStatus(
-        applicationId,
+    const updatedApplication = await vendorApplicationService.updateApplication(
+        { _id: applicationId },
         { applicationStatus, remarks },
     );
+
+    if (!updatedApplication) throw new ApiError(404, "Application not found");
 
     if (applicationStatus === "rejected")
         return res.json(
@@ -28,7 +29,7 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
             ),
         );
 
-    const { vendor } = await VendorApplicationService.createVendorAndUpdateUser(
+    const { vendor } = await vendorApplicationService.createVendorAndUpdateUser(
         updatedApplication,
     );
 
@@ -36,7 +37,7 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
 
     await updatedApplication.save();
 
-    return res.json(
+    res.json(
         new ApiResponse(
             200,
             updatedApplication,
@@ -45,7 +46,22 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
     );
 });
 
+const createVendorApplication = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const payload = req.body;
+
+    const application = await vendorApplicationService.createApplication(
+        _id,
+        payload,
+    );
+
+    res.json(
+        new ApiResponse(201, application, "Application created successfully"),
+    );
+});
+
 module.exports = {
     getAllApplications,
+    createVendorApplication,
     updateVendorApplicationStatus,
 };

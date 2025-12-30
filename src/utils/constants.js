@@ -10,7 +10,7 @@ const VENDOR_TYPE = ["individual", "business"];
 const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
-const VENDOR_APPLICATION_STATUS = ["accepted", "rejected"];
+const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 
 const GENERAL_USER_FIELDS = {
     fullname: 1,

@@ -14,12 +14,28 @@ const vendorApplicationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: Vendor,
     },
-    applicationStatus: VENDOR_APPLICATION_STATUS,
-    remarks: String,
+    description: {
+        type: String,
+        min: [10, "Minimum length should be 10"],
+    },
+    applicationStatus: {
+        type: String,
+        enum: {
+            values: VENDOR_APPLICATION_STATUS,
+            message: "`{VALUE}` is not valid value",
+        },
+        default: "pending",
+    },
+    remarks: {
+        type: String,
+        min: [10, "Minimum length should be 10"],
+    },
+}, {
+    timestamps: true
 });
 
 const VendorApplication = mongoose.model(
-    "vendor_applications",
+    "vendor-applications",
     vendorApplicationSchema,
 );
 
