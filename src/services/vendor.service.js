@@ -1,10 +1,8 @@
-const Vendor = require("../models/vendor.model");
-const ApiError = require("../utils/api-error");
+const Vendor = require("../models/vendor.models");
 
 class VendorService {
     async insertVendor(payload) {
         const {
-            userRefId,
             vendorType,
             avatar,
             storeName,
@@ -14,7 +12,6 @@ class VendorService {
         } = payload;
 
         const vendor = new Vendor({
-            userRefId,
             vendorType,
             avatar,
             storeName,

@@ -10,6 +10,7 @@ const VENDOR_TYPE = ["individual", "business"];
 const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
+const VENDOR_APPLICATION_STATUS = ["accepted", "rejected"];
 
 const GENERAL_USER_FIELDS = {
     fullname: 1,
@@ -40,5 +41,6 @@ module.exports = {
     ADDRESS_TYPE,
     VENDOR_TYPE,
     ACCOUNT_STATUS,
-    GENERAL_USER_FIELDS
+    GENERAL_USER_FIELDS,
+    VENDOR_APPLICATION_STATUS
 };

@@ -6,7 +6,7 @@ const {
     generateBaseTokens,
 } = require("../utils/helpers");
 const { REGEX, ROLES } = require("../utils/constants");
-const Vendor = require("./vendor.model");
+const Vendor = require("./vendor.models");
 
 const UserSchema = new mongoose.Schema(
     {
