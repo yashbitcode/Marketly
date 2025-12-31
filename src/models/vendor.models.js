@@ -5,24 +5,24 @@ const VendorSchema = new mongoose.Schema(
     {
         ...baseVendorSchema,
 
-        metrics: {
-            avgCustomerRating: {
-                type: Number,
-                default: 0,
+            metrics: {
+                avgCustomerRating: {
+                    type: Number,
+                    default: 0,
+                },
+                totalOrders: {
+                    type: Number,
+                    default: 0,
+                },
+                fulfilledOrders: {
+                    type: Number,
+                    default: 0,
+                },
+                rejectedOrders: {
+                    type: Number,
+                    default: 0,
+                },
             },
-            totalOrders: {
-                type: Number,
-                default: 0,
-            },
-            fulfilledOrders: {
-                type: Number,
-                default: 0,
-            },
-            rejectedOrders: {
-                type: Number,
-                default: 0,
-            },
-        },
     },
     {
         timestamps: true,

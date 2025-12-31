@@ -13,6 +13,12 @@ class VendorApplicationService {
         return allApplications;
     }
 
+    async getUserApplications(userId) {
+        const allApplications = await VendorApplication.find({user: userId}).populate("vendor");
+        
+        return allApplications;
+    }
+
     async createApplication(userId, payload) {
         const {
             vendorType,

@@ -5,6 +5,7 @@ const {
 } = require("../middlewares/auth.middlewares");
 const {
     getAllApplications,
+    getUserSpecificApplications,
     createVendorApplication,
     updateVendorApplicationStatus,
 } = require("../controllers/vendorApplication.controllers");
@@ -16,6 +17,12 @@ const {
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("super-admin"), getAllApplications);
+router.get(
+    "/me",
+    isAuthenticated,
+    authorise("user"),
+    getUserSpecificApplications,
+);
 router.post(
     "/me",
     isAuthenticated,

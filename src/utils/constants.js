@@ -11,6 +11,9 @@ const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
+const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
+const ATTRIBUTE_DATATYPES = ["text", "number"];
+const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
 
 const GENERAL_USER_FIELDS = {
     fullname: 1,
@@ -42,5 +45,8 @@ module.exports = {
     VENDOR_TYPE,
     ACCOUNT_STATUS,
     GENERAL_USER_FIELDS,
-    VENDOR_APPLICATION_STATUS
+    VENDOR_APPLICATION_STATUS,
+    PRODUCT_APPROVAL_STATUS,
+    ATTRIBUTE_DATATYPES,
+    ATTRIBUTE_SCHEMA_TYPES
 };

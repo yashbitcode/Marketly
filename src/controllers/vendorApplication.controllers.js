@@ -9,16 +9,24 @@ const getAllApplications = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, allApplications, "Applications fetched successfully"));
 });
 
+const getUserSpecificApplications = asyncHandler(async (req, res) => {
+    const {_id} = req.user;
+
+    const allApplications = await vendorApplicationService.getUserApplications(_id);
+
+    res.json(new ApiResponse(200, allApplications, "Applications fetched successfully"));
+});
+
 const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
     const { applicationId } = req.params;
     const { applicationStatus, remarks } = req.body;
 
     const updatedApplication = await vendorApplicationService.updateApplication(
-        { _id: applicationId },
+        { _id: applicationId, applicationStatus: "pending" },
         { applicationStatus, remarks },
     );
 
-    if (!updatedApplication) throw new ApiError(404, "Application not found");
+    if (!updatedApplication) throw new ApiError(404, "Application not found or already resolved");
 
     if (applicationStatus === "rejected")
         return res.json(
@@ -62,6 +70,7 @@ const createVendorApplication = asyncHandler(async (req, res) => {
 
 module.exports = {
     getAllApplications,
+    getUserSpecificApplications,
     createVendorApplication,
     updateVendorApplicationStatus,
 };
