@@ -130,6 +130,18 @@ const ProductSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.Union,
                 of: ATTRIBUTE_SCHEMA_TYPES,
                 required: [true, "Attribute value/values are required"],
+                validate: {
+                    validator: function(value) {
+                        const {dataType, isVariant} = this;
+
+                        if(!(isVariant && Array.isArray(value) || !(!isVariant && !Array.isArray(value)))) return false;                      
+                        
+                        const types = isVariant ? value : [value];
+
+                        return types.every((el) => typeof el === dataType);
+                    },
+                    message: "Invalid value with respect to datatype/isVariant"
+                }
             },
         },
     ],
