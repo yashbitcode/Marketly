@@ -1,0 +1,58 @@
+const { asyncHandler } = require("../utils/asyncHandler");
+const productService = require("../services/product.service");
+const ApiError = require("../utils/api-error");
+const ApiResponse = require("../utils/api-response");
+
+const getAllProducts = asyncHandler(async (req, res) => {
+    const allProducts = await productService.getAll({
+        "approval.status": "accepted",
+    });
+
+    res.json(
+        new ApiResponse(200, allProducts, "Products fetched successfully"),
+    );
+});
+
+const getAllProductsSuperAdmin = asyncHandler(async (req, res) => {
+    const allProducts = await productService.getAll();
+
+    res.json(
+        new ApiResponse(200, allProducts, "Products fetched successfully"),
+    );
+});
+
+const getSpecificProduct = asyncHandler(async (req, res) => {
+    const { slug } = req.params;
+
+    if (!slug) new ApiError(400, "Slug is required");
+
+    const product = await productService.getProduct({
+        slug,
+        "approval.status": "accepted",
+    });
+
+    if (!product) throw new ApiError(404, "Product not found");
+
+    res.json(new ApiResponse(200, product, "Product fetched successfully"));
+});
+
+const getAllVendorProducts = asyncHandler(async (req, res) => {
+    const { _id } = req.user.vendorId;
+
+    const allProducts = await productService.getAll({ vendor: _id });
+
+    res.json(
+        new ApiResponse(200, allProducts, "Products fetched successfully"),
+    );
+});
+
+const addProduct = asyncHandler(async (req, res) => {
+     
+});
+
+module.exports = {
+    getAllProducts,
+    getSpecificProduct,
+    getAllVendorProducts,
+    getAllProductsSuperAdmin
+};
