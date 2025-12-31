@@ -55,10 +55,23 @@ const addVendorProduct = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(201, product, "Product added successfully"));
 });
 
+const updateVendorProduct = asyncHandler(async (req, res) => {
+    const payload = req.body;
+    const {slug} = req.params;
+    const {_id} = req.user.vendorId;
+
+    const product = await productService.updateProduct({vendor: _id, slug}, payload);
+
+    if(!product) throw new ApiError(404, "Product not found");
+
+    res.json(new ApiResponse(200, product, "Product "))
+});
+
 module.exports = {
     getAllProducts,
     getSpecificProduct,
     getAllVendorProducts,
     getAllProductsSuperAdmin,
-    addVendorProduct
+    addVendorProduct,
+    updateVendorProduct
 };

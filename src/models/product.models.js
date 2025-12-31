@@ -109,8 +109,9 @@ const ProductSchema = new mongoose.Schema({
         required: [true, "Quantity is required"],
         min: [0, "Quantity can't be negative"],
     },
+    isActive: Boolean,
     attributes: {
-        type: [productAttributeSchema],
+        type: [new mongoose.Schema(productAttributeSchema, {_id: false})],
         validate: {
             validator: function (attribute) {
                 return attribute.length > 0;
@@ -125,10 +126,10 @@ ProductSchema.pre("validate", function () {
     if (this.isModified("name")) this.slug = generateUniqueSlug(this.name);
 });
 
-ProductSchema.pre("findOneAndUpdate", function (next) {
+ProductSchema.pre("findOneAndUpdate", function () {
     const update = this.getUpdate();
 
-    if (!update.name) next();
+    if (!update.name) return;
 
     update.slug = generateUniqueSlug(update.name);
 

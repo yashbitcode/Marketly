@@ -25,10 +25,10 @@ ParentCategorySchema.pre("validate", function () {
     if (this.isModified("name")) this.slug = generateSlug(this.name);
 });
 
-ParentCategorySchema.pre("findOneAndUpdate", function (next) {
+ParentCategorySchema.pre("findOneAndUpdate", function () {
     const update = this.getUpdate();
 
-    if (!update.name) next();
+    if (!update.name) return;
 
     update.slug = generateSlug(update.name);
 

@@ -77,8 +77,13 @@ const productAttributeSchema = {
                     return false;
 
                 const types = isVariant ? value : [value];
+                const chk = types.every(
+                    (el) =>
+                        typeof el ===
+                        (dataType === "text" ? "string" : dataType),
+                );
 
-                return types.every((el) => typeof el === dataType);
+                if (!chk || (isVariant && value.length === 0)) return false;
             },
             message: "Invalid value with respect to datatype/isVariant",
         },

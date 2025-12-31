@@ -39,6 +39,7 @@ class ProductService {
             cons,
             keyFeatures,
             images,
+            attributes
         } = payload;
 
         const product = new Product({
@@ -52,10 +53,20 @@ class ProductService {
             cons,
             keyFeatures,
             images,
+            attributes,
             vendor: vendorId,
         });
-        
+
         await product.save();
+
+        return product;
+    }
+
+    async updateProduct(filters, payload) {
+        const product = await Product.findOneAndUpdate(filters, payload, {
+            new: true,
+            runValidators: true,
+        });
 
         return product;
     }
