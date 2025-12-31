@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/api-error");
 const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
-const vendorService = require("../services/vendor.service");
 const { GENERAL_USER_FIELDS } = require("../utils/constants");
 
 const verifyToken = async (authHeader) => {

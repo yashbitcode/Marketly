@@ -117,22 +117,32 @@ const baseProductAttributeValidations = z.array(
             const { dataType, isVariant, value } = data;
 
             if (
-                !(
-                    (isVariant && Array.isArray(value)) ||
-                    !(!isVariant && !Array.isArray(value))
-                )
-            )
-                return ctx.addIssue({
+                !(isVariant === Array.isArray(value)) ||
+                !(!isVariant === !Array.isArray(value))
+            ) {
+                ctx.addIssue({
                     message: "Invalid value with respect to datatype/isVariant",
                     path: ["value"],
                 });
 
+                return;
+            }
+
             const types = isVariant ? value : [value];
-            const chk = types.every((el) => typeof el === dataType);
+            const chk = types.every(
+                (el) =>
+                    typeof el === (dataType === "text" ? "string" : dataType),
+            );
 
             if (!chk)
-                return ctx.addIssue({
+                ctx.addIssue({
                     message: "Invalid value with respect to datatype/isVariant",
+                    path: ["value"],
+                });
+
+            if (isVariant && value.length === 0)
+                ctx.addIssue({
+                    message: "Attribute value shouldn't be empty",
                     path: ["value"],
                 });
         }),
@@ -156,9 +166,11 @@ const baseProductValidations = z.object({
         .refine((price) => price > 0, {
             message: "Invalid price",
         }),
-    stockQuantity: z.number({
-        error: (iss) => !iss.input && "Stock quantity is required",
-    }).min[(0, "Stock quantity can't be negative")],
+    stockQuantity: z
+        .number({
+            error: (iss) => !iss.input && "Stock quantity is required",
+        })
+        .min(0, "Stock quantity can't be negative"),
     category: z
         .string({
             error: (iss) => !iss.input && "Category ID is required",
@@ -166,13 +178,13 @@ const baseProductValidations = z.object({
         .refine((val) => isValidObjectId(val), {
             message: "Invalid category ID",
         }),
-    vendor: z
-        .string({
-            error: (iss) => !iss.input && "Vendor ID is required",
-        })
-        .refine((val) => isValidObjectId(val), {
-            message: "Invalid vendor ID",
-        }),
+    // vendor: z
+    //     .string({
+    //         error: (iss) => !iss.input && "Vendor ID is required",
+    //     })
+    //     .refine((val) => isValidObjectId(val), {
+    //         message: "Invalid vendor ID",
+    //     }),
     description: z
         .string({
             error: (iss) => !iss.input && "Description is required",

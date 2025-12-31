@@ -46,13 +46,19 @@ const getAllVendorProducts = asyncHandler(async (req, res) => {
     );
 });
 
-const addProduct = asyncHandler(async (req, res) => {
-     
+const addVendorProduct = asyncHandler(async (req, res) => {
+    const {_id} = req.user.vendorId;
+    const payload = req.body;
+
+    const product = await productService.addProduct(_id, payload);
+
+    res.json(new ApiResponse(201, product, "Product added successfully"));
 });
 
 module.exports = {
     getAllProducts,
     getSpecificProduct,
     getAllVendorProducts,
-    getAllProductsSuperAdmin
+    getAllProductsSuperAdmin,
+    addVendorProduct
 };

@@ -2,7 +2,7 @@ const { baseProductValidations, baseProductAttributeValidations } = require("../
 
 const addProductValidations = baseProductValidations
     .extend({
-        attributes: baseProductAttributeValidations.optional(),
+        attributes: baseProductAttributeValidations.min(1, "Atleast 1 attribute should be there").optional(),
     })
     .strict();
 

@@ -1,4 +1,11 @@
-const { REGEX, VENDOR_TYPE, ACCOUNT_STATUS } = require("./constants");
+const {
+    REGEX,
+    VENDOR_TYPE,
+    ACCOUNT_STATUS,
+    ATTRIBUTE_DATATYPES,
+    ATTRIBUTE_SCHEMA_TYPES,
+} = require("./constants");
+const mongoose = require("mongoose");
 
 const baseVendorSchema = {
     vendorType: {
@@ -38,6 +45,47 @@ const baseVendorSchema = {
     },
 };
 
+const productAttributeSchema = {
+    name: {
+        type: String,
+        required: [true, "Attribute name is required"],
+    },
+    dataType: {
+        type: String,
+        enum: {
+            values: ATTRIBUTE_DATATYPES,
+            message: "`{VALUE}` is not a valid value",
+        },
+        required: [true, "Attribute datatype is required"],
+    },
+    isVariant: {
+        type: Boolean,
+        required: [true, "Variant flag is required"],
+    },
+    value: {
+        type: mongoose.Schema.Types.Union,
+        of: ATTRIBUTE_SCHEMA_TYPES,
+        required: [true, "Attribute value/values are required"],
+        validate: {
+            validator: function (value) {
+                const { dataType, isVariant } = this;
+
+                if (
+                    !(isVariant === Array.isArray(value)) ||
+                    !(!isVariant === !Array.isArray(value))
+                )
+                    return false;
+
+                const types = isVariant ? value : [value];
+
+                return types.every((el) => typeof el === dataType);
+            },
+            message: "Invalid value with respect to datatype/isVariant",
+        },
+    },
+};
+
 module.exports = {
-    baseVendorSchema
+    baseVendorSchema,
+    productAttributeSchema,
 };

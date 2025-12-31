@@ -26,6 +26,39 @@ class ProductService {
 
         return products;
     }
+
+    async addProduct(vendorId, payload) {
+        const {
+            name,
+            brandName,
+            price,
+            stockQuantity,
+            category,
+            description,
+            pros,
+            cons,
+            keyFeatures,
+            images,
+        } = payload;
+
+        const product = new Product({
+            name,
+            brandName,
+            price,
+            stockQuantity,
+            category,
+            description,
+            pros,
+            cons,
+            keyFeatures,
+            images,
+            vendor: vendorId,
+        });
+        
+        await product.save();
+
+        return product;
+    }
 }
 
 module.exports = new ProductService();
