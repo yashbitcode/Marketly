@@ -12,6 +12,7 @@ const categoryRouter = require("./routes/category.routes");
 const vendorRouter = require("./routes/vendor.routes");
 const vendorApplicationRouter = require("./routes/vendorApplication.routes");
 const productRouter = require("./routes/product.routes");
+const reviewRouter = require("./routes/review.routes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(BASE_ENDPOINT + "/category", categoryRouter);
 app.use(BASE_ENDPOINT + "/vendor", vendorRouter);
 app.use(BASE_ENDPOINT + "/vendor-application", vendorApplicationRouter);
 app.use(BASE_ENDPOINT + "/product", productRouter);
+app.use(BASE_ENDPOINT + "/review", reviewRouter);
 
 app.use(handleError);
 
