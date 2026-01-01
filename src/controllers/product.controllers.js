@@ -47,7 +47,7 @@ const getAllVendorProducts = asyncHandler(async (req, res) => {
 });
 
 const addVendorProduct = asyncHandler(async (req, res) => {
-    const {_id} = req.user.vendorId;
+    const { _id } = req.user.vendorId;
     const payload = req.body;
 
     const product = await productService.addProduct(_id, payload);
@@ -57,14 +57,31 @@ const addVendorProduct = asyncHandler(async (req, res) => {
 
 const updateVendorProduct = asyncHandler(async (req, res) => {
     const payload = req.body;
-    const {slug} = req.params;
-    const {_id} = req.user.vendorId;
+    const { slug } = req.params;
+    const { _id } = req.user.vendorId;
 
-    const product = await productService.updateProduct({vendor: _id, slug}, payload);
+    const product = await productService.updateProduct(
+        { vendor: _id, slug },
+        payload,
+    );
+
+    if (!product) throw new ApiError(404, "Product not found");
+
+    res.json(new ApiResponse(200, product, "Product "));
+});
+
+const updateProductStatus = asyncHandler(async (req, res) => {
+    const { slug } = req.params;
+    const { status, remarks, isActive } = req.body;
+
+    const product = await productService.updateProduct(
+        { slug },
+        { isActive, "approval.status": status, "approval.remarks": remarks },
+    );
 
     if(!product) throw new ApiError(404, "Product not found");
 
-    res.json(new ApiResponse(200, product, "Product "))
+    res.json(new ApiResponse(200, product, "Product updated successfully"));
 });
 
 module.exports = {
@@ -73,5 +90,6 @@ module.exports = {
     getAllVendorProducts,
     getAllProductsSuperAdmin,
     addVendorProduct,
-    updateVendorProduct
+    updateVendorProduct,
+    updateProductStatus
 };

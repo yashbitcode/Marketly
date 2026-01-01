@@ -1,4 +1,5 @@
 const ParentCategory = require("../models/parentCategory.models");
+const Product = require("../models/product.models");
 const SubCategory = require("../models/subCategory.models");
 
 class CategoryService {
@@ -29,12 +30,11 @@ class CategoryService {
     }
 
     async canParentBeDeleted(parentCategoryId) {
-        const subCategory = await SubCategory.findOne({
+        const isExist = await SubCategory.exists({
             parentCategory: parentCategoryId,
         });
 
-        if (subCategory) return false;
-        return true;
+        return isExist;
     }
 
     async deleteParentCategory(parentCategoryId) {
@@ -43,6 +43,20 @@ class CategoryService {
         );
 
         return parentCategory;
+    }
+
+    async canSubBeDeleted(subCategoryId) {
+        const isExist = await Product.exists({
+            category: subCategoryId,
+        });
+
+        return isExist;
+    }
+
+    async deleteSubCategory(subCategoryId) {
+        const subCategory = await SubCategory.findByIdAndDelete(subCategoryId);
+
+        return subCategory;
     }
 
     async updateParentCategory(slug, payload) {

@@ -53,13 +53,28 @@ const addSubCategory = asyncHandler(async (req, res) => {
 
 const deleteParentCategory = asyncHandler(async (req, res) => {
     const {parentCategoryId} = req.params;
-    const canBeDeleted = await categoryService.canParentBeDeleted(parentCategoryId);
+    const isExist = await categoryService.canParentBeDeleted(parentCategoryId);
 
-    if(!canBeDeleted) throw new ApiError(403, "Sub category is attached to this parent category");
+    if(isExist) throw new ApiError(403, "Sub category is attached to this parent category");
     
     const parentCategory = await categoryService.deleteParentCategory(parentCategoryId);
 
+    if(!parentCategory) throw new ApiError(404, "Parent category not found");
+
     res.json(new ApiResponse(200, parentCategory, "Parent category deleted successfully"));
+});
+
+const deleteSubCategory = asyncHandler(async (req, res) => {
+    const {subCategoryId} = req.params;
+    const isExist = await categoryService.canSubBeDeleted(subCategoryId);
+
+    if(isExist) throw new ApiError(403, "Product is attached to this category");
+    
+    const subCategory = await categoryService.deleteSubCategory(subCategoryId);
+
+    if(!subCategory) throw new ApiError(404, "Category not found");
+
+    res.json(new ApiResponse(200, subCategory, "Category deleted successfully"));
 });
 
 const updateParentCategory = asyncHandler(async (req, res) => {
@@ -104,6 +119,7 @@ module.exports = {
     addParentCategory,
     addSubCategory,
     deleteParentCategory,
+    deleteSubCategory,
     updateParentCategory,
     updateSubCategory,
 };

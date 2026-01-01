@@ -7,6 +7,7 @@ const {
     addParentCategory,
     addSubCategory,
     deleteParentCategory,
+    deleteSubCategory,
 } = require("../controllers/category.controllers");
 const { validate } = require("../middlewares/validate.middlewares");
 const {
@@ -40,6 +41,13 @@ router.delete(
     isAuthenticated,
     authorise("super-admin"),
     deleteParentCategory,
+);
+
+router.delete(
+    "/sub/:subCategoryId",
+    isAuthenticated,
+    authorise("super-admin"),
+    deleteSubCategory,
 );
 
 router.patch(

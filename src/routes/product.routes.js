@@ -4,14 +4,15 @@ const {
     getSpecificProduct,
     getAllProductsSuperAdmin,
     addVendorProduct,
-    updateVendorProduct
+    updateVendorProduct,
+    updateProductStatus
 } = require("../controllers/product.controllers");
 const { validate } = require("../middlewares/validate.middlewares");
 const {
     authorise,
     isAuthenticated,
 } = require("../middlewares/auth.middlewares");
-const { addProductValidations, updateProductValidations } = require("../validations/product.validations");
+const { addProductValidations, updateProductValidations, updateProductStatusValidations } = require("../validations/product.validations");
 const router = Router();
 
 router.get("/", getAllProducts);
@@ -35,6 +36,7 @@ router.patch(
     validate(updateProductValidations),
     updateVendorProduct,
 );
+router.patch("/approval/:slug", isAuthenticated, authorise("super-admin"), validate(updateProductStatusValidations), updateProductStatus)
 router.get("/:slug", getSpecificProduct);
 
 module.exports = router;

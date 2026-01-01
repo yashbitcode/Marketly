@@ -58,6 +58,10 @@ const ProductSchema = new mongoose.Schema({
             },
             default: "pending",
         },
+        remarks: {
+            type: String,
+            min: [10, "Minimum length should be 10"]
+        }
     },
     description: {
         type: String,
