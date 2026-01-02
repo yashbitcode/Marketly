@@ -27,9 +27,13 @@ const {
 const router = Router();
 
 router.post("/register", validate(registerValidations), register);
+
 router.post("/login", validate(loginValidations), login);
+
 router.post("/vendor-login", validate(loginValidations), loginVendor);
+
 router.post("/super-admin-login", validate(loginValidations), loginSuperAdmin);
+
 router.post(
     "/change-password",
     validate(changePasswordValidations),
@@ -37,6 +41,7 @@ router.post(
     authorise("user", "vendor"),
     changePassword,
 );
+
 router.post(
     "/forgot-password-link",
     validate(forgotPasswordLinkValidations),
@@ -50,8 +55,11 @@ router.post(
 );
 
 router.post("/logout", isAuthenticated, authorise("user", "vendor"), logout);
+
 router.get("/verify-email/:sessionId", verifyEmailSessionId);
+
 router.get("/verify-email-code/:sessionId/:code", verifyEmailCode);
+
 router.get("/forgot-password/:resetToken", forgotPasswordVerification);
 
 module.exports = router;

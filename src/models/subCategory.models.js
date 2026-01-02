@@ -15,6 +15,7 @@ const SubCategorySchema = new mongoose.Schema(
             min: [3, "Minimum length should be 3"],
             unique: [true, "Sub category already exists"],
             trim: true,
+            lowercase: true
         },
         parentCategory: {
             type: mongoose.Schema.Types.ObjectId,

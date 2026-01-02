@@ -14,6 +14,7 @@ const ParentCategorySchema = new mongoose.Schema(
             min: [3, "Minimum length should be 3"],
             unique: [true, "Parent category already exists"],
             trim: true,
+            lowercase: true
         },
     },
     {

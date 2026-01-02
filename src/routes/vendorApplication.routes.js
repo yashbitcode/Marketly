@@ -17,12 +17,14 @@ const {
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("super-admin"), getAllApplications);
+
 router.get(
     "/me",
     isAuthenticated,
     authorise("user"),
     getUserSpecificApplications,
 );
+
 router.post(
     "/me",
     isAuthenticated,
@@ -30,6 +32,7 @@ router.post(
     validate(createVendorApplicationValidations),
     createVendorApplication,
 );
+
 router.patch(
     "/vendor-status/:applicationId",
     isAuthenticated,

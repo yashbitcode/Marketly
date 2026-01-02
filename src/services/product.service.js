@@ -1,14 +1,21 @@
 const Product = require("../models/product.models");
+const { PAGINATION_LIMIT } = require("../utils/constants");
+const { getProductFilterationPipeline } = require("../utils/helpers");
 
 class ProductService {
-    async getAll(filters = {}) {
+    async getAll(filters, page) {
         const products = await Product.find(filters)
             .populate("vendor")
             .populate({
-                path: "vendor",
+                path: "category",
                 populate: {
                     path: "parentCategory",
                 },
+            })
+            .skip(PAGINATION_LIMIT * (page - 1))
+            .limit(PAGINATION_LIMIT)
+            .sort({
+                createdAt: -1,
             });
 
         return products;
@@ -39,7 +46,7 @@ class ProductService {
             cons,
             keyFeatures,
             images,
-            attributes
+            attributes,
         } = payload;
 
         const product = new Product({
@@ -69,6 +76,51 @@ class ProductService {
         });
 
         return product;
+    }
+
+    async getSearchedProducts(filters, searchQuery, page) {
+        const searchedProducts = await Product.find({
+            $text: {
+                $search: searchQuery,
+            },
+            ...filters,
+        })
+            .populate("vendor")
+            .populate({
+                path: "category",
+                populate: {
+                    path: "parentCategory",
+                },
+            })
+            .skip(PAGINATION_LIMIT * (page - 1))
+            .limit(PAGINATION_LIMIT)
+            .sort({
+                createdAt: -1,
+            });
+
+        return searchedProducts;
+    }
+
+    async getFilteredProducts(filterQueries, page) {
+        const pipeline = getProductFilterationPipeline(filterQueries);
+
+        pipeline.push(...[
+            {
+                $skip: PAGINATION_LIMIT * (page - 1),
+            },
+            {
+                $limit: PAGINATION_LIMIT,
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+        ]);
+
+        const filteredProducts = await Product.aggregate(pipeline);
+
+        return filteredProducts;
     }
 }
 

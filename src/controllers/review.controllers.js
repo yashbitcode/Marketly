@@ -3,9 +3,9 @@ const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 
 const getAllProductReviews = asyncHandler(async (req, res) => {
-    const { slug } = req.params;
+    const { slug, page } = req.params;
 
-    const allReviews = await reviewService.getAllProductReviewsBySlug(slug);
+    const allReviews = await reviewService.getAllProductReviewsBySlug(slug, +page);
 
     res.json(
         new ApiResponse(200, allReviews, "All reviews fetched successfully"),

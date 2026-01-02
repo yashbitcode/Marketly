@@ -22,6 +22,11 @@ const addProductReviewValidations = z.object({
         })
         .min(1, "Minimum rating should be 1")
         .max(5, "Maximum rating can be 5"),
+    heading: z
+        .string({
+            error: (iss) => !iss.input && "Heading is required",
+        })
+        .min(5, "Minimum length should be 5"),
     comment: z
         .string({
             error: (iss) => !iss.input && "Comment is required",

@@ -1,36 +1,42 @@
 const Review = require("../models/review.models");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const { GENERAL_USER_FIELDS, PAGINATION_LIMIT } = require("../utils/constants");
 
 class ReviewService {
-    async getAllProductReviewsBySlug(slug) {
-        const allReviews = await Review.find({}).populate([
-            {
-                path: "user",
-                select: GENERAL_USER_FIELDS,
-            },
-            {
-                path: "product",
-                match: {
-                    slug
+    async getAllProductReviewsBySlug(slug, page) {
+        const allReviews = await Review.find({})
+            .populate([
+                {
+                    path: "user",
+                    select: GENERAL_USER_FIELDS,
                 },
-                populate: [
-                    {
-                        path: "category",
+                {
+                    path: "product",
+                    match: {
+                        slug,
                     },
-                    {
-                        path: "vendor",
-                    },
-                ],
-            },
-        ]);
+                    populate: [
+                        {
+                            path: "category",
+                        },
+                        {
+                            path: "vendor",
+                        },
+                    ],
+                },
+            ])
+            .skip(PAGINATION_LIMIT * (page - 1))
+            .limit(PAGINATION_LIMIT)
+            .sort({
+                createdAt: -1
+            });
 
         return allReviews;
     }
 
     async addProductReview(payload) {
-        const { user, product, ratings, comment } = payload;
+        const { user, product, ratings, heading, comment } = payload;
 
-        const review = new Review({ user, product, ratings, comment });
+        const review = new Review({ user, product, ratings, heading, comment });
 
         review.save();
 

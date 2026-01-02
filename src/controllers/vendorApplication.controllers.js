@@ -4,17 +4,32 @@ const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 
 const getAllApplications = asyncHandler(async (req, res) => {
-    const allApplications = await vendorApplicationService.getAll();
+    const { page } = req.params;
+    const allApplications = await vendorApplicationService.getAll({}, +page);
 
-    res.json(new ApiResponse(200, allApplications, "Applications fetched successfully"));
+    res.json(
+        new ApiResponse(
+            200,
+            allApplications,
+            "Applications fetched successfully",
+        ),
+    );
 });
 
 const getUserSpecificApplications = asyncHandler(async (req, res) => {
-    const {_id} = req.user;
+    const { _id } = req.user;
 
-    const allApplications = await vendorApplicationService.getUserApplications(_id);
+    const allApplications = await vendorApplicationService.getUserApplications(
+        _id,
+    );
 
-    res.json(new ApiResponse(200, allApplications, "Applications fetched successfully"));
+    res.json(
+        new ApiResponse(
+            200,
+            allApplications,
+            "Applications fetched successfully",
+        ),
+    );
 });
 
 const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
@@ -26,7 +41,8 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
         { applicationStatus, remarks },
     );
 
-    if (!updatedApplication) throw new ApiError(404, "Application not found or already resolved");
+    if (!updatedApplication)
+        throw new ApiError(404, "Application not found or already resolved");
 
     if (applicationStatus === "rejected")
         return res.json(

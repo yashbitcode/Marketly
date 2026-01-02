@@ -4,9 +4,15 @@ const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 
 const getAllProducts = asyncHandler(async (req, res) => {
-    const allProducts = await productService.getAll({
-        "approval.status": "accepted",
-    });
+    const { page } = req.params;
+
+    const allProducts = await productService.getAll(
+        {
+            "approval.status": "accepted",
+            isActive: true,
+        },
+        +page,
+    );
 
     res.json(
         new ApiResponse(200, allProducts, "Products fetched successfully"),
@@ -14,7 +20,9 @@ const getAllProducts = asyncHandler(async (req, res) => {
 });
 
 const getAllProductsSuperAdmin = asyncHandler(async (req, res) => {
-    const allProducts = await productService.getAll();
+    const { page } = req.params;
+
+    const allProducts = await productService.getAll({}, +page);
 
     res.json(
         new ApiResponse(200, allProducts, "Products fetched successfully"),
@@ -29,6 +37,7 @@ const getSpecificProduct = asyncHandler(async (req, res) => {
     const product = await productService.getProduct({
         slug,
         "approval.status": "accepted",
+        isActive: true,
     });
 
     if (!product) throw new ApiError(404, "Product not found");
@@ -79,9 +88,35 @@ const updateProductStatus = asyncHandler(async (req, res) => {
         { isActive, "approval.status": status, "approval.remarks": remarks },
     );
 
-    if(!product) throw new ApiError(404, "Product not found");
+    if (!product) throw new ApiError(404, "Product not found");
 
     res.json(new ApiResponse(200, product, "Product updated successfully"));
+});
+
+const searchProduct = asyncHandler(async (req, res) => {
+    const { searchQuery, page } = req.params;
+
+    const searchedProducts = await productService.getSearchedProducts(
+        { "approval.status": "accepted", isActive: true },
+        searchQuery,
+        +page,
+    );
+
+    res.json(
+        new ApiResponse(200, searchedProducts, "Products fetched successfully"),
+    );
+});
+
+const getFilteredProducts = asyncHandler(async (req, res) => {
+    const filterQueries = req.query;
+    const { page } = req.params;
+
+    const filteredProducts = await productService.getFilteredProducts(
+        filterQueries,
+        +page,
+    );
+
+    res.json(filteredProducts);
 });
 
 module.exports = {
@@ -91,5 +126,7 @@ module.exports = {
     getAllProductsSuperAdmin,
     addVendorProduct,
     updateVendorProduct,
-    updateProductStatus
+    updateProductStatus,
+    searchProduct,
+    getFilteredProducts,
 };

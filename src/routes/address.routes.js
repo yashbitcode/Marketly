@@ -15,8 +15,11 @@ const {
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("user"), getAllUserAddresses);
+
 router.post("/", isAuthenticated, authorise("user"), validate(addAddressValidations), addAddress);
+
 router.delete("/:addressId", isAuthenticated, authorise("user"), deleteAddress);
+
 router.patch(
     "/:addressId",
     isAuthenticated,
@@ -24,6 +27,7 @@ router.patch(
     validate(updateAddressValidations),
     updateAddress,
 );
+
 router.patch("/default/:addressId", isAuthenticated, authorise("user"), markDefaultAddress);
 
 module.exports = router;

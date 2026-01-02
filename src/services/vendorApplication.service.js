@@ -1,14 +1,17 @@
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const { GENERAL_USER_FIELDS, PAGINATION_LIMIT } = require("../utils/constants");
 const vendorService = require("./vendor.service");
 const userService = require("./user.service");
 const VendorApplication = require("../models/vendorApplication.models");
 
 class VendorApplicationService {
-    async getAll() {
-        const allApplications = await VendorApplication.find({}).populate(
+    async getAll(filters, page) {
+        const allApplications = await VendorApplication.find(filters).populate(
             "user",
             GENERAL_USER_FIELDS,
-        );
+        ).skip(PAGINATION_LIMIT * (page - 1))
+            .limit(PAGINATION_LIMIT).sort({
+                createdAt: -1
+            });
 
         return allApplications;
     }

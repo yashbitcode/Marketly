@@ -1,9 +1,6 @@
 const BASE_ENDPOINT = "/api/v1";
 const TOKEN_LENGTH = 6;
-const COOKIE_OPTIONS = {
-    httpOnly: true,
-    secure: true,
-};
+const PAGINATION_LIMIT = 10;
 
 const ROLES = ["user", "vendor", "super-admin"];
 const VENDOR_TYPE = ["individual", "business"];
@@ -24,6 +21,10 @@ const GENERAL_USER_FIELDS = {
     tokenVersion: 1,
     phoneNumber: 1,
     isEmailVerified: 1,
+};
+const COOKIE_OPTIONS = {
+    httpOnly: true,
+    secure: true,
 };
 
 const REGEX = {
@@ -48,5 +49,6 @@ module.exports = {
     VENDOR_APPLICATION_STATUS,
     PRODUCT_APPROVAL_STATUS,
     ATTRIBUTE_DATATYPES,
-    ATTRIBUTE_SCHEMA_TYPES
+    ATTRIBUTE_SCHEMA_TYPES,
+    PAGINATION_LIMIT
 };

@@ -28,6 +28,7 @@ router.get(
     authorise("super-admin"),
     getAllParentCategories,
 );
+
 router.post(
     "/",
     isAuthenticated,
@@ -64,6 +65,7 @@ router.get(
     authorise("super-admin"),
     getAllSubCategories,
 );
+
 router.post(
     "/sub",
     isAuthenticated,
@@ -71,6 +73,7 @@ router.post(
     validate(addSubCategoryValidations),
     addSubCategory,
 );
+
 router.patch(
     "/sub/:slug",
     isAuthenticated,
