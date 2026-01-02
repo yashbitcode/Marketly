@@ -51,8 +51,46 @@ const updateProductStatusValidations = z
             });
     });
 
+const productQueryValidations = z
+    .object({
+        minPrice: z.string(),
+        maxPrice: z.string(),
+        ratings: z.string(),
+        brandName: z.string(),
+        stockAvailability: z.string(),
+    })
+    .partial()
+    .superRefine((data, ctx) => {
+        const { minPrice, maxPrice, ratings, stockAvailability } = data;
+
+        if (minPrice && Number.isNaN(+minPrice))
+            ctx.addIssue({
+                path: ["minPrice"],
+                message: "Min price should be number",
+            });
+
+        if (maxPrice && Number.isNaN(+maxPrice))
+            ctx.addIssue({
+                path: ["maxPrice"],
+                message: "Max price should be number",
+            });
+
+        if (ratings && Number.isNaN(+ratings))
+            ctx.addIssue({
+                path: ["ratings"],
+                message: "Ratings should be number",
+            });
+
+        if (stockAvailability && Number.isNaN(+stockAvailability))
+            ctx.addIssue({
+                path: ["stockAvailability"],
+                message: "Stock availabilityshould can only be 1",
+            });
+    });
+
 module.exports = {
     addProductValidations,
     updateProductValidations,
     updateProductStatusValidations,
+    productQueryValidations,
 };

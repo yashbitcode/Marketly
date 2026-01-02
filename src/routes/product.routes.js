@@ -18,10 +18,15 @@ const {
     addProductValidations,
     updateProductValidations,
     updateProductStatusValidations,
+    productQueryValidations,
 } = require("../validations/product.validations");
 const router = Router();
 
-router.get('/filter/:page', getFilteredProducts)
+router.get(
+    "/filter/:page",
+    validate(productQueryValidations, true),
+    getFilteredProducts,
+);
 
 router.get("/:page", getAllProducts);
 

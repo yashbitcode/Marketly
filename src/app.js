@@ -13,6 +13,7 @@ const vendorRouter = require("./routes/vendor.routes");
 const vendorApplicationRouter = require("./routes/vendorApplication.routes");
 const productRouter = require("./routes/product.routes");
 const reviewRouter = require("./routes/review.routes");
+const supportTicketRouter = require("./routes/supportTicket.routes");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(BASE_ENDPOINT + "/vendor", vendorRouter);
 app.use(BASE_ENDPOINT + "/vendor-application", vendorApplicationRouter);
 app.use(BASE_ENDPOINT + "/product", productRouter);
 app.use(BASE_ENDPOINT + "/review", reviewRouter);
+app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
 
 app.use(handleError);
 

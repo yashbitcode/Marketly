@@ -11,6 +11,16 @@ const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
+const SUPPORT_QUERY_TYPES = [
+    "order issue",
+    "payment issue",
+    "delivery issue",
+    "product issue",
+    "return or refund",
+    "account issue",
+    "technical issue",
+    "general issue",
+];
 
 const GENERAL_USER_FIELDS = {
     fullname: 1,
@@ -50,5 +60,6 @@ module.exports = {
     PRODUCT_APPROVAL_STATUS,
     ATTRIBUTE_DATATYPES,
     ATTRIBUTE_SCHEMA_TYPES,
-    PAGINATION_LIMIT
+    PAGINATION_LIMIT,
+    SUPPORT_QUERY_TYPES,
 };
