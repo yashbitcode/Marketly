@@ -25,10 +25,14 @@ class UserService {
             await user.save();
 
             return {
-                _id: user._id,
-                email: user.email,
-                username: user.username,
-                sessionId,
+                user: {
+                    _id: user._id,
+                    fullname: user.fullname,
+                    email: user.email,
+                    username: user.username,
+                    sessionId,
+                },
+                verificationToken: token,
             };
         } catch (error) {
             throw new ApiError(400, error.message);
@@ -48,7 +52,9 @@ class UserService {
     }
 
     async getUserWithVendor(filter, fieldsSelection = {}) {
-        const user = await User.findOne(filter).populate("vendorId").select(fieldsSelection);
+        const user = await User.findOne(filter)
+            .populate("vendorId")
+            .select(fieldsSelection);
 
         return user;
     }

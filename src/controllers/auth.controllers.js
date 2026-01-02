@@ -3,13 +3,21 @@ const userService = require("../services/user.service");
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
-const { COOKIE_OPTIONS } = require("../utils/constants");
+const { COOKIE_OPTIONS, FRONTEND_URL } = require("../utils/constants");
 const superAdminService = require("../services/superAdmin.service");
+const {sendMail, registrationCodeMailContent, passwordResetMailContent, registrationMailContent, passwordChangedMailContent} = require("../utils/mail");
 
 const register = asyncHandler(async (req, res) => {
-    const user = await userService.createNewUser(req.body);
+    const {user, verificationToken} = await userService.createNewUser(req.body);
 
     if (!user) throw new ApiError();
+
+    sendMail({
+        emailContent: registrationCodeMailContent(user.fullname, verificationToken),
+        from: process.env.MARKETLY_EMAIL,
+        to: user.email,
+        subject: "Verify Your Account"
+    });
 
     res.json(new ApiResponse(201, user, "User registered successfully"));
 });
@@ -169,6 +177,7 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
 
     const user = await userService.getEmailVerifySessionDoc(sessionId, {
         emailVerificationToken: 1,
+        email: 1
     });
 
     if (!user) throw new ApiError(400, "Session ID doesn't exist or expired");
@@ -176,6 +185,13 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
         throw new ApiError(422, "Code is incorrect");
 
     const updatedUser = await userService.getEmailVerifiedById(user._id);
+
+    sendMail({
+        emailContent: registrationMailContent(user.fullname, FRONTEND_URL),
+        from: process.env.MARKETLY_EMAIL,
+        to: user.email,
+        subject: "Account Created Login Now"
+    });
 
     res.json(
         new ApiResponse(
@@ -219,6 +235,13 @@ const changePassword = asyncHandler(async (req, res) => {
 
     await user.save();
 
+    sendMail({
+        emailContent: passwordChangedMailContent(user.fullname),
+        from: process.env.MARKETLY_EMAIL,
+        to: user.email,
+        subject: "Password Changed Successfully"
+    });
+
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
 });
 
@@ -239,6 +262,13 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
     user.forgotPasswordTokenExpiry = expiryDate;
 
     await user.save();
+
+    sendMail({
+        emailContent: passwordResetMailContent(user.fullname, FRONTEND_URL + `/${resetToken}`),
+        from: process.env.MARKETLY_EMAIL,
+        to: user.email,
+        subject: "Reset Password"
+    })
 
     res.json(
         new ApiResponse(

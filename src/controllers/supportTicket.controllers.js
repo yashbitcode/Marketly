@@ -2,19 +2,24 @@ const supportTicketService = require("../services/supportTicket.service");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 
-const getAllTickets = asyncHandler(async (req, res) => {
-    const { page } = req.params;
+const getAllTickets = asyncHandler(
+    async (req, res) => {
+        const { page } = req.params;
 
-    const allTickets = await supportTicketService.getAll({}, +page);
+        const allTickets = await supportTicketService.getAll({}, +page);
 
-    res.json(
-        new ApiResponse(
-            200,
-            allTickets,
-            "Support tickets fetched successfully",
-        ),
-    );
-});
+        res.json(
+            new ApiResponse(
+                200,
+                allTickets,
+                "Support tickets fetched successfully",
+            ),
+        );
+    },
+    {
+        timestamps: true,
+    },
+);
 
 const createTicket = asyncHandler(async (req, res) => {
     const payload = req.body;

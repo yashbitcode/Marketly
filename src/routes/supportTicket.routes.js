@@ -8,7 +8,7 @@ const {validate} = require("../middlewares/validate.middlewares");
 const { addSupportTicketValidations } = require("../validations/supportTicket.validations");
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllTickets);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllTickets);
 
 router.post("/", validate(addSupportTicketValidations), createTicket);
 

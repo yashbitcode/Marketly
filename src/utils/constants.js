@@ -1,4 +1,5 @@
 const BASE_ENDPOINT = "/api/v1";
+const FRONTEND_URL="https://sas.com";
 const TOKEN_LENGTH = 6;
 const PAGINATION_LIMIT = 10;
 
@@ -62,4 +63,5 @@ module.exports = {
     ATTRIBUTE_SCHEMA_TYPES,
     PAGINATION_LIMIT,
     SUPPORT_QUERY_TYPES,
+    FRONTEND_URL
 };
