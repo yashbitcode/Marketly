@@ -3,11 +3,9 @@ const SubCategory = require("./subCategory.models");
 const Vendor = require("./vendor.models");
 const {
     PRODUCT_APPROVAL_STATUS,
-    ATTRIBUTE_SCHEMA_TYPES,
-    ATTRIBUTE_DATATYPES,
 } = require("../utils/constants");
 const { generateUniqueSlug } = require("../utils/helpers");
-const { productAttributeSchema } = require("../utils/baseSchemas");
+const { productAttributeSchema, mediaSchema } = require("../utils/baseSchemas");
 
 const ProductSchema = new mongoose.Schema(
     {
@@ -100,7 +98,7 @@ const ProductSchema = new mongoose.Schema(
             },
         },
         images: {
-            type: [String],
+            type: [new mongoose.Schema(mediaSchema, {_id: false})],
             required: [true, "images are required"],
             validate: {
                 validator: function (images) {

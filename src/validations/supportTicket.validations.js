@@ -1,5 +1,6 @@
 const z = require("zod");
 const { SUPPORT_QUERY_TYPES } = require("../utils/constants");
+const { baseMediaValidations } = require("../utils/baseValidations");
 
 const addSupportTicketValidations = z.object({
     fullname: z
@@ -20,9 +21,12 @@ const addSupportTicketValidations = z.object({
             error: (iss) => !iss.input && "Message is required",
         })
         .min(10, "Minimum length should be 10"),
-    attachments: z.array(z.string()).min(1, "Minimum 1 attachment required").optional()
+    attachments: z
+        .array(baseMediaValidations)
+        .min(1, "Minimum 1 attachment required")
+        .optional(),
 });
 
 module.exports = {
-    addSupportTicketValidations
+    addSupportTicketValidations,
 };

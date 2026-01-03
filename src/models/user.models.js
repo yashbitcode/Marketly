@@ -7,6 +7,7 @@ const {
 } = require("../utils/helpers");
 const { REGEX, ROLES } = require("../utils/constants");
 const Vendor = require("./vendor.models");
+const { mediaSchema } = require("../utils/baseSchemas");
 
 const UserSchema = new mongoose.Schema(
     {
@@ -37,9 +38,7 @@ const UserSchema = new mongoose.Schema(
             default: "user",
         },
         avatar: {
-            type: String,
-            match: [REGEX.url, "Invalid avatar URL"],
-            default: "",
+            type: new mongoose.Schema(mediaSchema, {_id: false}),
         },
         username: {
             type: String,

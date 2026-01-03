@@ -1,5 +1,6 @@
 const express = require("express");
-const { BASE_ENDPOINT } = require("./utils/constants");
+const cors = require("cors");
+const { BASE_ENDPOINT, FRONTEND_URL } = require("./utils/constants");
 const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
 
@@ -14,8 +15,15 @@ const vendorApplicationRouter = require("./routes/vendorApplication.routes");
 const productRouter = require("./routes/product.routes");
 const reviewRouter = require("./routes/review.routes");
 const supportTicketRouter = require("./routes/supportTicket.routes");
+const uploadRouter = require("./routes/upload.routes");
 
 const app = express();
+
+app.use(cors({
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}))
 
 app.use(express.json());
 app.use(cookieParser());
@@ -31,6 +39,7 @@ app.use(BASE_ENDPOINT + "/vendor-application", vendorApplicationRouter);
 app.use(BASE_ENDPOINT + "/product", productRouter);
 app.use(BASE_ENDPOINT + "/review", reviewRouter);
 app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
+app.use(BASE_ENDPOINT + "/upload", uploadRouter);
 
 app.use(handleError);
 

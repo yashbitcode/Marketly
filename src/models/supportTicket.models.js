@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { SUPPORT_QUERY_TYPES, REGEX } = require("../utils/constants");
+const { mediaSchema } = require("../utils/baseSchemas");
 
 const SupportTicketSchema = new mongoose.Schema({
     fullname: {
@@ -30,7 +31,7 @@ const SupportTicketSchema = new mongoose.Schema({
         min: [10, "Minimum length should be 10"],
     },
     attachments: {
-        type: [String],
+        type: [new mongoose.Schema(mediaSchema, {_id: false})],
         default: undefined
     }
 });

@@ -7,6 +7,27 @@ const {
 } = require("./constants");
 const mongoose = require("mongoose");
 
+const mediaSchema = {
+    fileId: {
+        type: String,
+        required: [true, "File ID is required"],
+    },
+    url: {
+        type: String,
+        match: [REGEX.url, "Invalid URL"],
+        required: [true, "URL is required"]
+    },
+    thumbnailUrl: {
+        type: String,
+        match: [REGEX.url, "Invalid thumbnail URL"],
+        required: [true, "Thumbnail URL is required"]
+    },
+    filename: {
+        type: String,
+        required: [true, "Filename is required"],
+    }
+}
+
 const baseVendorSchema = {
     vendorType: {
         type: String,
@@ -17,9 +38,8 @@ const baseVendorSchema = {
         default: "individual",
     },
     avatar: {
-        type: String,
-        match: [REGEX.url, "Invalid avatar URL"],
-    },
+                type: new mongoose.Schema(mediaSchema, {_id: false})
+            },
     storeName: {
         type: String,
         required: [true, "Store name is required"],
@@ -93,4 +113,5 @@ const productAttributeSchema = {
 module.exports = {
     baseVendorSchema,
     productAttributeSchema,
+    mediaSchema
 };

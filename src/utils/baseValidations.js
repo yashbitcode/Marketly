@@ -7,6 +7,27 @@ const {
 } = require("./constants");
 const { isValidObjectId } = require("mongoose");
 
+const baseMediaValidations = z.object({
+    fileId: z
+        .string({
+            error: (iss) => !iss.input && "File ID is required",
+        }),
+    url: z
+        .url({
+            error: (iss) =>
+                !iss.input ? "URL is required" : "Invalid URL",
+        }),
+    thumbnailUrl: z
+        .url({
+            error: (iss) =>
+                !iss.input ? "Thumbnail URL is required" : "Invalid thumbnail URL",
+        }),
+        filename: z
+        .string({
+            error: (iss) => !iss.input && "Filename is required",
+        }),
+});
+
 const addressValidations = z.object({
     fullname: z
         .string({
@@ -72,12 +93,7 @@ const subCategoryValidations = z.object({
 
 const baseVendor = z.object({
     vendorType: z.enum(VENDOR_TYPE, "Invalid vendor type"),
-    avatar: z
-        .url({
-            error: (iss) =>
-                !iss.input ? "Avatar URL is required" : "Invalid avatar URL",
-        })
-        .optional(),
+    avatar: baseMediaValidations.optional(),
     storeName: z
         .string({
             error: (iss) => !iss.input && "Store name is required",
@@ -206,9 +222,7 @@ const baseProductValidations = z.object({
         })
         .min(1, "Atleast 1 key feature should be there"),
     images: z
-        .array(z.string(), {
-            error: (iss) => !iss.input && "Images are required",
-        })
+        .array(baseMediaValidations)
         .min(1, "Atleast 1 image should be there"),
 });
 
@@ -219,4 +233,5 @@ module.exports = {
     baseVendor,
     baseProductValidations,
     baseProductAttributeValidations,
+    baseMediaValidations
 };

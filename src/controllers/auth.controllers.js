@@ -5,18 +5,29 @@ const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS, FRONTEND_URL } = require("../utils/constants");
 const superAdminService = require("../services/superAdmin.service");
-const {sendMail, registrationCodeMailContent, passwordResetMailContent, registrationMailContent, passwordChangedMailContent} = require("../utils/mail");
+const {
+    sendMail,
+    registrationCodeMailContent,
+    passwordResetMailContent,
+    registrationMailContent,
+    passwordChangedMailContent,
+} = require("../utils/mail");
 
 const register = asyncHandler(async (req, res) => {
-    const {user, verificationToken} = await userService.createNewUser(req.body);
+    const { user, verificationToken } = await userService.createNewUser(
+        req.body,
+    );
 
     if (!user) throw new ApiError();
 
     sendMail({
-        emailContent: registrationCodeMailContent(user.fullname, verificationToken),
+        emailContent: registrationCodeMailContent(
+            user.fullname,
+            verificationToken,
+        ),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
-        subject: "Verify Your Account"
+        subject: "Verify Your Account",
     });
 
     res.json(new ApiResponse(201, user, "User registered successfully"));
@@ -136,7 +147,10 @@ const loginSuperAdmin = asyncHandler(async (req, res) => {
 
         if (!isValid) throw new ApiError(401, "Invalid credentials");
 
-        superAdmin = await superAdminService.createSuperAdmin({ email, password });
+        superAdmin = await superAdminService.createSuperAdmin({
+            email,
+            password,
+        });
         await superAdmin.save();
     }
 
@@ -177,7 +191,7 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
 
     const user = await userService.getEmailVerifySessionDoc(sessionId, {
         emailVerificationToken: 1,
-        email: 1
+        email: 1,
     });
 
     if (!user) throw new ApiError(400, "Session ID doesn't exist or expired");
@@ -190,7 +204,7 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
         emailContent: registrationMailContent(user.fullname, FRONTEND_URL),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
-        subject: "Account Created Login Now"
+        subject: "Account Created Login Now",
     });
 
     res.json(
@@ -239,7 +253,7 @@ const changePassword = asyncHandler(async (req, res) => {
         emailContent: passwordChangedMailContent(user.fullname),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
-        subject: "Password Changed Successfully"
+        subject: "Password Changed Successfully",
     });
 
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
@@ -264,11 +278,14 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
     await user.save();
 
     sendMail({
-        emailContent: passwordResetMailContent(user.fullname, FRONTEND_URL + `/${resetToken}`),
+        emailContent: passwordResetMailContent(
+            user.fullname,
+            FRONTEND_URL + `/${resetToken}`,
+        ),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
-        subject: "Reset Password"
-    })
+        subject: "Reset Password",
+    });
 
     res.json(
         new ApiResponse(

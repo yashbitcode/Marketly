@@ -1,5 +1,5 @@
 const BASE_ENDPOINT = "/api/v1";
-const FRONTEND_URL="https://sas.com";
+const FRONTEND_URL="*";
 const TOKEN_LENGTH = 6;
 const PAGINATION_LIMIT = 10;
 
@@ -10,6 +10,7 @@ const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
+const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
 const SUPPORT_QUERY_TYPES = [
@@ -39,6 +40,7 @@ const COOKIE_OPTIONS = {
 };
 
 const REGEX = {
+    file: /jpeg|jpg|png/,
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     url: /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
     username: /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/,
@@ -63,5 +65,6 @@ module.exports = {
     ATTRIBUTE_SCHEMA_TYPES,
     PAGINATION_LIMIT,
     SUPPORT_QUERY_TYPES,
-    FRONTEND_URL
+    FRONTEND_URL,
+    ALLOWED_FILETYPES
 };
