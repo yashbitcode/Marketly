@@ -13,8 +13,11 @@ class ImageKitService {
         return params;
     }
 
-    async deleteImage(fileId) {
-        const result = await this.client.files.delete(fileId);
+    async getList(filterQuery, path) {
+        const result = await this.client.assets.list({
+            searchQuery: filterQuery,
+            path
+        });
 
         return result;
     }
@@ -26,6 +29,12 @@ class ImageKitService {
 
         return result;
     }
+
+    //  async deleteImage(fileId) {
+    //     const result = await this.client.files.delete(fileId);
+
+    //     return result;
+    // }
 
     // async uploadFile(file) {
     //     const info = await this.imageKit.upload(

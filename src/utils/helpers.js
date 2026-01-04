@@ -167,10 +167,19 @@ const getProductFilterationPipeline = (filterQueries) => {
     return pipeline;
 };
 
+const getSearchQueryByFileIds = (userId, fileIds) => {
+    let str = fileIds.map(el => `"${el}"`).join(); 
+    
+    str = `"customMetadata.user_id"="${userId}" AND "id" in [${str}]`;
+
+    return str;
+}
+
 module.exports = {
     generateRandomNumberString,
     generateSlug,
     generateUniqueSlug,
     generateBaseTokens,
-    getProductFilterationPipeline
+    getProductFilterationPipeline,
+    getSearchQueryByFileIds
 };
