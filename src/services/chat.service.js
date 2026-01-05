@@ -1,6 +1,7 @@
 const ChatRequest = require("../models/chatRequest.models");
 const { nanoid } = require("nanoid");
 const Message = require("../models/message.models");
+const { GENERAL_USER_FIELDS } = require("../utils/constants");
 
 class ChatService {
     async createChatReq(payload) {
@@ -16,17 +17,29 @@ class ChatService {
     }
 
     async getAllChatReqs(filters) {
-        const chatRequests = await ChatRequest.find(filters).populate(
-            "user vendor",
-        );
+        const chatRequests = await ChatRequest.find(filters).populate([
+            {
+                path: "user",
+                select: GENERAL_USER_FIELDS,
+            },
+            {
+                path: "vendor",
+            },
+        ]);
 
         return chatRequests;
     }
 
     async getChatReq(filters) {
-        const chatRequest = await ChatRequest.findOne(filters).populate(
-            "user vendor",
-        );
+        const chatRequest = await ChatRequest.findOne(filters).populate([
+            {
+                path: "user",
+                select: GENERAL_USER_FIELDS,
+            },
+            {
+                path: "vendor",
+            },
+        ]);
 
         return chatRequest;
     }

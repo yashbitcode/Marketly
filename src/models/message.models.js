@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { MESSAGE_DOC_MODEL_TYPES } = require("../utils/constants");
+const { mediaSchema } = require("../utils/baseSchemas");
 
 const MessageSchema = new mongoose.Schema({
     senderId: {

@@ -16,6 +16,7 @@ const productRouter = require("./routes/product.routes");
 const reviewRouter = require("./routes/review.routes");
 const supportTicketRouter = require("./routes/supportTicket.routes");
 const mediaRouter = require("./routes/media.routes");
+const chatRouter = require("./routes/chat.routes");
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(BASE_ENDPOINT + "/product", productRouter);
 app.use(BASE_ENDPOINT + "/review", reviewRouter);
 app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
 app.use(BASE_ENDPOINT + "/media", mediaRouter);
+app.use(BASE_ENDPOINT + "/chat", chatRouter);
 
 app.use(handleError);
 
