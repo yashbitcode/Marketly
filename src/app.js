@@ -1,8 +1,10 @@
 const express = require("express");
 const cors = require("cors");
+const http = require("node:http");
 const { BASE_ENDPOINT, FRONTEND_URL } = require("./utils/constants");
 const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
+const {setupSocketIO} = require("./utils/socket-io");
 
 const healthRouter = require("./routes/health.routes");
 const authRouter = require("./routes/auth.routes");
@@ -19,6 +21,7 @@ const mediaRouter = require("./routes/media.routes");
 const chatRouter = require("./routes/chat.routes");
 
 const app = express();
+const httpServer = http.createServer(app);
 
 app.use(cors({
     origin: FRONTEND_URL,
@@ -45,4 +48,4 @@ app.use(BASE_ENDPOINT + "/chat", chatRouter);
 
 app.use(handleError);
 
-module.exports = app;
+module.exports = httpServer;

@@ -24,7 +24,7 @@ const verifyToken = async (authHeader) => {
 };
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const {_id, currentRole, tokenVersion} = await verifyToken(
+    const { _id, currentRole, tokenVersion } = await verifyToken(
         req.get("Authorization"),
     );
 
@@ -52,9 +52,27 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     next();
 });
 
+const isSocketAuthenticated = async (socket, next) => {
+    const token = socket.handshake?.auth.token;
+    const decoded = await verifyToken(token);
+
+    const user = await userService.getUserById(
+        decoded._id,
+        GENERAL_USER_FIELDS,
+    );
+
+    if (user.role === "super-admin")
+        next(new ApiError(401, "Un-Authenticated"));
+    else {
+        socket.user = user;
+        next();
+    }
+};
+
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
-        if(!allowedRoles.includes(req.user.currentRole)) throw new ApiError(403, "Forbidden: insufficient permissions");
+        if (!allowedRoles.includes(req.user.currentRole))
+            throw new ApiError(403, "Forbidden: insufficient permissions");
 
         next();
     });
@@ -62,5 +80,6 @@ const authorise = (...allowedRoles) => {
 
 module.exports = {
     isAuthenticated,
-    authorise
+    isSocketAuthenticated,
+    authorise,
 };
