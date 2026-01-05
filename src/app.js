@@ -4,7 +4,6 @@ const http = require("node:http");
 const { BASE_ENDPOINT, FRONTEND_URL } = require("./utils/constants");
 const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
-const {setupSocketIO} = require("./utils/socket-io");
 
 const healthRouter = require("./routes/health.routes");
 const authRouter = require("./routes/auth.routes");
@@ -19,9 +18,14 @@ const reviewRouter = require("./routes/review.routes");
 const supportTicketRouter = require("./routes/supportTicket.routes");
 const mediaRouter = require("./routes/media.routes");
 const chatRouter = require("./routes/chat.routes");
+const { initSocket } = require("./socket/socket.manager");
+const { setupSocketIO } = require("./socket");
 
 const app = express();
 const httpServer = http.createServer(app);
+
+const io = initSocket(httpServer);
+setupSocketIO(io);
 
 app.use(cors({
     origin: FRONTEND_URL,
