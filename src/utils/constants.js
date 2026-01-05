@@ -10,6 +10,7 @@ const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
+const MESSAGE_DOC_MODEL_TYPES = ['users', "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
@@ -66,5 +67,6 @@ module.exports = {
     PAGINATION_LIMIT,
     SUPPORT_QUERY_TYPES,
     FRONTEND_URL,
-    ALLOWED_FILETYPES
+    ALLOWED_FILETYPES,
+    MESSAGE_DOC_MODEL_TYPES
 };

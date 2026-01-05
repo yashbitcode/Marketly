@@ -132,6 +132,6 @@ UserSchema.statics.generateTokens = function () {
     };
 };
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("users", UserSchema);
 
 module.exports = User;
