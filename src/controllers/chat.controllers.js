@@ -1,6 +1,12 @@
 const chatService = require("../services/chat.service");
+const notificationService = require("../services/notification.service");
+const { getIO } = require("../socket/socket.manager");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
+const { validateSchema } = require("../utils/helpers");
+const {
+    addNotificationValidations,
+} = require("../validations/notification.validations");
 
 const createChatRequest = asyncHandler(async (req, res) => {
     const payload = req.body;
@@ -22,6 +28,19 @@ const updateChatRequest = asyncHandler(async (req, res) => {
         chatReq,
         status,
     );
+
+    const notificationPayload = validateSchema(addNotificationValidations, {
+        receiverId: chatReq.user,
+        docModel: "user",
+        notificationType: "CHAT_REQUEST_UPDATE",
+        title: "Chat Request Update",
+        message: `Your Recent Chat Request Is: ${status}`,
+    });
+
+    const notification = await notificationService.createNotification(
+        notificationPayload,
+    );
+    await notificationService.sendChatUpdateNotification(chatReq, notification);
 
     res.json(
         new ApiResponse(
@@ -58,7 +77,7 @@ module.exports = {
     getAllUserChats,
     getAllVendorChats,
     getAllChats,
-}
+};
 
 // const createMessage = asyncHandler(async (req, res) => {
 //     const payload = req.body;

@@ -34,7 +34,7 @@ router.post(
 router.patch(
     "/",
     isAuthenticated,
-    authorise("super-admin"),
+    authorise("vendor"),
     validate(updateChatReqStatusValidations),
     updateChatRequest,
 );

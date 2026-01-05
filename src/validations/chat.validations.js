@@ -43,8 +43,7 @@ const createMessageValidations = z.object({
     message: z
         .string({
             error: (iss) => !iss.input && "Message is required",
-        })
-        .min(1, "Minimum length should be 1"),
+        }),
     chatId: z.string({
         error: (iss) => !iss.input && "Chat ID is required",
     }),

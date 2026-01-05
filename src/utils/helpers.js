@@ -168,11 +168,19 @@ const getProductFilterationPipeline = (filterQueries) => {
 };
 
 const getSearchQueryByFileIds = (userId, fileIds) => {
-    let str = fileIds.map(el => `"${el}"`).join(); 
-    
+    let str = fileIds.map((el) => `"${el}"`).join();
+
     str = `"customMetadata.user_id"="${userId}" AND "id" in [${str}]`;
 
     return str;
+};
+
+const validateSchema = (validationSchema, payload) => {
+    const validation = validationSchema.safeParse(payload);
+
+    if(!validation.success) throw new ApiError();
+
+    return validation.data;
 }
 
 module.exports = {
@@ -181,5 +189,6 @@ module.exports = {
     generateUniqueSlug,
     generateBaseTokens,
     getProductFilterationPipeline,
-    getSearchQueryByFileIds
+    getSearchQueryByFileIds,
+    validateSchema
 };
