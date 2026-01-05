@@ -15,6 +15,7 @@ const MessageSchema = new mongoose.Schema({
             message: "`{VALUE}` is not valid value",
         },
     },
+    chatId: String,
     message: {
         type: String,
         required: [true, "Message is required"],
