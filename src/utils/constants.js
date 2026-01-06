@@ -13,6 +13,7 @@ const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
 const MESSAGE_DOC_MODEL_TYPES = ['users', "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
+const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
 const NOTIFICATION_TYPES = ["CHAT_REQUEST_UPDATE", "ORDER_UPDATE", "GENERAL_UPDATE"];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
 const SUPPORT_QUERY_TYPES = [
@@ -70,5 +71,6 @@ module.exports = {
     FRONTEND_URL,
     ALLOWED_FILETYPES,
     MESSAGE_DOC_MODEL_TYPES,
-    NOTIFICATION_TYPES
+    NOTIFICATION_TYPES,
+    ORDER_STATUS
 };

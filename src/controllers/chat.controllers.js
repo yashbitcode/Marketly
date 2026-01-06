@@ -1,6 +1,5 @@
 const chatService = require("../services/chat.service");
 const notificationService = require("../services/notification.service");
-const { getIO } = require("../socket/socket.manager");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 const { validateSchema } = require("../utils/helpers");

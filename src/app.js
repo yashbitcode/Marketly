@@ -4,6 +4,14 @@ const http = require("node:http");
 const { BASE_ENDPOINT, FRONTEND_URL } = require("./utils/constants");
 const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
+const { initSocket } = require("./socket/socket.manager");
+const { setupSocketIO } = require("./socket");
+
+const app = express();
+const httpServer = http.createServer(app);
+
+const io = initSocket(httpServer);
+setupSocketIO(io);
 
 const healthRouter = require("./routes/health.routes");
 const authRouter = require("./routes/auth.routes");
@@ -18,23 +26,16 @@ const reviewRouter = require("./routes/review.routes");
 const supportTicketRouter = require("./routes/supportTicket.routes");
 const mediaRouter = require("./routes/media.routes");
 const chatRouter = require("./routes/chat.routes");
-const { initSocket } = require("./socket/socket.manager");
-const { setupSocketIO } = require("./socket");
+const rzpRouter = require("./routes/razorpay.routes");
 
-const app = express();
-const httpServer = http.createServer(app);
-
-const io = initSocket(httpServer);
-setupSocketIO(io);
-
-app.use(cors({
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}))
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/", function (req, res) {
+    res.sendFile(__dirname + "/index.html");
+});
 
 app.use(BASE_ENDPOINT + "/health-check", healthRouter);
 app.use(BASE_ENDPOINT + "/auth", authRouter);
@@ -49,6 +50,7 @@ app.use(BASE_ENDPOINT + "/review", reviewRouter);
 app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
 app.use(BASE_ENDPOINT + "/media", mediaRouter);
 app.use(BASE_ENDPOINT + "/chat", chatRouter);
+app.use(BASE_ENDPOINT + "/rzp", rzpRouter);
 
 app.use(handleError);
 

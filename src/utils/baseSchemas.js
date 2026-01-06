@@ -110,8 +110,21 @@ const productAttributeSchema = {
     },
 };
 
+const productItemSchema = {
+    slug: {
+        type: String,
+        required: [true, "Slug is required"]
+    },
+    quantity: {
+        type: Number,
+        required: [true, "Quantity is required"],
+        min: [1, "Minimum 1 quantity is required"]
+    }
+};
+
 module.exports = {
     baseVendorSchema,
     productAttributeSchema,
-    mediaSchema
+    mediaSchema,
+    productItemSchema
 };

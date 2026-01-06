@@ -1,0 +1,72 @@
+const mongoose = require("mongoose");
+const { ORDER_STATUS } = require("../utils/constants");
+const { productItemSchema } = require("../utils/baseSchemas");
+
+const OrderSchema = new mongoose.Schema(
+    {
+        orderId: {
+            type: String,
+            required: [true, "Order ID is required"],
+        },
+        name: {
+            type: String,
+            required: [true, "Name is required"],
+        },
+        description: {
+            type: String,
+            required: [true, "Description is required"],
+        },
+        amount: {
+            type: Number,
+            required: [true, "Order ID is required"],
+            min: [1, "Minimum amount should be 1"],
+        },
+        currency: {
+            type: String,
+            required: [true, "Currency is required"],
+        },
+        prefills: {
+            type: Map,
+            of: String,
+        },
+        notes: {
+            type: Map,
+            of: String,
+        },
+        products: {
+            type: [new mongoose.Schema(productItemSchema, { _id: false })],
+            required: [true, "Products are required"],
+            min: [1, "Minimum 1 product is necessary"],
+        },
+        status: {
+            type: String,
+            enum: {
+                values: ORDER_STATUS,
+                message: "`{VALUE}` is not valid value",
+            },
+            default: "created",
+        },
+    },
+    {
+        timestamps: true,
+    },
+);
+
+const Order = mongoose.model("orders", OrderSchema);
+
+module.exports = Order;
+
+// {
+//   amount: 1500,
+//   amount_due: 1500,
+//   amount_paid: 0,
+//   attempts: 0,
+//   created_at: 1767709809,
+//   currency: 'INR',
+//   entity: 'order',
+//   id: 'order_S0ctir7yzJznXB',
+//   notes: [],
+//   offer_id: null,
+//   receipt: null,
+//   status: 'created'
+// }
