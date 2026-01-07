@@ -15,18 +15,18 @@ const mediaSchema = {
     url: {
         type: String,
         match: [REGEX.url, "Invalid URL"],
-        required: [true, "URL is required"]
+        required: [true, "URL is required"],
     },
     thumbnailUrl: {
         type: String,
         match: [REGEX.url, "Invalid thumbnail URL"],
-        required: [true, "Thumbnail URL is required"]
+        required: [true, "Thumbnail URL is required"],
     },
     filename: {
         type: String,
         required: [true, "Filename is required"],
-    }
-}
+    },
+};
 
 const baseVendorSchema = {
     vendorType: {
@@ -38,8 +38,8 @@ const baseVendorSchema = {
         default: "individual",
     },
     avatar: {
-                type: new mongoose.Schema(mediaSchema, {_id: false})
-            },
+        type: new mongoose.Schema(mediaSchema, { _id: false }),
+    },
     storeName: {
         type: String,
         required: [true, "Store name is required"],
@@ -113,18 +113,49 @@ const productAttributeSchema = {
 const productItemSchema = {
     slug: {
         type: String,
-        required: [true, "Slug is required"]
+        required: [true, "Slug is required"],
     },
     quantity: {
         type: Number,
         required: [true, "Quantity is required"],
-        min: [1, "Minimum 1 quantity is required"]
-    }
+        min: [1, "Minimum 1 quantity is required"],
+    },
 };
 
+const prefillsSchema = {
+    name: {
+        type: String,
+        required: [true, "Name is required"],
+        min: [3, "Minimum length should be 3"],
+    },
+    email: {
+        type: String,
+        lowercase: true,
+        required: [true, "Email is required"],
+        trim: true,
+        match: [REGEX.email, "Invalid email"],
+        unique: [true, "Email already exists"],
+        trim: true,
+    },
+    phoneNumber: {
+        type: String,
+        required: [true, "Phone number is required"],
+        match: [REGEX.phoneNumber, "Invalid phone number"],
+    },
+};
+
+const notesSchema = {
+    description: {
+        type: String,
+        min: [10, "Minimum length should be 10"]
+    }
+}
+
 module.exports = {
+    prefillsSchema,
+    notesSchema,
     baseVendorSchema,
     productAttributeSchema,
     mediaSchema,
-    productItemSchema
+    productItemSchema,
 };

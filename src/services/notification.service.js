@@ -25,9 +25,15 @@ class NotificationService {
     }
 
     async sendChatUpdateNotification(chatReq, notification) {
-        io.of("/notification")
+        this.io.of("/notification")
             .to("notification:" + chatReq.user)
             .emit("chat-request-update", notification);
+    }
+
+    async sendOrderUpdateNotification(order, notification) {
+        this.io.of("/notification")
+            .to("notification:" + order.user)
+            .emit("order-place-update", notification);
     }
 }
 

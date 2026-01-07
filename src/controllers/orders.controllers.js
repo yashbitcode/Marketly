@@ -7,9 +7,12 @@ const ApiError = require("../utils/api-error");
 const {
     validateWebhookSignature,
 } = require("razorpay/dist/utils/razorpay-utils");
+const notificationService = require("../services/notification.service");
+const { validateSchema } = require("../utils/helpers");
+const { addNotificationValidations } = require("../validations/notification.validations");
 
 const createOrder = asyncHandler(async (req, res) => {
-    // const { _id } = req.user;
+    const { _id } = req.user;
     const { products, prefills, notes } = req.body;
 
     const allProducts = await productService.getAll({
@@ -35,7 +38,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const order = await razorpayService.createOrder(payload);
 
     const dbPayload = {
-        // user: _id,
+        user: _id,
         orderId: order.id,
         amount: order.amount,
         currency: order.currency,
@@ -49,6 +52,18 @@ const createOrder = asyncHandler(async (req, res) => {
     const dbOrder = await orderService.createOrder(dbPayload);
 
     res.json(new ApiResponse(201, dbOrder, "Order created successfully"));
+});
+
+const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
+    const {orderId, deliveryStatus} = req.body;
+    
+    const order = await orderService.updateOrder({orderId}, {deliveryStatus});
+
+    if(!order) throw new ApiError(404, "Order not found");
+
+    await orderService.sendOrderDeliveryUpdate(order);
+
+    res.json(new ApiResponse(200, order, "Order updated successfully"));
 });
 
 const verifyOrderPayment = asyncHandler(async (req, res) => {
@@ -88,16 +103,33 @@ const webhook = asyncHandler(async (req, res) => {
             paymentId: entity.id,
         };
 
-        if (event === "payment.captured") updateData.status = "paid";
+        if (event === "payment.captured") {
+            updateData.status = "paid";
+            updateData.deliveryStatus = "placed";
+        }
         else if (event === "payment.failed") updateData.status = "failed";
 
-        await orderService.updateOrder(
+        const order = await orderService.updateOrder(
             { orderId: entity.order_id },
             updateData,
         );
 
-        res.json(new ApiResponse(200))
-    } catch {
+        const notificationPayload = validateSchema(addNotificationValidations, {
+            receiverId: order.user,
+            // receiverId: order.user || "695260f3fd88aeed840374de",
+            docModel: "users",
+            notificationType: "ORDER_UPDATE",
+            title: "Order Update",
+            message: order.status === "paid" ? `Your Order Is Placed: ${order.orderId}` : `Your Order Placing Failed: ${order.orderId}`,
+        });
+
+        const notification = await notificationService.createNotification(notificationPayload)
+
+        await notificationService.sendOrderUpdateNotification(notification);
+
+        res.json(new ApiResponse(200));
+    } catch(e) {
+        console.log(e)
         throw new ApiError(400, "Invalid signature");
     }
 });
@@ -106,4 +138,5 @@ module.exports = {
     createOrder,
     verifyOrderPayment,
     webhook,
+    updateOrderDeliveryStatus
 };

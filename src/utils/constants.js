@@ -14,6 +14,7 @@ const MESSAGE_DOC_MODEL_TYPES = ['users', "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
+const ORDER_DELIVERY_STATUS = ["placed", "shipped", "out of delivery", "delivered", "returned"];
 const NOTIFICATION_TYPES = ["CHAT_REQUEST_UPDATE", "ORDER_UPDATE", "GENERAL_UPDATE"];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
 const SUPPORT_QUERY_TYPES = [
@@ -72,5 +73,6 @@ module.exports = {
     ALLOWED_FILETYPES,
     MESSAGE_DOC_MODEL_TYPES,
     NOTIFICATION_TYPES,
-    ORDER_STATUS
+    ORDER_STATUS,
+    ORDER_DELIVERY_STATUS
 };

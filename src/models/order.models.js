@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const { ORDER_STATUS } = require("../utils/constants");
-const { productItemSchema } = require("../utils/baseSchemas");
+const { ORDER_STATUS, ORDER_DELIVERY_STATUS } = require("../utils/constants");
+const { productItemSchema, prefillsSchema, notesSchema } = require("../utils/baseSchemas");
 const User = require("./user.models");
 
 const OrderSchema = new mongoose.Schema(
@@ -27,7 +27,7 @@ const OrderSchema = new mongoose.Schema(
         },
         amount: {
             type: Number,
-            required: [true, "Order ID is required"],
+            reuired: [true, "Amount is required"],
             min: [1, "Minimum amount should be 1"],
         },
         currency: {
@@ -35,12 +35,11 @@ const OrderSchema = new mongoose.Schema(
             required: [true, "Currency is required"],
         },
         prefills: {
-            type: Map,
-            of: String,
+            type: [new mongoose.Schema(prefillsSchema, { _id: false })],
+            required: [true, "Prefills are required"]
         },
         notes: {
-            type: Map,
-            of: String,
+            type: [new mongoose.Schema(notesSchema, { _id: false })],
         },
         products: {
             type: [new mongoose.Schema(productItemSchema, { _id: false })],
@@ -55,6 +54,13 @@ const OrderSchema = new mongoose.Schema(
             },
             default: "created",
         },
+        deliveryStatus: {
+            type: String,
+            enum: {
+                values: ORDER_DELIVERY_STATUS,
+                message: "`{VALUE}` is not valid value",
+            }
+        }
     },
     {
         timestamps: true,

@@ -1,6 +1,11 @@
 const Order = require("../models/order.models");
+const { getIO } = require("../socket/socket.manager");
 
 class OrderService {
+    constructor() {
+        this.io = getIO();
+    }
+
     async createOrder(payload) {
         const {
             orderId,
@@ -29,14 +34,17 @@ class OrderService {
         return order;
     }
 
-    async updateOrder(filters = {}, payload) {
-       try {
-         const order = await Order.findOneAndUpdate(filters, payload);
+    async updateOrder(filters = {}, payload = {}) {
+        const order = await Order.findOneAndUpdate(filters, payload);
 
         return order;
-       } catch(e) {
-        console.log(e);
-       }
+    }
+
+    async sendOrderDeliveryUpdate(order) {
+        this.io
+            .of("/order")
+            .to("order:" + order.orderId)
+            .emit("delivery-update", order);
     }
 }
 

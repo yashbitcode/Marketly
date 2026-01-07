@@ -3,6 +3,7 @@ const { TOKEN_LENGTH } = require("./constants");
 const slugify = require("slugify");
 const { nanoid } = require("nanoid");
 const jwt = require("jsonwebtoken");
+const ApiError = require("./api-error");
 
 const generateRandomNumberString = () => {
     let result = "";
@@ -178,6 +179,7 @@ const getSearchQueryByFileIds = (userId, fileIds) => {
 const validateSchema = (validationSchema, payload) => {
     const validation = validationSchema.safeParse(payload);
 
+    console.log(validation.error)
     if (!validation.success) throw new ApiError();
 
     return validation.data;

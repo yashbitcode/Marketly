@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const {
     MESSAGE_DOC_MODEL_TYPES: NOTIFICATION_DOC_MODEL_TYPES,
+    NOTIFICATION_TYPES,
 } = require("../utils/constants");
 
 const NotificationSchema = new mongoose.Schema({
@@ -20,7 +21,7 @@ const NotificationSchema = new mongoose.Schema({
     notificationType: {
         type: String,
         enum: {
-            values: NOTIFICATION_DOC_MODEL_TYPES,
+            values: NOTIFICATION_TYPES,
             message: "`{VALUE}` is not valid value",
         },
         default: "GENERAL_UPDATE"

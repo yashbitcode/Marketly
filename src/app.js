@@ -26,7 +26,7 @@ const reviewRouter = require("./routes/review.routes");
 const supportTicketRouter = require("./routes/supportTicket.routes");
 const mediaRouter = require("./routes/media.routes");
 const chatRouter = require("./routes/chat.routes");
-const rzpRouter = require("./routes/razorpay.routes");
+const orderRouter = require("./routes/order.routes");
 
 app.use(cors());
 
@@ -50,7 +50,7 @@ app.use(BASE_ENDPOINT + "/review", reviewRouter);
 app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
 app.use(BASE_ENDPOINT + "/media", mediaRouter);
 app.use(BASE_ENDPOINT + "/chat", chatRouter);
-app.use(BASE_ENDPOINT + "/rzp", rzpRouter);
+app.use(BASE_ENDPOINT + "/order", orderRouter);
 
 app.use(handleError);
 
