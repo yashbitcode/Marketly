@@ -178,10 +178,21 @@ const getSearchQueryByFileIds = (userId, fileIds) => {
 const validateSchema = (validationSchema, payload) => {
     const validation = validationSchema.safeParse(payload);
 
-    if(!validation.success) throw new ApiError();
+    if (!validation.success) throw new ApiError();
 
     return validation.data;
-}
+};
+
+const verifyRazorpaySignature = (orderId, paymenId, signature) => {
+    const body = orderId + "|" + paymentId;
+
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body)
+        .digest("hex");
+
+    return expectedSignature === signature;
+};
 
 module.exports = {
     generateRandomNumberString,
@@ -190,5 +201,6 @@ module.exports = {
     generateBaseTokens,
     getProductFilterationPipeline,
     getSearchQueryByFileIds,
-    validateSchema
+    validateSchema,
+    verifyRazorpaySignature
 };

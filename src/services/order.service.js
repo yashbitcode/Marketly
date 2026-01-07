@@ -28,6 +28,16 @@ class OrderService {
 
         return order;
     }
+
+    async updateOrder(filters = {}, payload) {
+       try {
+         const order = await Order.findOneAndUpdate(filters, payload);
+
+        return order;
+       } catch(e) {
+        console.log(e);
+       }
+    }
 }
 
 module.exports = new OrderService();

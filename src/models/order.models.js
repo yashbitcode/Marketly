@@ -1,12 +1,21 @@
 const mongoose = require("mongoose");
 const { ORDER_STATUS } = require("../utils/constants");
 const { productItemSchema } = require("../utils/baseSchemas");
+const User = require("./user.models");
 
 const OrderSchema = new mongoose.Schema(
     {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: User
+        },
         orderId: {
             type: String,
             required: [true, "Order ID is required"],
+        },
+        paymentId: {
+            type: String,
+            required: [true, "Payment ID is required"],
         },
         name: {
             type: String,
