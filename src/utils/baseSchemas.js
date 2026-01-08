@@ -134,7 +134,6 @@ const prefillsSchema = {
         required: [true, "Email is required"],
         trim: true,
         match: [REGEX.email, "Invalid email"],
-        unique: [true, "Email already exists"],
         trim: true,
     },
     phoneNumber: {
@@ -151,6 +150,19 @@ const notesSchema = {
     }
 }
 
+const sellerOrderProductsSchema = {
+    product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products",
+        required: [true, "Product is required"],
+    },
+    quantity: {
+        type: Number,
+        required: [true, "Quantity is required"],
+        min: [1, 'Minimum 1 quantity is required']
+    }
+}
+
 module.exports = {
     prefillsSchema,
     notesSchema,
@@ -158,4 +170,5 @@ module.exports = {
     productAttributeSchema,
     mediaSchema,
     productItemSchema,
+    sellerOrderProductsSchema
 };

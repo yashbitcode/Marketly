@@ -1,13 +1,18 @@
 const mongoose = require("mongoose");
 const { ORDER_STATUS, ORDER_DELIVERY_STATUS } = require("../utils/constants");
-const { productItemSchema, prefillsSchema, notesSchema } = require("../utils/baseSchemas");
+const {
+    productItemSchema,
+    prefillsSchema,
+    notesSchema,
+} = require("../utils/baseSchemas");
 const User = require("./user.models");
 
 const OrderSchema = new mongoose.Schema(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: User
+            ref: User,
+            required: [true, "User ID is required"],
         },
         orderId: {
             type: String,
@@ -15,7 +20,6 @@ const OrderSchema = new mongoose.Schema(
         },
         paymentId: {
             type: String,
-            required: [true, "Payment ID is required"],
         },
         name: {
             type: String,
@@ -35,16 +39,25 @@ const OrderSchema = new mongoose.Schema(
             required: [true, "Currency is required"],
         },
         prefills: {
-            type: [new mongoose.Schema(prefillsSchema, { _id: false })],
-            required: [true, "Prefills are required"]
+            type: new mongoose.Schema(prefillsSchema, { _id: false }),
+            required: [true, "Prefills are required"],
         },
         notes: {
             type: [new mongoose.Schema(notesSchema, { _id: false })],
         },
         products: {
-            type: [new mongoose.Schema(productItemSchema, { _id: false })],
+            type: Map,
+            of: {
+                type: Number,
+                required: [true, "Quantity is required"],
+                min: [1, "Minimum quantity should be 1"],
+            },
             required: [true, "Products are required"],
             min: [1, "Minimum 1 product is necessary"],
+
+            // type: [new mongoose.Schema(productItemSchema, { _id: false })],
+            // required: [true, "Products are required"],
+            // min: [1, "Minimum 1 product is necessary"],
         },
         status: {
             type: String,
@@ -54,13 +67,6 @@ const OrderSchema = new mongoose.Schema(
             },
             default: "created",
         },
-        deliveryStatus: {
-            type: String,
-            enum: {
-                values: ORDER_DELIVERY_STATUS,
-                message: "`{VALUE}` is not valid value",
-            }
-        }
     },
     {
         timestamps: true,

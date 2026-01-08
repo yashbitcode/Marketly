@@ -5,6 +5,8 @@ const {
     verifyOrderPayment,
     webhook,
     updateOrderDeliveryStatus,
+    getOrderByOrderId,
+    segregateSellerOrders,
 } = require("../controllers/orders.controllers");
 const {
     verifyPaymentValidations,
@@ -18,23 +20,25 @@ const {
 } = require("../middlewares/auth.middlewares");
 const router = Router();
 
+router.get("/:orderId", isAuthenticated, authorise("user", "vendor", "super-admin"), getOrderByOrderId)
+
 router.post(
     "/create-order",
-    isAuthenticated,
-    authorise("user"),
-    validate(createOrderValidations),
+    // isAuthenticated,
+    // authorise("user"),
+    // validate(createOrderValidations),
     createOrder,
 );
 
 router.post(
     "/payment-verify",
-    isAuthenticated,
-    authorise("user"),
-    validate(verifyPaymentValidations),
+    // isAuthenticated,
+    // authorise("user"),
+    // validate(verifyPaymentValidations),
     verifyOrderPayment,
 );
 
-router.post("/webhook", express.raw({ type: "application/json" }), webhook);
+router.post("/webhook", express.raw({ type: "application/json" }), webhook, segregateSellerOrders);
 
 router.patch(
     "/delivery-status",
