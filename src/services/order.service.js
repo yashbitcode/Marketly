@@ -2,8 +2,6 @@ const Order = require("../models/order.models");
 const Product = require("../models/product.models");
 const SellerOrder = require("../models/sellerOrder.models");
 const { getIO } = require("../socket/socket.manager");
-const util = require("node:util");
-const mongoose = require("mongoose");
 
 class OrderService {
     constructor() {
@@ -11,6 +9,8 @@ class OrderService {
     }
 
     async createOrder(payload) {
+
+        console.log(payload);
         const {
             orderId,
             name,
@@ -21,6 +21,7 @@ class OrderService {
             prefills,
             notes,
             user,
+            shippingAddress
         } = payload;
 
         const order = new Order({
@@ -33,6 +34,7 @@ class OrderService {
             prefills,
             notes,
             user,
+            shippingAddress
         });
 
         await order.save();
@@ -67,7 +69,7 @@ class OrderService {
     }
 
     async getOrderById(matchStage = {}) {
-        const order = await SellerOrder.aggregate([
+        const [order] = await SellerOrder.aggregate([
             {
                 $match: matchStage,
             },
@@ -227,6 +229,16 @@ class OrderService {
 
         return sellerOrders;
     }
+
+    async updateParentOrder(filters = {}, payload = {}) {
+        const order = await Order.findOneAndUpdate(filters, payload, {
+            new: true,
+            runValidators: true,
+        });
+
+        return order;
+    }
+
 
     async updateOrder(filters = {}, payload = {}) {
         const order = await SellerOrder.findOneAndUpdate(filters, payload, {

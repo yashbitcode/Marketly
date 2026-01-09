@@ -10,7 +10,7 @@ const {
     generateTableRow,
     generateHeader,
     generateCustomerInformation,
-    generateHr
+    generateHr,
 } = require("./invoiceHelpers");
 
 const generateRandomNumberString = () => {
@@ -204,47 +204,73 @@ const verifyRazorpaySignature = (orderId, paymenId, signature) => {
     return expectedSignature === signature;
 };
 
-const createInvoice = (invoice, path) => {
-    const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream(path));
+const createInvoice = (invoice) => {
+    return new Promise((resolve) => {
+        const doc = new PDFDocument();
+        const chunks = [];
 
-    generateHeader(doc);
-    generateCustomerInformation(doc, invoice);
-    
-    doc.fontSize(12);
+        let topMargin = 500;
 
-    generateTableRow(
-        doc,
-        480,
-        "Item",
-        "Store Name",
-        "Unit Cost",
-        "Quantity",
-        "Total",
-    );
+        doc.on("data", (chunk) => chunks.push(chunk));
+        doc.on("end", () => {
+            const pdfBuffer = Buffer.concat(chunks);
+            resolve(pdfBuffer);
+        })
 
-    let counter = 0;
+        generateHeader(doc);
+        generateCustomerInformation(doc, invoice);
 
-    doc.font("Helvetica")
+        doc.fontSize(12);
 
-    invoice.sellerOrders.forEach((el, idx) => {
-        el.products.forEach(({ product, quantity }, idx) => {
-            generateTableRow(
-                doc,
-                500 + counter++ * 20,
-                product.name,
-                el.vendor.storeName,
-                "Rs. " + product.price,
-                quantity,
-                "Rs. " + (product.price * quantity),
-            );
+        generateTableRow(
+            doc,
+            topMargin,
+            "Item",
+            "Store Name",
+            "Unit Cost",
+            "Quantity",
+            "Total",
+        );
+
+        let counter = 0;
+
+        doc.font("Helvetica");
+
+        invoice.sellerOrders.forEach((el, idx) => {
+            el.products.forEach(({ product, quantity }, idx) => {
+                if((topMargin + (counter++ * 10)) > 650) {
+                    topMargin = 50;
+                    counter = 0;
+
+                    doc.addPage();
+                }
+
+                
+                generateTableRow(
+                    doc,
+                    topMargin + (counter++ * 10),
+                    product.name,
+                    el.vendor.storeName,
+                    "Rs. " + product.price,
+                    quantity,
+                    "Rs. " + product.price * quantity,
+                );
+            });
         });
+
+        doc.fontSize(14);
+        generateTableRow(
+            doc,
+            topMargin + (counter++ * 10),
+            "",
+            "",
+            "Total Amount",
+            "",
+            "Rs. " + invoice.order.amount,
+        );
+
+        doc.end();
     });
-
-    doc.fontSize(14)
-    generateTableRow(doc, 500 + (counter * 20), "", "", "Total Amount", "", "Rs. " + invoice.order.amount)
-
-    doc.end();
 };
 
 module.exports = {

@@ -4,6 +4,7 @@ const {
     productItemSchema,
     prefillsSchema,
     notesSchema,
+    mediaSchema,
 } = require("../utils/baseSchemas");
 const User = require("./user.models");
 const Address = require("./address.models");
@@ -60,6 +61,9 @@ const OrderSchema = new mongoose.Schema(
             // required: [true, "Products are required"],
             // min: [1, "Minimum 1 product is necessary"],
         },
+        invoice: {
+            type: new mongoose.Schema(mediaSchema, {_id: false}),
+        },
         status: {
             type: String,
             enum: {
@@ -71,7 +75,7 @@ const OrderSchema = new mongoose.Schema(
         shippingAddress: {
             type: mongoose.Schema.Types.ObjectId,
             ref: Address,
-            required: [true, "Address ID is required"],
+            required: [true, "Shipping address ID is required"],
         }
     },
     {

@@ -1,4 +1,6 @@
 const ImageKit = require("@imagekit/nodejs");
+const {toFile} = require("@imagekit/nodejs")
+const fs = require("node:fs");
 
 class ImageKitService {
     constructor() {
@@ -28,6 +30,13 @@ class ImageKitService {
         });
 
         return result;
+    }
+
+    async upload(buffer) {
+        return await this.client.files.upload({
+            file: await toFile(buffer),
+            fileName: "sasa"
+        });
     }
 
     //  async deleteImage(fileId) {

@@ -8,7 +8,7 @@ const {
     getOrderByOrderId,
     segregateSellerOrders,
     getAllOrders,
-    getInvoice,
+    generateInvoice,
 } = require("../controllers/orders.controllers");
 const {
     verifyPaymentValidations,
@@ -22,7 +22,7 @@ const {
 } = require("../middlewares/auth.middlewares");
 const router = Router();
 
-router.get("/gg", getInvoice);
+router.get("/gg", generateInvoice);
 router.get(
     "/:orderId",
     isAuthenticated,
@@ -39,9 +39,9 @@ router.get(
 
 router.post(
     "/create-order",
-    isAuthenticated,
-    authorise("user"),
-    validate(createOrderValidations),
+    // isAuthenticated,
+    // authorise("user"),
+    // validate(createOrderValidations),
     createOrder,
 );
 
@@ -58,6 +58,7 @@ router.post(
     express.raw({ type: "application/json" }),
     webhook,
     segregateSellerOrders,
+    generateInvoice
 );
 
 router.patch(

@@ -46,7 +46,7 @@ const COOKIE_OPTIONS = {
 const REGEX = {
     file: /jpeg|jpg|png/,
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    url: /^(https?:\/\/)?[da-z.-]+.([a-z.]{2,6})([\/w .-]*)*\/?$/,
+    url: /^(https?:\/\/)?[\da-z.-]+\.[a-z.]{2,6}(\/[\w.-]*)*\/?$/,
     username: /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/,
     phoneNumber: /^\+[1-9]\d{1,14}$/,
     password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
