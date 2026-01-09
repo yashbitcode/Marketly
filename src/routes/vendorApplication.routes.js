@@ -16,7 +16,7 @@ const {
 } = require("../validations/vendorApplication.validations");
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllApplications);
+router.get("/", getAllApplications);
 
 router.get(
     "/me",

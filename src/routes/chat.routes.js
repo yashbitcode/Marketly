@@ -6,8 +6,6 @@ const {
 const { validate } = require("../middlewares/validate.middlewares");
 const {
     getAllChats,
-    getAllVendorChats,
-    getAllUserChats,
     createChatRequest,
     updateChatRequest,
 } = require("../controllers/chat.controllers");
@@ -17,11 +15,12 @@ const {
 } = require("../validations/chat.validations");
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllChats);
-
-router.get("/vendor", isAuthenticated, authorise("vendor"), getAllVendorChats);
-
-router.get("/user", isAuthenticated, authorise("user"), getAllUserChats);
+router.get(
+    "/",
+    isAuthenticated,
+    authorise("super-admin", "vendor", "user"),
+    getAllChats,
+);
 
 router.post(
     "/user",

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const User = require("./user.models");
 const { REGEX, ADDRESS_TYPE } = require("../utils/constants");
 
-const addressSchema = new mongoose.Schema(
+const AddressSchema = new mongoose.Schema(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -61,11 +61,11 @@ const addressSchema = new mongoose.Schema(
     },
 );
 
-addressSchema.pre("save", function () {
+AddressSchema.pre("save", function () {
     if (this.isModified("userId"))
         this.userId = new mongoose.Types.ObjectId(this.userId);
 });
 
-const Address = mongoose.model("addresses", addressSchema);
+const Address = mongoose.model("addresses", AddressSchema);
 
 module.exports = Address;

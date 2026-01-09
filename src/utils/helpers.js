@@ -4,6 +4,14 @@ const slugify = require("slugify");
 const { nanoid } = require("nanoid");
 const jwt = require("jsonwebtoken");
 const ApiError = require("./api-error");
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const {
+    generateTableRow,
+    generateHeader,
+    generateCustomerInformation,
+    generateHr
+} = require("./invoiceHelpers");
 
 const generateRandomNumberString = () => {
     let result = "";
@@ -179,7 +187,7 @@ const getSearchQueryByFileIds = (userId, fileIds) => {
 const validateSchema = (validationSchema, payload) => {
     const validation = validationSchema.safeParse(payload);
 
-    console.log(validation.error)
+    console.log(validation.error);
     if (!validation.success) throw new ApiError();
 
     return validation.data;
@@ -196,6 +204,49 @@ const verifyRazorpaySignature = (orderId, paymenId, signature) => {
     return expectedSignature === signature;
 };
 
+const createInvoice = (invoice, path) => {
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream(path));
+
+    generateHeader(doc);
+    generateCustomerInformation(doc, invoice);
+    
+    doc.fontSize(12);
+
+    generateTableRow(
+        doc,
+        480,
+        "Item",
+        "Store Name",
+        "Unit Cost",
+        "Quantity",
+        "Total",
+    );
+
+    let counter = 0;
+
+    doc.font("Helvetica")
+
+    invoice.sellerOrders.forEach((el, idx) => {
+        el.products.forEach(({ product, quantity }, idx) => {
+            generateTableRow(
+                doc,
+                500 + counter++ * 20,
+                product.name,
+                el.vendor.storeName,
+                "Rs. " + product.price,
+                quantity,
+                "Rs. " + (product.price * quantity),
+            );
+        });
+    });
+
+    doc.fontSize(14)
+    generateTableRow(doc, 500 + (counter * 20), "", "", "Total Amount", "", "Rs. " + invoice.order.amount)
+
+    doc.end();
+};
+
 module.exports = {
     generateRandomNumberString,
     generateSlug,
@@ -204,5 +255,6 @@ module.exports = {
     getProductFilterationPipeline,
     getSearchQueryByFileIds,
     validateSchema,
-    verifyRazorpaySignature
+    verifyRazorpaySignature,
+    createInvoice,
 };

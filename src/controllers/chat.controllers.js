@@ -50,22 +50,28 @@ const updateChatRequest = asyncHandler(async (req, res) => {
     );
 });
 
-const getAllUserChats = asyncHandler(async (req, res) => {
-    const { _id } = req.user;
-    const allChatReqs = await chatService.getAllChatReqs({ user: _id });
+// const getAllUserChats = asyncHandler(async (req, res) => {
 
-    res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
-});
+//     const { _id } = req.user;
+//     const allChatReqs = await chatService.getAllChatReqs({ user: _id });
 
-const getAllVendorChats = asyncHandler(async (req, res) => {
-    const { _id } = req.user.vendor;
-    const allChatReqs = await chatService.getAllChatReqs({ vendor: _id });
+//     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
+// });
 
-    res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
-});
+// const getAllVendorChats = asyncHandler(async (req, res) => {
+//     const { _id } = req.user.vendor;
+//     const allChatReqs = await chatService.getAllChatReqs({ vendor: _id });
+
+//     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
+// });
 
 const getAllChats = asyncHandler(async (req, res) => {
-    const allChatReqs = await chatService.getAllChatReqs();
+    const filters = {};
+
+    if(req.user.currentRole === 'user') filters.user = req.user._id;
+    if(req.user.currentRole === "vendor") filter.vendor = req.user.vendorId._id;
+
+    const allChatReqs = await chatService.getAllChatReqs(filters);
 
     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
 });
@@ -73,8 +79,6 @@ const getAllChats = asyncHandler(async (req, res) => {
 module.exports = {
     createChatRequest,
     updateChatRequest,
-    getAllUserChats,
-    getAllVendorChats,
     getAllChats,
 };
 

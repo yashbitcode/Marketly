@@ -6,6 +6,7 @@ const {
     notesSchema,
 } = require("../utils/baseSchemas");
 const User = require("./user.models");
+const Address = require("./address.models");
 
 const OrderSchema = new mongoose.Schema(
     {
@@ -67,6 +68,11 @@ const OrderSchema = new mongoose.Schema(
             },
             default: "created",
         },
+        shippingAddress: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Address,
+            required: [true, "Address ID is required"],
+        }
     },
     {
         timestamps: true,

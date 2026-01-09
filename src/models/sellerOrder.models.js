@@ -32,8 +32,9 @@ const SellerOrderSchema = new mongoose.Schema({
             values: ORDER_DELIVERY_STATUS,
             message: "`{VALUE}` is not valid value",
         },
+        default: "placed"
     },
-});
+}, {timestamps: true});
 
 const SellerOrder = mongoose.model("seller-orders", SellerOrderSchema);
 

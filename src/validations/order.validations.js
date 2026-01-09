@@ -2,26 +2,17 @@ const z = require("zod");
 const { ORDER_DELIVERY_STATUS, REGEX } = require("../utils/constants");
 
 const updateOrderDeliveryStatusValidations = z.object({
-    orderId: z.string({
+    sellerOrderId: z.string({
         error: (iss) => !iss.input && "Order ID is required",
     }),
     deliveryStatus: z.enum(ORDER_DELIVERY_STATUS, "Invalid delivery status"),
 });
 
 const createOrderValidations = z.object({
-    products: z.array(
-        z.object({
-            slug: z.string({
-                error: (iss) => !iss.input && "Slug is required",
-            }),
-            quantity: z
-                .number({
-                    error: (iss) => !iss.input && "Quantity is required",
-                })
-                .min(1, "Minimum 1 quantity is required"),
-        }),
+    products: z.record(
+        z.string(),
+        z.number().min(1, "Minimum 1 quantity is required"),
     ),
-
     prefills: z.object({
         name: z
             .string({
@@ -41,7 +32,6 @@ const createOrderValidations = z.object({
             })
             .regex(REGEX.phoneNumber, "Invalid phone number"),
     }),
-
     notes: z
         .object({
             description: z.string().min(10, "Minimum length should be 10"),
