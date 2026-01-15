@@ -1,16 +1,9 @@
 const Order = require("../models/order.models");
 const Product = require("../models/product.models");
 const SellerOrder = require("../models/sellerOrder.models");
-const { getIO } = require("../socket/socket.manager");
 
 class OrderService {
-    constructor() {
-        this.io = getIO();
-    }
-
     async createOrder(payload) {
-
-        console.log(payload);
         const {
             orderId,
             name,
@@ -249,13 +242,10 @@ class OrderService {
         return order;
     }
 
-    async sendOrderDeliveryUpdate(orders) {
-        orders.forEach((order) =>
-            this.io
-                .of("/order")
-                .to("order:" + order._id)
-                .emit("delivery-update", order),
-        );
+    async doesSellerOrderExists(filters = {}) {
+        const sellerOrder = await SellerOrder.exists(filters);
+
+        return sellerOrder;
     }
 }
 

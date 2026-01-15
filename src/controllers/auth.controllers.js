@@ -6,12 +6,12 @@ const ApiResponse = require("../utils/api-response");
 const { COOKIE_OPTIONS, FRONTEND_URL } = require("../utils/constants");
 const superAdminService = require("../services/superAdmin.service");
 const {
-    sendMail,
     registrationCodeMailContent,
     passwordResetMailContent,
     registrationMailContent,
     passwordChangedMailContent,
 } = require("../utils/mail");
+const emailQueue = require("../queues/email.queue");
 
 const register = asyncHandler(async (req, res) => {
     const { user, verificationToken } = await userService.createNewUser(
@@ -20,7 +20,7 @@ const register = asyncHandler(async (req, res) => {
 
     if (!user) throw new ApiError();
 
-    sendMail({
+    const emailData = {
         emailContent: registrationCodeMailContent(
             user.fullname,
             verificationToken,
@@ -28,6 +28,12 @@ const register = asyncHandler(async (req, res) => {
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
         subject: "Verify Your Account",
+    };
+
+    await emailQueue.add("send-email", emailData, {
+        removeOnComplete: true,
+        removeOnFail: true,
+        attempts: 3
     });
 
     res.json(new ApiResponse(201, user, "User registered successfully"));
@@ -200,11 +206,17 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
 
     const updatedUser = await userService.getEmailVerifiedById(user._id);
 
-    sendMail({
+    const emailData = {
         emailContent: registrationMailContent(user.fullname, FRONTEND_URL),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
         subject: "Account Created Login Now",
+    };
+
+    await emailQueue.add("send-email", emailData, {
+        removeOnComplete: true,
+        removeOnFail: true,
+        attempts: 3
     });
 
     res.json(
@@ -249,11 +261,17 @@ const changePassword = asyncHandler(async (req, res) => {
 
     await user.save();
 
-    sendMail({
+    const emailData = {
         emailContent: passwordChangedMailContent(user.fullname),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
         subject: "Password Changed Successfully",
+    };
+
+    await emailQueue.add("send-email", emailData, {
+        removeOnComplete: true,
+        removeOnFail: true,
+        attempts: 3
     });
 
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
@@ -277,7 +295,7 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
 
     await user.save();
 
-    sendMail({
+    const emailData = {
         emailContent: passwordResetMailContent(
             user.fullname,
             FRONTEND_URL + `/${resetToken}`,
@@ -285,6 +303,12 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
         subject: "Reset Password",
+    };
+
+    await emailQueue.add("send-email", emailData, {
+        removeOnComplete: true,
+        removeOnFail: true,
+        attempts: 3
     });
 
     res.json(

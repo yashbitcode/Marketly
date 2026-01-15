@@ -86,18 +86,3 @@ const OrderSchema = new mongoose.Schema(
 const Order = mongoose.model("orders", OrderSchema);
 
 module.exports = Order;
-
-// {
-//   amount: 1500,
-//   amount_due: 1500,
-//   amount_paid: 0,
-//   attempts: 0,
-//   created_at: 1767709809,
-//   currency: 'INR',
-//   entity: 'order',
-//   id: 'order_S0ctir7yzJznXB',
-//   notes: [],
-//   offer_id: null,
-//   receipt: null,
-//   status: 'created'
-// }

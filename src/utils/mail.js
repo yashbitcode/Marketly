@@ -118,11 +118,36 @@ const passwordChangedMailContent = (fullname) => ({
     },
 });
 
+const orderPlacedInvoiceMailContent = (fullname, orderId, invoiceUrl) => ({
+    body: {
+        name: fullname,
+        title: "Your Order Has Been Placed Successfully 🎉",
+        intro: [
+            `Thank you for your purchase, ${fullname}!`,
+            `We’re happy to inform you that your order with Order ID ${orderId} has been placed successfully.`
+        ],
+        action: {
+            instructions: "You can view or download your invoice by clicking the button below:",
+            button: {
+                color: "#22BC66",
+                text: "View Invoice",
+                link: invoiceUrl
+            }
+        },
+        outro: [
+            "If you have any questions regarding your order, feel free to reach out to our support team.",
+            "Thank you for shopping with us!"
+        ]
+    }
+});
+
+
 
 module.exports = {
     sendMail,
     passwordResetMailContent,
     registrationMailContent,
     registrationCodeMailContent,
-    passwordChangedMailContent
+    passwordChangedMailContent,
+    orderPlacedInvoiceMailContent
 };

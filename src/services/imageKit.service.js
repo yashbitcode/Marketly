@@ -1,6 +1,5 @@
 const ImageKit = require("@imagekit/nodejs");
-const {toFile} = require("@imagekit/nodejs")
-const fs = require("node:fs");
+const {toFile} = require("@imagekit/nodejs");
 
 class ImageKitService {
     constructor() {

@@ -1,11 +1,7 @@
+const notificationQueue = require("../queues/notification.queue");
 const chatService = require("../services/chat.service");
-const notificationService = require("../services/notification.service");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
-const { validateSchema } = require("../utils/helpers");
-const {
-    addNotificationValidations,
-} = require("../validations/notification.validations");
 
 const createChatRequest = asyncHandler(async (req, res) => {
     const payload = req.body;
@@ -28,18 +24,23 @@ const updateChatRequest = asyncHandler(async (req, res) => {
         status,
     );
 
-    const notificationPayload = validateSchema(addNotificationValidations, {
+    const notificationPayload = {
         receiverId: chatReq.user,
         docModel: "user",
         notificationType: "CHAT_REQUEST_UPDATE",
         title: "Chat Request Update",
         message: `Your Recent Chat Request Is: ${status}`,
-    });
+    };
 
-    const notification = await notificationService.createNotification(
-        notificationPayload,
+    await notificationQueue.add(
+        "chat-update",
+        { notificationPayload, chatReq: updatedChatReq.chatReq },
+        {
+            removeOnComplete: true,
+            removeOnFail: true,
+            attempts: 3,
+        },
     );
-    await notificationService.sendChatUpdateNotification(chatReq, notification);
 
     res.json(
         new ApiResponse(
@@ -68,8 +69,9 @@ const updateChatRequest = asyncHandler(async (req, res) => {
 const getAllChats = asyncHandler(async (req, res) => {
     const filters = {};
 
-    if(req.user.currentRole === 'user') filters.user = req.user._id;
-    if(req.user.currentRole === "vendor") filter.vendor = req.user.vendorId._id;
+    if (req.user.currentRole === "user") filters.user = req.user._id;
+    if (req.user.currentRole === "vendor")
+        filter.vendor = req.user.vendorId._id;
 
     const allChatReqs = await chatService.getAllChatReqs(filters);
 
