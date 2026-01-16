@@ -1,5 +1,5 @@
 const BASE_ENDPOINT = "/api/v1";
-const FRONTEND_URL="*";
+const FRONTEND_URL = "*";
 const TOKEN_LENGTH = 6;
 const PAGINATION_LIMIT = 10;
 
@@ -10,12 +10,22 @@ const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
-const MESSAGE_DOC_MODEL_TYPES = ['users', "vendors"];
+const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
-const ORDER_DELIVERY_STATUS = ["placed", "shipped", "out of delivery", "delivered", "returned"];
-const NOTIFICATION_TYPES = ["CHAT_REQUEST_UPDATE", "ORDER_UPDATE", "GENERAL_UPDATE"];
+const ORDER_DELIVERY_STATUS = [
+    "placed",
+    "shipped",
+    "out of delivery",
+    "delivered",
+    "returned",
+];
+const NOTIFICATION_TYPES = [
+    "CHAT_REQUEST_UPDATE",
+    "ORDER_UPDATE",
+    "GENERAL_UPDATE",
+];
 const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
 const SUPPORT_QUERY_TYPES = [
     "order issue",
@@ -74,5 +84,5 @@ module.exports = {
     MESSAGE_DOC_MODEL_TYPES,
     NOTIFICATION_TYPES,
     ORDER_STATUS,
-    ORDER_DELIVERY_STATUS
+    ORDER_DELIVERY_STATUS,
 };

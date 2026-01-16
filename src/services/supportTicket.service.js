@@ -9,8 +9,8 @@ class SupportTicketService {
             .sort({
                 createdAt: -1,
             });
-        
-            return allTickets;
+
+        return allTickets;
     }
 
     async createTicket(payload) {

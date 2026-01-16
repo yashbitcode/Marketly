@@ -35,5 +35,5 @@ const addProductReviewValidations = z.object({
 });
 
 module.exports = {
-    addProductReviewValidations
+    addProductReviewValidations,
 };

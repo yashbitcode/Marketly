@@ -5,20 +5,22 @@ const VendorApplication = require("../models/vendorApplication.models");
 
 class VendorApplicationService {
     async getAll(filters, page) {
-        const allApplications = await VendorApplication.find(filters).populate(
-            "user",
-            GENERAL_USER_FIELDS,
-        ).skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT).sort({
-                createdAt: -1
+        const allApplications = await VendorApplication.find(filters)
+            .populate("user", GENERAL_USER_FIELDS)
+            .skip(PAGINATION_LIMIT * (page - 1))
+            .limit(PAGINATION_LIMIT)
+            .sort({
+                createdAt: -1,
             });
 
         return allApplications;
     }
 
     async getUserApplications(userId) {
-        const allApplications = await VendorApplication.find({user: userId}).populate("vendor");
-        
+        const allApplications = await VendorApplication.find({
+            user: userId,
+        }).populate("vendor");
+
         return allApplications;
     }
 
@@ -29,7 +31,7 @@ class VendorApplicationService {
             fullname,
             storeName,
             phoneNumber,
-            description
+            description,
         } = payload;
 
         const application = new VendorApplication({
@@ -39,7 +41,7 @@ class VendorApplicationService {
             fullname,
             storeName,
             phoneNumber,
-            description
+            description,
         });
 
         await application.save();
@@ -48,14 +50,8 @@ class VendorApplicationService {
     }
 
     async createVendorAndUpdateUser(vendorApplication) {
-        const {
-            user,
-            vendorType,
-            avatar,
-            storeName,
-            fullname,
-            phoneNumber,
-        } = vendorApplication;
+        const { user, vendorType, avatar, storeName, fullname, phoneNumber } =
+            vendorApplication;
 
         const vendor = await vendorService.insertVendor({
             vendorType,
@@ -63,7 +59,7 @@ class VendorApplicationService {
             storeName,
             fullname,
             phoneNumber,
-            accountStatus: "active"
+            accountStatus: "active",
         });
 
         if (!vendor) throw new ApiError();

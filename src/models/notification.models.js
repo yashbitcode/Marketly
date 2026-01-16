@@ -24,24 +24,24 @@ const NotificationSchema = new mongoose.Schema({
             values: NOTIFICATION_TYPES,
             message: "`{VALUE}` is not valid value",
         },
-        default: "GENERAL_UPDATE"
+        default: "GENERAL_UPDATE",
     },
     title: {
         type: String,
-        required: [true, "Title is required"]
+        required: [true, "Title is required"],
     },
     message: {
         type: String,
-        required: [true, "Message is required"]
+        required: [true, "Message is required"],
     },
     isRead: {
         type: Boolean,
-        default: false
+        default: false,
     },
     data: {
         type: Map,
-        of: String
-    }
+        of: String,
+    },
 });
 
 const Notification = mongoose.model("notifications", NotificationSchema);

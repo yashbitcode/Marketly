@@ -1,5 +1,5 @@
 const Notification = require("../models/notification.models");
-const io = require("../socket/socket.emitter");
+const initEmitter = require("../config/socket/socket.emitter");
 
 class NotificationService {
     async createNotification(payload) {
@@ -20,19 +20,25 @@ class NotificationService {
         return notification;
     }
 
-    sendChatUpdateNotification(chatReq, notification) {
+    async sendChatUpdateNotification(chatReq, notification) {
+        const io = await initEmitter();
+
         io.of("/notification")
             .to("notification:" + chatReq.user)
             .emit("chat-request-update", notification);
     }
 
-    sendOrderUpdateNotification(order, notification) {
+    async sendOrderUpdateNotification(order, notification) {
+        const io = await initEmitter();
+
         io.of("/notification")
             .to("notification:" + order.user)
             .emit("order-place-update", notification);
     }
 
-    sendOrderDeliveryUpdateNotification(orders) {
+    async sendOrderDeliveryUpdateNotification(orders) {
+        const io = await initEmitter();
+
         orders.forEach((order) =>
             io
                 .of("/order")

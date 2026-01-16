@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema(
             default: "user",
         },
         avatar: {
-            type: new mongoose.Schema(mediaSchema, {_id: false}),
+            type: new mongoose.Schema(mediaSchema, { _id: false }),
         },
         username: {
             type: String,
@@ -63,12 +63,12 @@ const UserSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        
+
         vendorId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: Vendor
+            ref: Vendor,
         },
-        
+
         emailVerificationToken: String,
         emailVerificationSessionId: String,
         emailVerificationTokenExpiry: Date,
@@ -104,7 +104,7 @@ UserSchema.methods.generateAccessAndRefreshTokens = function (currentRole) {
         currentRole,
     };
 
-    if(currentRole === "vendor") payload.vendorId = this.vendorId._id;
+    if (currentRole === "vendor") payload.vendorId = this.vendorId._id;
 
     return generateBaseTokens(payload);
 };

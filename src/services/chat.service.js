@@ -54,7 +54,7 @@ class ChatService {
 
         chatReq.status = status;
 
-        await chatReq.save()
+        await chatReq.save();
 
         return {
             chatReq,

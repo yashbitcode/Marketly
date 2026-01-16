@@ -1,5 +1,5 @@
 const ImageKit = require("@imagekit/nodejs");
-const {toFile} = require("@imagekit/nodejs");
+const { toFile } = require("@imagekit/nodejs");
 
 class ImageKitService {
     constructor() {
@@ -17,7 +17,7 @@ class ImageKitService {
     async getList(filterQuery, path) {
         const result = await this.client.assets.list({
             searchQuery: filterQuery,
-            path
+            path,
         });
 
         return result;
@@ -25,7 +25,7 @@ class ImageKitService {
 
     async deleteImages(fileIds) {
         const result = await this.client.files.bulk.delete({
-            fileIds
+            fileIds,
         });
 
         return result;
@@ -34,7 +34,7 @@ class ImageKitService {
     async upload(buffer) {
         return await this.client.files.upload({
             file: await toFile(buffer),
-            fileName: "sasa"
+            fileName: "sasa",
         });
     }
 

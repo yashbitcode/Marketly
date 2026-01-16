@@ -1,5 +1,8 @@
 const z = require("zod");
-const { MESSAGE_DOC_MODEL_TYPES, PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS } = require("../utils/constants");
+const {
+    MESSAGE_DOC_MODEL_TYPES,
+    PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS,
+} = require("../utils/constants");
 const { baseMediaValidations } = require("../utils/baseValidations");
 const { isValidObjectId } = require("mongoose");
 
@@ -28,8 +31,8 @@ const updateChatReqStatusValidations = z.object({
         .refine((val) => isValidObjectId(val), {
             message: "Invalid chat request ID",
         }),
-    status: z.enum(APPROVAL_STATUS, "Invalid status")
-})
+    status: z.enum(APPROVAL_STATUS, "Invalid status"),
+});
 
 const createMessageValidations = z.object({
     senderId: z
@@ -40,10 +43,9 @@ const createMessageValidations = z.object({
             message: "Invalid sender ID",
         }),
     docModel: z.enum(MESSAGE_DOC_MODEL_TYPES, "Invalid address type"),
-    message: z
-        .string({
-            error: (iss) => !iss.input && "Message is required",
-        }),
+    message: z.string({
+        error: (iss) => !iss.input && "Message is required",
+    }),
     chatId: z.string({
         error: (iss) => !iss.input && "Chat ID is required",
     }),
@@ -56,5 +58,5 @@ const createMessageValidations = z.object({
 module.exports = {
     createChatReqValidations,
     updateChatReqStatusValidations,
-    createMessageValidations
+    createMessageValidations,
 };

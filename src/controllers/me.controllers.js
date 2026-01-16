@@ -6,4 +6,4 @@ const getMe = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, user, "User fetched successfully"));
 });
 
-module.exports = {getMe};
+module.exports = { getMe };

@@ -1,5 +1,8 @@
 const z = require("zod");
-const { MESSAGE_DOC_MODEL_TYPES: NOTIFICATION_DOC_MODEL_TYPES, NOTIFICATION_TYPES } = require("../utils/constants");
+const {
+    MESSAGE_DOC_MODEL_TYPES: NOTIFICATION_DOC_MODEL_TYPES,
+    NOTIFICATION_TYPES,
+} = require("../utils/constants");
 const { isValidObjectId } = require("mongoose");
 
 const addNotificationValidations = z.object({
@@ -18,9 +21,9 @@ const addNotificationValidations = z.object({
     message: z.string({
         error: (iss) => !iss.input && "Message is required",
     }),
-    data: z.record(z.string(), z.string()).optional()
+    data: z.record(z.string(), z.string()).optional(),
 });
 
 module.exports = {
-    addNotificationValidations
-}
+    addNotificationValidations,
+};

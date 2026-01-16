@@ -19,10 +19,7 @@ const registerValidations = z
             .string({
                 error: (iss) => !iss.input && "Phone number is required",
             })
-            .regex(
-                REGEX.phoneNumber,
-                "Invalid phone number",
-            ),
+            .regex(REGEX.phoneNumber, "Invalid phone number"),
         password: z
             .string({
                 error: (iss) => !iss.input && "Password is required",

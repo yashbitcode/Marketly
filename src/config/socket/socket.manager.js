@@ -1,14 +1,14 @@
 const { Server } = require("socket.io");
-const ApiError = require("../utils/api-error");
+const ApiError = require("../../utils/api-error");
 const { createAdapter } = require("@socket.io/redis-adapter");
-const { pubClient, subClient } = require("../config/redis/connection");
+const { pubClient, subClient } = require("../redis/connection");
 
 let io = null;
 
 const initSocket = (httpServer) => {
     io = new Server(httpServer, {
         connectionStateRecovery: {},
-        adapter: createAdapter(pubClient, subClient)
+        adapter: createAdapter(pubClient, subClient),
     });
 
     return io;

@@ -146,9 +146,9 @@ const prefillsSchema = {
 const notesSchema = {
     description: {
         type: String,
-        min: [10, "Minimum length should be 10"]
-    }
-}
+        min: [10, "Minimum length should be 10"],
+    },
+};
 
 const sellerOrderProductsSchema = {
     product: {
@@ -159,9 +159,9 @@ const sellerOrderProductsSchema = {
     quantity: {
         type: Number,
         required: [true, "Quantity is required"],
-        min: [1, 'Minimum 1 quantity is required']
-    }
-}
+        min: [1, "Minimum 1 quantity is required"],
+    },
+};
 
 module.exports = {
     prefillsSchema,
@@ -170,5 +170,5 @@ module.exports = {
     productAttributeSchema,
     mediaSchema,
     productItemSchema,
-    sellerOrderProductsSchema
+    sellerOrderProductsSchema,
 };

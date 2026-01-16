@@ -14,7 +14,7 @@ class OrderService {
             prefills,
             notes,
             user,
-            shippingAddress
+            shippingAddress,
         } = payload;
 
         const order = new Order({
@@ -27,7 +27,7 @@ class OrderService {
             prefills,
             notes,
             user,
-            shippingAddress
+            shippingAddress,
         });
 
         await order.save();
@@ -148,7 +148,8 @@ class OrderService {
                 },
             },
             {
-                $unwind: "$sellerOrders.products.product.category.parentCategory",
+                $unwind:
+                    "$sellerOrders.products.product.category.parentCategory",
             },
             {
                 $group: {
@@ -231,7 +232,6 @@ class OrderService {
 
         return order;
     }
-
 
     async updateOrder(filters = {}, payload = {}) {
         const order = await SellerOrder.findOneAndUpdate(filters, payload, {

@@ -12,7 +12,12 @@ const {
 } = require("../controllers/media.controllers");
 
 router.post("/", isAuthenticated, authorise("user", "vendor"), getAuthParams);
-router.delete("/files", isAuthenticated, authorise("user", "vendor"), deleteFiles);
+router.delete(
+    "/files",
+    isAuthenticated,
+    authorise("user", "vendor"),
+    deleteFiles,
+);
 router.post("/files", isAuthenticated, authorise("user", "vendor"), getFiles);
 
 module.exports = router;

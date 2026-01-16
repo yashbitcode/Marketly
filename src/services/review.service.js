@@ -27,7 +27,7 @@ class ReviewService {
             .skip(PAGINATION_LIMIT * (page - 1))
             .limit(PAGINATION_LIMIT)
             .sort({
-                createdAt: -1
+                createdAt: -1,
             });
 
         return allReviews;

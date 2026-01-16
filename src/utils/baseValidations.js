@@ -8,24 +8,19 @@ const {
 const { isValidObjectId } = require("mongoose");
 
 const baseMediaValidations = z.object({
-    fileId: z
-        .string({
-            error: (iss) => !iss.input && "File ID is required",
-        }),
-    url: z
-        .url({
-            error: (iss) =>
-                !iss.input ? "URL is required" : "Invalid URL",
-        }),
-    thumbnailUrl: z
-        .url({
-            error: (iss) =>
-                !iss.input ? "Thumbnail URL is required" : "Invalid thumbnail URL",
-        }),
-        filename: z
-        .string({
-            error: (iss) => !iss.input && "Filename is required",
-        }),
+    fileId: z.string({
+        error: (iss) => !iss.input && "File ID is required",
+    }),
+    url: z.url({
+        error: (iss) => (!iss.input ? "URL is required" : "Invalid URL"),
+    }),
+    thumbnailUrl: z.url({
+        error: (iss) =>
+            !iss.input ? "Thumbnail URL is required" : "Invalid thumbnail URL",
+    }),
+    filename: z.string({
+        error: (iss) => !iss.input && "Filename is required",
+    }),
 });
 
 const addressValidations = z.object({
@@ -233,5 +228,5 @@ module.exports = {
     baseVendor,
     baseProductValidations,
     baseProductAttributeValidations,
-    baseMediaValidations
+    baseMediaValidations,
 };

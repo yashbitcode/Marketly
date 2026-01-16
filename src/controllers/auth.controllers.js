@@ -33,7 +33,7 @@ const register = asyncHandler(async (req, res) => {
     await emailQueue.add("send-email", emailData, {
         removeOnComplete: true,
         removeOnFail: true,
-        attempts: 3
+        attempts: 3,
     });
 
     res.json(new ApiResponse(201, user, "User registered successfully"));
@@ -216,7 +216,7 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
     await emailQueue.add("send-email", emailData, {
         removeOnComplete: true,
         removeOnFail: true,
-        attempts: 3
+        attempts: 3,
     });
 
     res.json(
@@ -271,7 +271,7 @@ const changePassword = asyncHandler(async (req, res) => {
     await emailQueue.add("send-email", emailData, {
         removeOnComplete: true,
         removeOnFail: true,
-        attempts: 3
+        attempts: 3,
     });
 
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
@@ -308,7 +308,7 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
     await emailQueue.add("send-email", emailData, {
         removeOnComplete: true,
         removeOnFail: true,
-        attempts: 3
+        attempts: 3,
     });
 
     res.json(

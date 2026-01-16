@@ -7,7 +7,9 @@ const PORT = process.env.PORT ?? 8000;
 connectDB()
     .then(() => {
         console.log("MongoDB connection established");
-        app.listen(PORT, () => console.log("Server up and running on PORT " + PORT));
+        app.listen(PORT, () =>
+            console.log("Server up and running on PORT " + PORT),
+        );
     })
     .catch(() => {
         console.log("Unable to run the server");

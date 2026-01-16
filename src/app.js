@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("node:http");
-const { BASE_ENDPOINT, FRONTEND_URL } = require("./utils/constants");
+const { BASE_ENDPOINT } = require("./utils/constants");
 const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
-const { initSocket } = require("./socket/socket.manager");
-const { setupSocketIO } = require("./socket");
+const { initSocket } = require("./config/socket/socket.manager");
+const { setupSocketIO } = require("./config/socket");
 
 const app = express();
 const httpServer = http.createServer(app);

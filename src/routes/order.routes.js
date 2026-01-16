@@ -7,6 +7,7 @@ const {
     updateOrderDeliveryStatus,
     getOrderByOrderId,
     getAllOrders,
+    gg,
 } = require("../controllers/orders.controllers");
 const {
     verifyPaymentValidations,
@@ -20,7 +21,7 @@ const {
 } = require("../middlewares/auth.middlewares");
 const router = Router();
 
-// router.get("/gg", generateInvoice);
+router.get("/gg", gg);
 router.get(
     "/:orderId",
     isAuthenticated,
@@ -51,11 +52,7 @@ router.post(
     verifyOrderPayment,
 );
 
-router.post(
-    "/webhook",
-    express.raw({ type: "application/json" }),
-    webhook,
-);
+router.post("/webhook", express.raw({ type: "application/json" }), webhook);
 
 router.patch(
     "/delivery-status",
@@ -64,7 +61,5 @@ router.patch(
     validate(updateOrderDeliveryStatusValidations),
     updateOrderDeliveryStatus,
 );
-
-
 
 module.exports = router;

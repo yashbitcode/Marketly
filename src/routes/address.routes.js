@@ -6,7 +6,10 @@ const {
     updateAddress,
     markDefaultAddress,
 } = require("../controllers/address.controllers");
-const { isAuthenticated, authorise } = require("../middlewares/auth.middlewares");
+const {
+    isAuthenticated,
+    authorise,
+} = require("../middlewares/auth.middlewares");
 const { validate } = require("../middlewares/validate.middlewares");
 const {
     addAddressValidations,
@@ -16,7 +19,13 @@ const router = Router();
 
 router.get("/", isAuthenticated, authorise("user"), getAllUserAddresses);
 
-router.post("/", isAuthenticated, authorise("user"), validate(addAddressValidations), addAddress);
+router.post(
+    "/",
+    isAuthenticated,
+    authorise("user"),
+    validate(addAddressValidations),
+    addAddress,
+);
 
 router.delete("/:addressId", isAuthenticated, authorise("user"), deleteAddress);
 
@@ -28,6 +37,11 @@ router.patch(
     updateAddress,
 );
 
-router.patch("/default/:addressId", isAuthenticated, authorise("user"), markDefaultAddress);
+router.patch(
+    "/default/:addressId",
+    isAuthenticated,
+    authorise("user"),
+    markDefaultAddress,
+);
 
 module.exports = router;

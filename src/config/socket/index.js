@@ -1,6 +1,8 @@
-const { isSocketAuthenticated } = require("../middlewares/auth.middlewares");
-const { createMessageValidations } = require("../validations/chat.validations");
-const chatService = require("../services/chat.service");
+const { isSocketAuthenticated } = require("../../middlewares/auth.middlewares");
+const {
+    createMessageValidations,
+} = require("../../validations/chat.validations");
+const chatService = require("../../services/chat.service");
 
 const setupSocketIO = (io) => {
     io.use(isSocketAuthenticated);

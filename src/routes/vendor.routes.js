@@ -22,7 +22,7 @@ router.post(
     authorise("super-admin"),
     validate(createVendorValidations),
     createVendor,
-); 
+);
 
 router.patch(
     "/",

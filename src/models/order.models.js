@@ -62,7 +62,7 @@ const OrderSchema = new mongoose.Schema(
             // min: [1, "Minimum 1 product is necessary"],
         },
         invoice: {
-            type: new mongoose.Schema(mediaSchema, {_id: false}),
+            type: new mongoose.Schema(mediaSchema, { _id: false }),
         },
         status: {
             type: String,
@@ -76,7 +76,7 @@ const OrderSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: Address,
             required: [true, "Shipping address ID is required"],
-        }
+        },
     },
     {
         timestamps: true,

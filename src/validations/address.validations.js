@@ -5,5 +5,5 @@ const updateAddressValidations = addressValidations.partial();
 
 module.exports = {
     addAddressValidations,
-    updateAddressValidations
+    updateAddressValidations,
 };

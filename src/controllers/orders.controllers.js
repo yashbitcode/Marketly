@@ -128,6 +128,34 @@ const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, order, "Order updated successfully"));
 });
 
+const gg = asyncHandler(async (req, res) => {
+    const notificationPayload = {
+        receiverId: "695260f3fd88aeed840374de",
+        docModel: "users",
+        notificationType: "CHAT_REQUEST_UPDATE",
+        title: "Chat Request Update",
+        message: `Your Recent Chat Request Is: accepted`,
+    };
+
+    await notificationQueue.add(
+        "chat-update",
+        {
+            notificationPayload,
+            chatReq: {
+                _id: "695b6de3cb37696a4d45088d",
+                user: "695260f3fd88aeed840374de",
+                vendor: "695260f3fd88aeed840374dc",
+                status: "pending",
+            },
+        },
+        {
+            removeOnComplete: true,
+            removeOnFail: true,
+        },
+    );
+    res.json({});
+});
+
 const verifyOrderPayment = asyncHandler(async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
         req.body;
@@ -201,4 +229,5 @@ module.exports = {
     getAllOrders,
     webhook,
     updateOrderDeliveryStatus,
+    gg,
 };

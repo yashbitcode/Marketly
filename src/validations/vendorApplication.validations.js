@@ -3,7 +3,7 @@ const { VENDOR_APPLICATION_STATUS } = require("../utils/constants");
 const { baseVendor } = require("../utils/baseValidations");
 
 const createVendorApplicationValidations = baseVendor.extend({
-    description: z.string().min(10, "Minimum length should be 10").optional()
+    description: z.string().min(10, "Minimum length should be 10").optional(),
 });
 
 const updateVendorApplicationValidations = z

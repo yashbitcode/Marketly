@@ -81,5 +81,5 @@ module.exports = {
     addAddress,
     deleteAddress,
     updateAddress,
-    markDefaultAddress
+    markDefaultAddress,
 };

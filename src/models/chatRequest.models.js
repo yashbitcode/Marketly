@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const User = require("./user.models");
 const Vendor = require("./vendor.models");
-const { PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS } = require("../utils/constants");
+const {
+    PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS,
+} = require("../utils/constants");
 
 const ChatRequestSchema = new mongoose.Schema({
     user: {
@@ -20,7 +22,7 @@ const ChatRequestSchema = new mongoose.Schema({
         },
         default: "pending",
     },
-    chatId: String
+    chatId: String,
 });
 
 const ChatRequest = mongoose.model("chat-requests", ChatRequestSchema);

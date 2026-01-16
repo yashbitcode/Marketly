@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "worker:email": "node src/workers/email.worker.js"
+    "worker:notification": "node src/workers/notification.worker.js"
   },
   "dependencies": {
     "@imagekit/nodejs": "^7.1.1",

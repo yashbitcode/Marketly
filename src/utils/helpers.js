@@ -215,7 +215,7 @@ const createInvoice = (invoice) => {
         doc.on("end", () => {
             const pdfBuffer = Buffer.concat(chunks);
             resolve(pdfBuffer);
-        })
+        });
 
         generateHeader(doc);
         generateCustomerInformation(doc, invoice);
@@ -238,17 +238,16 @@ const createInvoice = (invoice) => {
 
         invoice.sellerOrders.forEach((el, idx) => {
             el.products.forEach(({ product, quantity }, idx) => {
-                if((topMargin + (counter++ * 10)) > 650) {
+                if (topMargin + counter++ * 10 > 650) {
                     topMargin = 50;
                     counter = 0;
 
                     doc.addPage();
                 }
 
-                
                 generateTableRow(
                     doc,
-                    topMargin + (counter++ * 10),
+                    topMargin + counter++ * 10,
                     product.name,
                     el.vendor.storeName,
                     "Rs. " + product.price,
@@ -261,7 +260,7 @@ const createInvoice = (invoice) => {
         doc.fontSize(14);
         generateTableRow(
             doc,
-            topMargin + (counter++ * 10),
+            topMargin + counter++ * 10,
             "",
             "",
             "Total Amount",

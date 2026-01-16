@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { Worker } = require("bullmq");
 const { sendMailJob } = require("../jobs/email.jobs");
-const connection = require("../config/redis/connection");
+const { pubClient } = require("../config/redis/connection");
 
 const worker = new Worker(
     "email-queue",
@@ -15,7 +15,7 @@ const worker = new Worker(
         }
     },
     {
-        connection,
+        connection: pubClient,
         concurrency: 5,
     },
 );

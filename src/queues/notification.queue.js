@@ -1,8 +1,8 @@
-const {Queue} = require("bullmq");
-const connection = require("../config/redis/connection");
+const { Queue } = require("bullmq");
+const { pubClient } = require("../config/redis/connection");
 
 const notificationQueue = new Queue("notification-queue", {
-    connection
+    connection: pubClient,
 });
 
 module.exports = notificationQueue;

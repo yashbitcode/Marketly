@@ -31,9 +31,9 @@ const SupportTicketSchema = new mongoose.Schema({
         min: [10, "Minimum length should be 10"],
     },
     attachments: {
-        type: [new mongoose.Schema(mediaSchema, {_id: false})],
-        default: undefined
-    }
+        type: [new mongoose.Schema(mediaSchema, { _id: false })],
+        default: undefined,
+    },
 });
 
 const SupportTicket = mongoose.model("support-tickets", SupportTicketSchema);

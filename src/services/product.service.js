@@ -104,19 +104,21 @@ class ProductService {
     async getFilteredProducts(filterQueries, page) {
         const pipeline = getProductFilterationPipeline(filterQueries);
 
-        pipeline.push(...[
-            {
-                $skip: PAGINATION_LIMIT * (page - 1),
-            },
-            {
-                $limit: PAGINATION_LIMIT,
-            },
-            {
-                $sort: {
-                    createdAt: -1,
+        pipeline.push(
+            ...[
+                {
+                    $skip: PAGINATION_LIMIT * (page - 1),
                 },
-            },
-        ]);
+                {
+                    $limit: PAGINATION_LIMIT,
+                },
+                {
+                    $sort: {
+                        createdAt: -1,
+                    },
+                },
+            ],
+        );
 
         const filteredProducts = await Product.aggregate(pipeline);
 

@@ -8,5 +8,5 @@ const sendMailJob = async (job) => {
 };
 
 module.exports = {
-    sendMailJob
+    sendMailJob,
 };

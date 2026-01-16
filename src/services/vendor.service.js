@@ -25,27 +25,20 @@ class VendorService {
         return vendor;
     }
 
-    async getVendorById(
-        vendorId,
-        vendorFieldsSelection = {},
-    ) {
-        const vendor = await Vendor.findById(vendorId)
-            .select(vendorFieldsSelection);
+    async getVendorById(vendorId, vendorFieldsSelection = {}) {
+        const vendor = await Vendor.findById(vendorId).select(
+            vendorFieldsSelection,
+        );
 
         return vendor;
     }
 
-    async updateVendorDetails(
-        vendorId,
-        payload,
-        vendorFieldsSelection = {},
-    ) {
+    async updateVendorDetails(vendorId, payload, vendorFieldsSelection = {}) {
         const vendor = await Vendor.findOneAndUpdate(
             { _id: vendorId },
             payload,
             { new: true, runValidators: true },
-        )
-            .select(vendorFieldsSelection);
+        ).select(vendorFieldsSelection);
 
         return vendor;
     }
