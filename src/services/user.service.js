@@ -39,6 +39,12 @@ class UserService {
         }
     }
 
+    async getAll(filters = {}, fieldsSelection = {}) {
+        const allUsers = await User.find(filters).select(fieldsSelection);
+
+        return allUsers;
+    }
+
     async getUserByEmail(email, fieldsSelection = {}) {
         const user = await User.findOne({ email }).select(fieldsSelection);
 

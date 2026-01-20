@@ -25,6 +25,12 @@ class VendorService {
         return vendor;
     }
 
+    async getAll(filters = {}, vendorFieldsSelection = {}) {
+        const allVendors = await Vendor.find(filters).select(vendorFieldsSelection);
+
+        return allVendors;
+    }
+
     async getVendorById(vendorId, vendorFieldsSelection = {}) {
         const vendor = await Vendor.findById(vendorId).select(
             vendorFieldsSelection,

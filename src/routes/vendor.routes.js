@@ -3,6 +3,7 @@ const {
     createVendor,
     updateVendor,
     updateAccountStatus,
+    getAllVendors,
 } = require("../controllers/vendor.controllers");
 const {
     isAuthenticated,
@@ -15,6 +16,8 @@ const {
 } = require("../validations/vendor.validations");
 const { validate } = require("../middlewares/validate.middlewares");
 const router = Router();
+
+router.get("/", isAuthenticated, authorise("super-admin"), getAllVendors);
 
 router.post(
     "/",

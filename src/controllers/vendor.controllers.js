@@ -5,6 +5,12 @@ const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 const { ACCOUNT_STATUS, GENERAL_USER_FIELDS } = require("../utils/constants");
 
+const getAllVendors = asyncHandler(async (req, res) => {
+    const allVendors = await vendorService.getAll();
+
+    res.json(new ApiResponse(200, allVendors, "Vendors fetched successfully"));
+});
+
 const createVendor = asyncHandler(async (req, res) => {
     const { _id } = req.user;
 
@@ -72,6 +78,7 @@ const updateAccountStatus = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+    getAllVendors,
     createVendor,
     updateVendor,
     updateAccountStatus,
