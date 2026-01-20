@@ -5,29 +5,42 @@ const ApiResponse = require("../utils/api-response");
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
+    const filters = {};
 
-    const allProducts = await productService.getAll(
-        {
+    if (req?.user?.currentRole || req.user.currentRole === "user")
+        filters = {
             "approval.status": "accepted",
             isActive: true,
-        },
-        +page,
-    );
+        };
+    else if (req.user.currentRole === "vendor")
+        filters.vendor = req.user.vendorId._id;
+
+    const allProducts = await productService.getAll(filters, +page);
 
     res.json(
         new ApiResponse(200, allProducts, "Products fetched successfully"),
     );
 });
 
-const getAllProductsSuperAdmin = asyncHandler(async (req, res) => {
-    const { page } = req.params;
+// const getAllProductsSuperAdmin = asyncHandler(async (req, res) => {
+//     const { page } = req.params;
 
-    const allProducts = await productService.getAll({}, +page);
+//     const allProducts = await productService.getAll({}, +page);
 
-    res.json(
-        new ApiResponse(200, allProducts, "Products fetched successfully"),
-    );
-});
+//     res.json(
+//         new ApiResponse(200, allProducts, "Products fetched successfully"),
+//     );
+// });
+
+// const getAllVendorProducts = asyncHandler(async (req, res) => {
+//     const { _id } = req.user.vendorId;
+
+//     const allProducts = await productService.getAll({ vendor: _id });
+
+//     res.json(
+//         new ApiResponse(200, allProducts, "Products fetched successfully"),
+//     );
+// });
 
 const getSpecificProduct = asyncHandler(async (req, res) => {
     const { slug } = req.params;
@@ -43,16 +56,6 @@ const getSpecificProduct = asyncHandler(async (req, res) => {
     if (!product) throw new ApiError(404, "Product not found");
 
     res.json(new ApiResponse(200, product, "Product fetched successfully"));
-});
-
-const getAllVendorProducts = asyncHandler(async (req, res) => {
-    const { _id } = req.user.vendorId;
-
-    const allProducts = await productService.getAll({ vendor: _id });
-
-    res.json(
-        new ApiResponse(200, allProducts, "Products fetched successfully"),
-    );
 });
 
 const addVendorProduct = asyncHandler(async (req, res) => {
@@ -122,8 +125,8 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
 module.exports = {
     getAllProducts,
     getSpecificProduct,
-    getAllVendorProducts,
-    getAllProductsSuperAdmin,
+    // getAllVendorProducts,
+    // getAllProductsSuperAdmin,
     addVendorProduct,
     updateVendorProduct,
     updateProductStatus,

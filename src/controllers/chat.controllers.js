@@ -71,7 +71,7 @@ const getAllChats = asyncHandler(async (req, res) => {
 
     if (req.user.currentRole === "user") filters.user = req.user._id;
     if (req.user.currentRole === "vendor")
-        filter.vendor = req.user.vendorId._id;
+        filters.vendor = req.user.vendorId._id;
 
     const allChatReqs = await chatService.getAllChatReqs(filters);
 

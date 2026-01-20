@@ -2,7 +2,6 @@ const { Router } = require("express");
 const {
     getAllProducts,
     getSpecificProduct,
-    getAllProductsSuperAdmin,
     addVendorProduct,
     updateVendorProduct,
     updateProductStatus,
@@ -32,12 +31,12 @@ router.get("/:page", getAllProducts);
 
 router.get("/search/:searchQuery/:page", searchProduct);
 
-router.get(
-    "/super-admin/:page",
-    isAuthenticated,
-    authorise("super-admin"),
-    getAllProductsSuperAdmin,
-);
+// router.get(
+//     "/super-admin/:page",
+//     isAuthenticated,
+//     authorise("super-admin"),
+//     getAllProductsSuperAdmin,
+// );
 
 router.post(
     "/vendor",
@@ -63,6 +62,6 @@ router.patch(
     updateProductStatus,
 );
 
-router.get("/:slug", getSpecificProduct);
+router.get("/slug/:slug", getSpecificProduct);
 
 module.exports = router;
