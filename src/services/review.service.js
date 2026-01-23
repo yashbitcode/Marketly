@@ -1,34 +1,46 @@
 const Review = require("../models/review.models");
-const { GENERAL_USER_FIELDS, PAGINATION_LIMIT } = require("../utils/constants");
+const { GENERAL_USER_FIELDS} = require("../utils/constants");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class ReviewService {
-    async getAllProductReviewsBySlug(slug, page) {
-        const allReviews = await Review.find({})
-            .populate([
-                {
-                    path: "user",
-                    select: GENERAL_USER_FIELDS,
-                },
-                {
-                    path: "product",
-                    match: {
-                        slug,
-                    },
-                    populate: [
+    async getAllProductReviewsBySlug(slug, page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [allReviews] = await Review.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user",
+                    foreignField: "_id",
+                    as: "user",
+                    pipeline: [
                         {
-                            path: "category",
-                        },
-                        {
-                            path: "vendor",
-                        },
-                    ],
-                },
-            ])
-            .skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT)
-            .sort({
-                createdAt: -1,
-            });
+                            $project: GENERAL_USER_FIELDS,
+                        }
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "product",
+                }
+            },
+            {
+                $addFields: {
+                    product: { $arrayElemAt: ["$product", 0] },
+                    user: { $arrayElemAt: ["$user", 0] },
+                }
+            },
+            {
+                $match: {
+                    "product.slug": slug,
+                }
+            },
+            ...basePagination,
+        ]);
 
         return allReviews;
     }

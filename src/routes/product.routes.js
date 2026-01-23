@@ -5,7 +5,6 @@ const {
     addVendorProduct,
     updateVendorProduct,
     updateProductStatus,
-    searchProduct,
     getFilteredProducts,
 } = require("../controllers/product.controllers");
 const { validate } = require("../middlewares/validate.middlewares");
@@ -18,18 +17,20 @@ const {
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
+    searchQueryValidations,
 } = require("../validations/product.validations");
 const router = Router();
 
 router.get(
     "/filter/:page",
     validate(productQueryValidations, true),
+    validate(searchQueryValidations),
     getFilteredProducts,
 );
 
 router.get("/:page", getAllProducts);
 
-router.get("/search/:searchQuery/:page", searchProduct);
+// router.get("/search/:searchQuery/:page", searchProduct);
 
 // router.get(
 //     "/super-admin/:page",

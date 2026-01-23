@@ -5,7 +5,7 @@ const {
 } = require("../middlewares/auth.middlewares");
 const { validate } = require("../middlewares/validate.middlewares");
 const {
-    getAllChats,
+    getAllChatsReqs,
     createChatRequest,
     updateChatRequest,
 } = require("../controllers/chat.controllers");
@@ -16,10 +16,10 @@ const {
 const router = Router();
 
 router.get(
-    "/",
-    isAuthenticated,
-    authorise("super-admin", "vendor", "user"),
-    getAllChats,
+    "/:page",
+    // isAuthenticated,
+    // authorise("super-admin", "vendor", "user"),
+    getAllChatsReqs,
 );
 
 router.post(

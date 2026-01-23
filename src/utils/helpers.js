@@ -1,5 +1,5 @@
 const crypto = require("node:crypto");
-const { TOKEN_LENGTH } = require("./constants");
+const { TOKEN_LENGTH, PAGINATION_LIMIT } = require("./constants");
 const slugify = require("slugify");
 const { nanoid } = require("nanoid");
 const jwt = require("jsonwebtoken");
@@ -80,45 +80,45 @@ const getProductFilterationPipeline = (filterQueries) => {
     categories = categories?.split(",");
     subCategories = subCategories?.split(",");
 
-    pipeline.push(
-        ...[
-            {
-                $lookup: {
-                    from: "sub-categories",
-                    localField: "category",
-                    foreignField: "_id",
-                    as: "category",
-                    pipeline: [
-                        {
-                            $lookup: {
-                                from: "parent-categories",
-                                localField: "parentCategory",
-                                foreignField: "_id",
-                                as: "parentCategory",
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $lookup: {
-                    from: "vendors",
-                    localField: "vendor",
-                    foreignField: "_id",
-                    as: "vendor",
-                },
-            },
-            {
-                $unwind: "$category",
-            },
-            {
-                $unwind: "$category.parentCategory",
-            },
-            {
-                $unwind: "$vendor",
-            },
-        ],
-    );
+    // pipeline.push(
+    //     ...[
+    //         {
+    //             $lookup: {
+    //                 from: "sub-categories",
+    //                 localField: "category",
+    //                 foreignField: "_id",
+    //                 as: "category",
+    //                 pipeline: [
+    //                     {
+    //                         $lookup: {
+    //                             from: "parent-categories",
+    //                             localField: "parentCategory",
+    //                             foreignField: "_id",
+    //                             as: "parentCategory",
+    //                         },
+    //                     },
+    //                 ],
+    //             },
+    //         },
+    //         {
+    //             $lookup: {
+    //                 from: "vendors",
+    //                 localField: "vendor",
+    //                 foreignField: "_id",
+    //                 as: "vendor",
+    //             },
+    //         },
+    //         {
+    //             $unwind: "$category",
+    //         },
+    //         {
+    //             $unwind: "$category.parentCategory",
+    //         },
+    //         {
+    //             $unwind: "$vendor",
+    //         },
+    //     ],
+    // );
 
     if (brandName)
         pipeline.push({
@@ -155,7 +155,6 @@ const getProductFilterationPipeline = (filterQueries) => {
             },
         });
 
-    if (true)
         pipeline.push({
             $match: {
                 $expr: {
@@ -174,6 +173,81 @@ const getProductFilterationPipeline = (filterQueries) => {
         });
 
     return pipeline;
+};
+
+const getPaginationBasePipeline = (page) => {
+    return [
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $facet: {
+                data: [
+                    { $skip: PAGINATION_LIMIT * (page - 1) },
+                    { $limit: PAGINATION_LIMIT },
+                ],
+                totalCount: [{ $count: "count" }],
+            },
+        },
+        {
+            $project: {
+                data: 1,
+                totalCount: {
+                    $ifNull: [{ $arrayElemAt: ["$totalCount.count", 0] }, 0],
+                },
+            },
+        },
+    ];
+};
+
+const getProductBasePipeline = () => {
+    return [
+        {
+            $lookup: {
+                from: "vendors",
+                localField: "vendor",
+                foreignField: "_id",
+                as: "vendor",
+            },
+        },
+        {
+            $addFields: {
+                vendor: { $arrayElemAt: ["$vendor", 0] },
+            },
+        },
+        {
+            $lookup: {
+                from: "sub-categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "parent-categories",
+                            localField: "parentCategory",
+                            foreignField: "_id",
+                            as: "parentCategory",
+                        },
+                    },
+                    {
+                        $addFields: {
+                            parentCategory: {
+                                $arrayElemAt: ["$parentCategory", 0],
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                category: { $arrayElemAt: ["$category", 0] },
+            },
+        },
+    ];
 };
 
 const getSearchQueryByFileIds = (userId, fileIds) => {
@@ -282,4 +356,6 @@ module.exports = {
     validateSchema,
     verifyRazorpaySignature,
     createInvoice,
+    getPaginationBasePipeline,
+    getProductBasePipeline
 };

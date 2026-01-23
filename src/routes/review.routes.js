@@ -15,8 +15,8 @@ const router = Router();
 
 router.get(
     "/product/:slug/:page",
-    isAuthenticated,
-    authorise("user"),
+    // isAuthenticated,
+    // authorise("user"),
     getAllProductReviews,
 );
 

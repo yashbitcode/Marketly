@@ -1,22 +1,23 @@
 const Product = require("../models/product.models");
 const { PAGINATION_LIMIT } = require("../utils/constants");
-const { getProductFilterationPipeline } = require("../utils/helpers");
+const {
+    getProductFilterationPipeline,
+    getPaginationBasePipeline,
+    getProductBasePipeline,
+} = require("../utils/helpers");
 
 class ProductService {
-    async getAll(filters, page) {
-        const products = await Product.find(filters)
-            .populate("vendor")
-            .populate({
-                path: "category",
-                populate: {
-                    path: "parentCategory",
-                },
-            })
-            .skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT)
-            .sort({
-                createdAt: -1,
-            });
+    async getAll(matchStage = {}, page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+        const baseProductPipeline = getProductBasePipeline();
+
+        const [products] = await Product.aggregate([
+            {
+                $match: matchStage,
+            },
+            ...baseProductPipeline,
+            ...basePagination,
+        ]);
 
         return products;
     }
@@ -78,52 +79,44 @@ class ProductService {
         return product;
     }
 
-    async getSearchedProducts(filters, searchQuery, page) {
-        const searchedProducts = await Product.find({
-            $text: {
-                $search: searchQuery,
-            },
-            ...filters,
-        })
-            .populate("vendor")
-            .populate({
-                path: "category",
-                populate: {
-                    path: "parentCategory",
+    async getFilteredProducts(matchStage = {}, filterQueries = {}, searchQuery = "", page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+        const baseFilterPipeline = getProductFilterationPipeline(filterQueries);
+        const baseProductPipeline = getProductBasePipeline();
+
+        const [searchedProducts] = await Product.aggregate([
+            {
+                $match: {
+                    ...matchStage,
+                    ...(searchQuery && {$text: { $search: searchQuery }})
                 },
-            })
-            .skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT)
-            .sort({
-                createdAt: -1,
-            });
+            },
+            ...baseProductPipeline,
+            ...baseFilterPipeline,
+            ...basePagination,
+        ]);
 
         return searchedProducts;
     }
 
-    async getFilteredProducts(filterQueries, page) {
-        const pipeline = getProductFilterationPipeline(filterQueries);
+    // async getFilteredProducts(filterQueries, page) {
+    //     const basePagination = getPaginationBasePipeline(+page);
+    //     const baseFilterPipeline = getProductFilterationPipeline(filterQueries);
+    //     const baseProductPipeline = getProductBasePipeline();
 
-        pipeline.push(
-            ...[
-                {
-                    $skip: PAGINATION_LIMIT * (page - 1),
-                },
-                {
-                    $limit: PAGINATION_LIMIT,
-                },
-                {
-                    $sort: {
-                        createdAt: -1,
-                    },
-                },
-            ],
-        );
+    //     const [filteredProducts] = await Product.aggregate([
+    //         {
+    //             $match: {
+                    
+    //             }
+    //         },
+    //         ...baseProductPipeline,
+    //         ...baseFilterPipeline,
+    //         ...basePagination,
+    //     ]);
 
-        const filteredProducts = await Product.aggregate(pipeline);
-
-        return filteredProducts;
-    }
+    //     return filteredProducts;
+    // }
 }
 
 module.exports = new ProductService();

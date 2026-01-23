@@ -66,14 +66,15 @@ const updateChatRequest = asyncHandler(async (req, res) => {
 //     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
 // });
 
-const getAllChats = asyncHandler(async (req, res) => {
-    const filters = {};
+const getAllChatsReqs = asyncHandler(async (req, res) => {
+    const {page} = req.params;
+    const matchStage = {};
 
-    if (req.user.currentRole === "user") filters.user = req.user._id;
-    if (req.user.currentRole === "vendor")
-        filters.vendor = req.user.vendorId._id;
+    // if (req.user.currentRole === "user") matchStage.user = req.user._id;
+    // if (req.user.currentRole === "vendor")
+    //     matchStage.vendor = req.user.vendorId._id;
 
-    const allChatReqs = await chatService.getAllChatReqs(filters);
+    const allChatReqs = await chatService.getAllChatReqs(matchStage, page);
 
     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
 });
@@ -81,7 +82,7 @@ const getAllChats = asyncHandler(async (req, res) => {
 module.exports = {
     createChatRequest,
     updateChatRequest,
-    getAllChats,
+    getAllChatsReqs,
 };
 
 // const createMessage = asyncHandler(async (req, res) => {

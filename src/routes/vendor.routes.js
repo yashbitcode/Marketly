@@ -17,7 +17,7 @@ const {
 const { validate } = require("../middlewares/validate.middlewares");
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllVendors);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllVendors);
 
 router.post(
     "/",

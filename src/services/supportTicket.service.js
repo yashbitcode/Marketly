@@ -1,14 +1,16 @@
 const SupportTicket = require("../models/supportTicket.models");
-const { PAGINATION_LIMIT } = require("../utils/constants");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class SupportTicketService {
-    async getAll(filters, page) {
-        const allTickets = await SupportTicket.find(filters)
-            .skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT)
-            .sort({
-                createdAt: -1,
-            });
+    async getAll(matchStage = {}, page = 1) {
+        const basePagination = await getPaginationBasePipeline(+page);
+
+        const [allTickets] = await SupportTicket.aggregate([
+            {
+                $match: matchStage,
+            },
+            ...basePagination,
+        ]);
 
         return allTickets;
     }

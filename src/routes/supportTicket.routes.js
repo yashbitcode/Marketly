@@ -13,7 +13,7 @@ const {
 } = require("../validations/supportTicket.validations");
 const router = Router();
 
-router.get("/:page", isAuthenticated, authorise("super-admin"), getAllTickets);
+router.get("/:page", getAllTickets);
 
 router.post("/", validate(addSupportTicketValidations), createTicket);
 

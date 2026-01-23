@@ -13,13 +13,19 @@ const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
 const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
-const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
+const ORDER_STATUS = [
+    "created",
+    "attempted",
+    "paid",
+    "failed",
+    // "refunded"
+];
 const ORDER_DELIVERY_STATUS = [
     "placed",
     "shipped",
     "out of delivery",
     "delivered",
-    "returned",
+    // "returned",
 ];
 const NOTIFICATION_TYPES = [
     "CHAT_REQUEST_UPDATE",
@@ -32,7 +38,7 @@ const SUPPORT_QUERY_TYPES = [
     "payment issue",
     "delivery issue",
     "product issue",
-    "return or refund",
+    // "return or refund",
     "account issue",
     "technical issue",
     "general issue",
@@ -48,6 +54,7 @@ const GENERAL_USER_FIELDS = {
     phoneNumber: 1,
     isEmailVerified: 1,
 };
+
 const COOKIE_OPTIONS = {
     httpOnly: true,
     secure: true,

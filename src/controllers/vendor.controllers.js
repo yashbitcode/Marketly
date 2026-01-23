@@ -6,9 +6,16 @@ const { asyncHandler } = require("../utils/asyncHandler");
 const { ACCOUNT_STATUS, GENERAL_USER_FIELDS } = require("../utils/constants");
 
 const getAllVendors = asyncHandler(async (req, res) => {
-    const allVendors = await vendorService.getAll();
+    const { page } = req.params;
+    const { data, totalCount } = await vendorService.getAll(page);
 
-    res.json(new ApiResponse(200, allVendors, "Vendors fetched successfully"));
+    res.json(
+        new ApiResponse(
+            200,
+            { vendors: data, totalCount },
+            "Vendors fetched successfully",
+        ),
+    );
 });
 
 const createVendor = asyncHandler(async (req, res) => {

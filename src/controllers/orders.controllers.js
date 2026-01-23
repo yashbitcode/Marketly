@@ -93,13 +93,14 @@ const getOrderByOrderId = asyncHandler(async (req, res) => {
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {
+    const {page} = req.params;
     let matchStage = {};
 
-    if (req.user.currentRole === "user") matchStage.user = req.user._id;
-    if (req.user.currentRole === "vendor")
-        matchStage.vendor = req.user.vendorId._id;
+    // if (req.user.currentRole === "user") matchStage.user = req.user._id;
+    // if (req.user.currentRole === "vendor")
+    //     matchStage.vendor = req.user.vendorId._id;
 
-    const allOrders = await orderService.getAll(matchStage);
+    const allOrders = await orderService.getAll(matchStage, page);
 
     res.json(new ApiResponse(200, allOrders, "Orders fetched successfully"));
 });

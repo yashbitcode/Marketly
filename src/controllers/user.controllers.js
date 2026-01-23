@@ -1,12 +1,13 @@
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
 
 const getAllUsers = asyncHandler(async (req, res) => {
-    const allUsers = await userService.getAll({}, GENERAL_USER_FIELDS);
+    const {page} = req.params;
 
-    res.json(new ApiResponse(200, allUsers, "Users fetched successfully"));
+    const {data, totalCount} = await userService.getAll(page);
+
+    res.json(new ApiResponse(200, {users: data, totalCount}, "Users fetched successfully"));
 });
 
 const updateUser = asyncHandler(async (req, res) => {

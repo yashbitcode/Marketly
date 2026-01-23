@@ -5,12 +5,12 @@ const { asyncHandler } = require("../utils/asyncHandler");
 
 const getAllApplications = asyncHandler(async (req, res) => {
     const { page } = req.params;
-    const allApplications = await vendorApplicationService.getAll({}, +page);
+    const {data, totalCount} = await vendorApplicationService.getAll(page);
 
     res.json(
         new ApiResponse(
             200,
-            allApplications,
+            {applications: data, totalCount},
             "Applications fetched successfully",
         ),
     );

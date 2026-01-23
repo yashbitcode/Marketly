@@ -1,6 +1,7 @@
 const Order = require("../models/order.models");
 const Product = require("../models/product.models");
 const SellerOrder = require("../models/sellerOrder.models");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class OrderService {
     async createOrder(payload) {
@@ -35,8 +36,10 @@ class OrderService {
         return order;
     }
 
-    async getAll(matchStage = {}) {
-        const allOrders = await SellerOrder.aggregate([
+    async getAll(matchStage = {}, page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [allOrders] = await SellerOrder.aggregate([
             {
                 $match: matchStage,
             },
@@ -56,6 +59,12 @@ class OrderService {
                     as: "order",
                 },
             },
+            {
+                $addFields: {
+                    order: { $arrayElemAt: ["$order", 0] },
+                },
+            },
+            ...basePagination,
         ]);
 
         return allOrders;

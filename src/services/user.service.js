@@ -1,6 +1,8 @@
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
 const crypto = require("node:crypto");
+const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class UserService {
     async createNewUser(userData) {
@@ -39,8 +41,15 @@ class UserService {
         }
     }
 
-    async getAll(filters = {}, fieldsSelection = {}) {
-        const allUsers = await User.find(filters).select(fieldsSelection);
+    async getAll(page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [allUsers] = await User.aggregate([
+            {
+                $project: GENERAL_USER_FIELDS,
+            },
+            ...basePagination    
+        ]);
 
         return allUsers;
     }

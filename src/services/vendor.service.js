@@ -1,4 +1,5 @@
 const Vendor = require("../models/vendor.models");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class VendorService {
     async insertVendor(payload) {
@@ -25,8 +26,10 @@ class VendorService {
         return vendor;
     }
 
-    async getAll(filters = {}, vendorFieldsSelection = {}) {
-        const allVendors = await Vendor.find(filters).select(vendorFieldsSelection);
+    async getAll(page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [allVendors] = await Vendor.aggregate(basePagination);
 
         return allVendors;
     }

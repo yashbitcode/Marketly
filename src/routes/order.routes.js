@@ -23,14 +23,14 @@ const router = Router();
 
 router.get("/gg", gg);
 router.get(
-    "/:orderId",
+    "/specific/:orderId",
     isAuthenticated,
     authorise("user", "vendor", "super-admin"),
     getOrderByOrderId,
 );
 
 router.get(
-    "/",
+    "/:page",
     isAuthenticated,
     authorise("user", "vendor", "super-admin"),
     getAllOrders,

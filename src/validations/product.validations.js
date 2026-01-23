@@ -51,6 +51,10 @@ const updateProductStatusValidations = z
             });
     });
 
+const searchQueryValidations = z.object({
+    searchQuery: z.string().optional(),
+});
+
 const productQueryValidations = z
     .object({
         minPrice: z.string(),
@@ -93,4 +97,5 @@ module.exports = {
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
+    searchQueryValidations
 };

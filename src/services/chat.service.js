@@ -2,6 +2,7 @@ const ChatRequest = require("../models/chatRequest.models");
 const { nanoid } = require("nanoid");
 const Message = require("../models/message.models");
 const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class ChatService {
     async createChatReq(payload) {
@@ -16,16 +17,52 @@ class ChatService {
         return chatRequest;
     }
 
-    async getAllChatReqs(filters) {
-        const chatRequests = await ChatRequest.find(filters).populate([
+    async getAllChatReqs(matchStage = {}, page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [chatRequests] = await ChatRequest.aggregate([
             {
-                path: "user",
-                select: GENERAL_USER_FIELDS,
+                $match: matchStage,
             },
             {
-                path: "vendor",
+                $lookup: {
+                    from: "users",
+                    localField: "user",
+                    foreignField: "_id",
+                    as: "user",
+                    pipeline: [
+                        {
+                            $project: GENERAL_USER_FIELDS,
+                        }
+                    ]
+                },
             },
+            {
+                $lookup: {
+                    from: "vendors",
+                    localField: "vendor",
+                    foreignField: "_id",
+                    as: "vendor",
+                },
+            },
+            {
+                $addFields: {
+                    user: { $arrayElemAt: ["$user", 0] },
+                    vendor: { $arrayElemAt: ["$vendor", 0] },
+                },
+            },
+            ...basePagination,
         ]);
+
+        // const chatRequests = await ChatRequest.find(matchStage).populate([
+        //     {
+        //         path: "user",
+        //         select: GENERAL_USER_FIELDS,
+        //     },
+        //     {
+        //         path: "vendor",
+        //     },
+        // ]);
 
         return chatRequests;
     }

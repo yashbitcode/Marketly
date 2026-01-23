@@ -5,17 +5,17 @@ const ApiResponse = require("../utils/api-response");
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
-    const filters = {};
+    const matchStage = {};
 
-    if (req?.user?.currentRole || req.user.currentRole === "user")
-        filters = {
+    if (!req?.user?.currentRole || req.user.currentRole === "user")
+        matchStage = {
             "approval.status": "accepted",
             isActive: true,
         };
     else if (req.user.currentRole === "vendor")
-        filters.vendor = req.user.vendorId._id;
+        matchStage.vendor = req.user.vendorId._id;
 
-    const allProducts = await productService.getAll(filters, +page);
+    const allProducts = await productService.getAll(matchStage, page);
 
     res.json(
         new ApiResponse(200, allProducts, "Products fetched successfully"),
@@ -96,31 +96,34 @@ const updateProductStatus = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, product, "Product updated successfully"));
 });
 
-const searchProduct = asyncHandler(async (req, res) => {
-    const { searchQuery, page } = req.params;
+const getFilteredProducts = asyncHandler(async (req, res) => {
+    const { page } = req.params;
+    const {searchQuery} = req.body;
+    const filterQueries = req.query;
 
-    const searchedProducts = await productService.getSearchedProducts(
+    const filteredProducts = await productService.getFilteredProducts(
         { "approval.status": "accepted", isActive: true },
+        filterQueries,
         searchQuery,
         +page,
     );
 
     res.json(
-        new ApiResponse(200, searchedProducts, "Products fetched successfully"),
+        new ApiResponse(200, filteredProducts, "Products fetched successfully"),
     );
 });
 
-const getFilteredProducts = asyncHandler(async (req, res) => {
-    const filterQueries = req.query;
-    const { page } = req.params;
+// const getFilteredProducts = asyncHandler(async (req, res) => {
+//     const filterQueries = req.query;
+//     const { page } = req.params;
 
-    const filteredProducts = await productService.getFilteredProducts(
-        filterQueries,
-        +page,
-    );
+//     const filteredProducts = await productService.getFilteredProducts(
+//         filterQueries,
+//         +page,
+//     );
 
-    res.json(filteredProducts);
-});
+//     res.json(new ApiResponse(200, filteredProducts, "Products fetched successfully"));
+// });
 
 module.exports = {
     getAllProducts,
@@ -130,6 +133,5 @@ module.exports = {
     addVendorProduct,
     updateVendorProduct,
     updateProductStatus,
-    searchProduct,
     getFilteredProducts,
 };

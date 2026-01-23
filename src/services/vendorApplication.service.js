@@ -1,17 +1,32 @@
-const { GENERAL_USER_FIELDS, PAGINATION_LIMIT } = require("../utils/constants");
+const { GENERAL_USER_FIELDS } = require("../utils/constants");
 const vendorService = require("./vendor.service");
 const userService = require("./user.service");
 const VendorApplication = require("../models/vendorApplication.models");
+const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class VendorApplicationService {
-    async getAll(filters, page) {
-        const allApplications = await VendorApplication.find(filters)
-            .populate("user", GENERAL_USER_FIELDS)
-            .skip(PAGINATION_LIMIT * (page - 1))
-            .limit(PAGINATION_LIMIT)
-            .sort({
-                createdAt: -1,
-            });
+    async getAll(page) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        const [allApplications] = await VendorApplication.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "user",
+                    foreignField: "_id",
+                    as: "user",
+                    pipeline: [
+                        {
+                            $project: GENERAL_USER_FIELDS
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: "$user"
+            },
+            ...basePagination
+        ])
 
         return allApplications;
     }
