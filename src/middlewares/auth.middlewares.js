@@ -3,6 +3,7 @@ const ApiError = require("../utils/api-error");
 const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
 const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const {pubClient: redisClient} = require("../config/redis/connection");
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -24,27 +25,52 @@ const verifyToken = async (authHeader) => {
 };
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const { _id, currentRole, tokenVersion } = await verifyToken(
+    const { _id, vendorId, currentRole, tokenVersion } = await verifyToken(
         req.get("Authorization"),
     );
 
     let payload;
 
-    if (currentRole === "vendor")
-        payload = await userService.getUserWithVendor(
-            { _id },
-            GENERAL_USER_FIELDS,
-        );
-    else payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
+    if (currentRole === "vendor") {
+        payload = JSON.parse(await redisClient.get(`vendor:${vendorId}`));
 
-    if (!payload) throw new ApiError(401, "Un-Authenticated");
+        // payload = await userService.getUserWithVendor(
+        //     { _id },
+        //     GENERAL_USER_FIELDS,
+        // );
+        // console.log(payload);
+    }
+    else {
+        payload = JSON.parse(await redisClient.get(`user:${_id}`));
 
-    if (payload.tokenVersion !== tokenVersion) {
-        res.clearCookie("accessToken");
-        res.clearCookie("refreshToken");
+        // payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
+    }
+
+    if(!payload || payload.tokenVersion !== tokenVersion) {
+            res.clearCookie("accessToken");
+            res.clearCookie("refreshToken");
+
+        if(!payload) throw new ApiError(401, "Un-Authenticated");
+        
+        const keyToDelete = currentRole === "vendor" ?`vendor:${vendorId}` : `user:${_id}`;
+        
+        await redisClient.del(keyToDelete);
 
         throw new ApiError(401, "Un-authenticated token invalidated");
     }
+
+    // if (!payload) throw new ApiError(401, "Un-Authenticated");
+
+    // if (payload.tokenVersion !== tokenVersion) {
+    //     res.clearCookie("accessToken");
+    //     res.clearCookie("refreshToken");
+
+    //     const keyToDelete = currentRole === "vendor" ?`vendor:${vendorId}` : `user:${_id}`;
+        
+    //     await redisClient.del(keyToDelete);
+
+    //     throw new ApiError(401, "Un-authenticated token invalidated");
+    // }
 
     req.user = payload;
     req.user.currentRole = currentRole;

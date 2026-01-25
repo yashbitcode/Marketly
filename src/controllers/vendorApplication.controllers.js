@@ -2,6 +2,7 @@ const vendorApplicationService = require("../services/vendorApplication.service"
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
+const {pubClient: redisClient} = require("../config/redis/connection");
 
 const getAllApplications = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -60,6 +61,8 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
     updatedApplication.vendor = vendor._id;
 
     await updatedApplication.save();
+
+    await redisClient.del(`user:${mainUser._id}`);
 
     res.json(
         new ApiResponse(

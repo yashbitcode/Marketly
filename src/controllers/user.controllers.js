@@ -13,7 +13,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user;
 
-    const user = await userService.updateUserData(_id, req.body);
+    const user = await userService.updateUserData({_id}, req.body);
 
     res.json(new ApiResponse(200, user, "User updated successfully"));
 });

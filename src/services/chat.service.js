@@ -7,6 +7,7 @@ const { getPaginationBasePipeline } = require("../utils/helpers");
 class ChatService {
     async createChatReq(payload) {
         const { user, vendor } = payload;
+        
         const chatRequest = new ChatRequest({
             user,
             vendor,
@@ -53,16 +54,6 @@ class ChatService {
             },
             ...basePagination,
         ]);
-
-        // const chatRequests = await ChatRequest.find(matchStage).populate([
-        //     {
-        //         path: "user",
-        //         select: GENERAL_USER_FIELDS,
-        //     },
-        //     {
-        //         path: "vendor",
-        //     },
-        // ]);
 
         return chatRequests;
     }

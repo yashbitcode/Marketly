@@ -26,7 +26,7 @@ const createVendor = asyncHandler(async (req, res) => {
     if (!vendor) throw new ApiError();
 
     const user = await userService.updateUserData(
-        _id,
+        {_id},
         { vendorId: vendor._id, role: "vendor" },
         GENERAL_USER_FIELDS,
     );

@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const {
     generateRandomNumberString,
     generateBaseTokens,
+    createHash,
 } = require("../utils/helpers");
 const { REGEX, ROLES } = require("../utils/constants");
 const Vendor = require("./vendor.models");
@@ -117,10 +118,7 @@ UserSchema.methods.verifyPassword = async function (password) {
 
 UserSchema.statics.generateTokens = function () {
     const sessionId = crypto.randomBytes(15).toString("hex");
-    const hashedSessionId = crypto
-        .createHmac("sha256", process.env.HASHED_MAC_SECRET)
-        .update(sessionId)
-        .digest("hex");
+    const hashedSessionId = createHash(sessionId, process.env.HASHED_MAC_SECRET);
     const token = generateRandomNumberString();
     const expiryDate = new Date(Date.now() + 1000 * 60 * 20);
 

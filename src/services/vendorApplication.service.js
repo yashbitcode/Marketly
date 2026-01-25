@@ -17,16 +17,16 @@ class VendorApplicationService {
                     as: "user",
                     pipeline: [
                         {
-                            $project: GENERAL_USER_FIELDS
-                        }
-                    ]
-                }
+                            $project: GENERAL_USER_FIELDS,
+                        },
+                    ],
+                },
             },
             {
-                $unwind: "$user"
+                $unwind: "$user",
             },
-            ...basePagination
-        ])
+            ...basePagination,
+        ]);
 
         return allApplications;
     }
@@ -80,8 +80,8 @@ class VendorApplicationService {
         if (!vendor) throw new ApiError();
 
         const mainUser = await userService.updateUserData(
-            user,
-            { vendorId: vendor._id },
+            { _id: user },
+            { vendorId: vendor._id, $inc: { tokenVersion: 1 } },
             GENERAL_USER_FIELDS,
         );
 

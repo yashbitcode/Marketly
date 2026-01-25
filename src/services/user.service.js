@@ -1,6 +1,5 @@
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
-const crypto = require("node:crypto");
 const { GENERAL_USER_FIELDS } = require("../utils/constants");
 const { getPaginationBasePipeline } = require("../utils/helpers");
 
@@ -75,10 +74,7 @@ class UserService {
     }
 
     async getEmailVerifySessionDoc(sessionId, fieldsSelection = {}) {
-        const hashedSessionId = crypto
-            .createHmac("sha256", process.env.HASHED_MAC_SECRET)
-            .update(sessionId)
-            .digest("hex");
+        const hashedSessionId = createHash(sessionId, process.env.HASHED_MAC_SECRET);
 
         const user = await User.findOne({
             emailVerificationSessionId: hashedSessionId,
@@ -105,10 +101,7 @@ class UserService {
     }
 
     async getResetPasswordDoc(resetToken, fieldsSelection = {}) {
-        const hashedResetToken = crypto
-            .createHmac("sha256", process.env.HASHED_MAC_SECRET)
-            .update(resetToken)
-            .digest("hex");
+        const hashedResetToken = createHash(resetToken, process.env.HASHED_MAC_SECRET);
 
         const user = await User.findOne({
             forgotPasswordResetToken: hashedResetToken,
@@ -120,8 +113,8 @@ class UserService {
         return user;
     }
 
-    async updateUserData(_id, payload, fieldsSelection = {}) {
-        const user = await User.findByIdAndUpdate(_id, payload, {
+    async updateUserData(filters = {}, payload = {}, fieldsSelection = {}) {
+        const user = await User.findOneAndUpdate(filters, payload, {
             new: true,
             runValidators: true,
         }).select(fieldsSelection);

@@ -10,8 +10,11 @@ const {
     generateTableRow,
     generateHeader,
     generateCustomerInformation,
-    generateHr,
 } = require("./invoiceHelpers");
+
+const createHash = (body, secret) => {
+    return crypto.createHmac("sha256", secret).update(body).digest("hex");
+};
 
 const generateRandomNumberString = () => {
     let result = "";
@@ -155,22 +158,22 @@ const getProductFilterationPipeline = (filterQueries) => {
             },
         });
 
-        pipeline.push({
-            $match: {
-                $expr: {
-                    $and: [
-                        (categories && {
-                            $in: ["$category.parentCategory.slug", categories],
-                        }) ||
-                            true,
-                        (subCategories && {
-                            $in: ["$category.slug", subCategories],
-                        }) ||
-                            true,
-                    ],
-                },
+    pipeline.push({
+        $match: {
+            $expr: {
+                $and: [
+                    (categories && {
+                        $in: ["$category.parentCategory.slug", categories],
+                    }) ||
+                        true,
+                    (subCategories && {
+                        $in: ["$category.slug", subCategories],
+                    }) ||
+                        true,
+                ],
             },
-        });
+        },
+    });
 
     return pipeline;
 };
@@ -267,13 +270,10 @@ const validateSchema = (validationSchema, payload) => {
     return validation.data;
 };
 
-const verifyRazorpaySignature = (orderId, paymenId, signature) => {
+const verifyRazorpaySignature = (orderId, paymentId, signature) => {
     const body = orderId + "|" + paymentId;
 
-    const expectedSignature = crypto
-        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-        .update(body)
-        .digest("hex");
+    const expectedSignature = createHash(body, process.env.RAZORPAY_KEY_SECRET);
 
     return expectedSignature === signature;
 };
@@ -357,5 +357,6 @@ module.exports = {
     verifyRazorpaySignature,
     createInvoice,
     getPaginationBasePipeline,
-    getProductBasePipeline
+    getProductBasePipeline,
+    createHash,
 };
