@@ -3,10 +3,25 @@ const Address = require("../models/address.models");
 const ApiResponse = require("../utils/api-response");
 const addressService = require("../services/address.service");
 const ApiError = require("../utils/api-error");
+const { pubClient: redisClient } = require("../config/redis/connection");
 
 const getAllUserAddresses = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const allAddresses = await addressService.getAllAddressesByUserId(_id);
+    let allAddresses = await redisClient.get(`user:addresses:${_id}`);
+
+    if (allAddresses)
+        return res.json(
+            new ApiResponse(
+                200,
+                allAddresses,
+                "All addresses fetched successfully",
+            ),
+        );
+
+    allAddresses = await addressService.getAllAddressesByUserId(_id);
+    
+    await redisClient.set(`user:addresses:${_id}`, JSON.stringify(allAddresses));
+    await redisClient.expire(`user:addresses:${_id}`, 60 * 60 * 24);
 
     res.json(
         new ApiResponse(
@@ -23,6 +38,8 @@ const addAddress = asyncHandler(async (req, res) => {
 
     const address = await addressService.addAddress(req.body);
 
+    await redisClient.del(`user:addresses:${_id}`);
+
     res.json(new ApiResponse(201, address, "Address added successfully"));
 });
 
@@ -33,6 +50,8 @@ const deleteAddress = asyncHandler(async (req, res) => {
     const address = await addressService.deleteAddressById(addressId, _id);
 
     if (!address) throw new ApiError(404, "Address not found");
+
+    await redisClient.del(`user:addresses:${_id}`);
 
     res.json(
         new ApiResponse(200, { addressId }, "Address deleted successfully"),
@@ -52,6 +71,8 @@ const updateAddress = asyncHandler(async (req, res) => {
 
     if (!updatedAddress) throw new ApiError(404, "Address not found");
 
+    await redisClient.del(`user:addresses:${_id}`);
+
     res.json(
         new ApiResponse(200, updatedAddress, "Address updated successfully"),
     );
@@ -66,6 +87,8 @@ const markDefaultAddress = asyncHandler(async (req, res) => {
     if (!address) throw new ApiError(404, "Address not found");
 
     await addressService.markAddressAsDefault(addressId, _id);
+
+    await redisClient.del(`user:addresses:${_id}`);
 
     res.json(
         new ApiResponse(

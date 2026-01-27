@@ -110,6 +110,7 @@ const login = asyncHandler(async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     await redisClient.set(`user:${user._id}`, JSON.stringify(payload));
+    await redisClient.expire(`user:${user._id}`, 60 * 60 * 24);
 
     res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
         .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
@@ -121,8 +122,11 @@ const logout = asyncHandler(async (req, res) => {
     const user = await userService.getUserById(_id);
 
     user.refreshToken = "";
-
+    
     await user.save({ validateBeforeSave: false });
+
+    let redisKey = req.user.currentRole === "vendor" ? `vendor:${user.vendorId._id}` : `user:${_id}`;
+    await redisClient.del(redisKey);
 
     res.clearCookie("accessToken")
         .clearCookie("refreshToken")
@@ -159,6 +163,7 @@ const loginVendor = asyncHandler(async (req, res) => {
     };
 
     await redisClient.set(`vendor:${vendorUser.vendorId._id}`, JSON.stringify(payload));
+    await redisClient.expire(`vendor:${vendorUser.vendorId._id}`, 60 * 60 * 24);
 
     res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
         .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
@@ -192,13 +197,19 @@ const loginSuperAdmin = asyncHandler(async (req, res) => {
         _id: superAdmin._id,
         fullname: superAdmin.fullname,
         email: superAdmin.email,
+        username: superAdmin.username,
+        phone: superAdmin.phoneNumber,
         role: superAdmin.role,
         avatar: superAdmin.avatar,
+        isEmailVerified: superAdmin.isEmailVerified,
         tokenVersion: superAdmin.tokenVersion,
     };
 
     const { accessToken, refreshToken } =
         superAdmin.generateAccessAndRefreshTokens("super-admin");
+
+    await redisClient.set(`user:${superAdmin._id}`, JSON.stringify(payload));
+    await redisClient.expire(`user:${superAdmin._id}`, 60 * 60 * 24);
 
     res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
         .cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
