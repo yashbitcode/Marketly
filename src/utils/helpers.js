@@ -66,6 +66,46 @@ const generateBaseTokens = (payload) => {
     };
 };
 
+const getVendorPayoutFilterationPipeline = (filterQueries) => {
+    const pipeline = [];
+    
+    let {paid, notPaid, minPrice, maxPrice} = filterQueries;
+
+    minPrice = +minPrice;
+    maxPrice = +maxPrice;
+
+    if(minPrice || maxPrice) {
+        pipeline.push({
+            $match: {
+                ...((minPrice ||
+                    minPrice === 0 ||
+                    maxPrice ||
+                    maxPrice === 0) && {
+                    price: {
+                        ...((minPrice || minPrice === 0) && {
+                            $gte: minPrice,
+                        }),
+                        ...((maxPrice || maxPrice === 0) && {
+                            $lte: maxPrice,
+                        }),
+                    },
+                }),
+            }
+        })
+    }
+
+    if((paid !== undefined && notPaid !== undefined) && !(paid && notPaid)) { 
+        pipeline.push({
+            $match: {
+                ...(paid && {isPaid: true}),
+                ...(notPaid && {isPaid: false})
+            }
+        })
+    }
+
+    return pipeline;
+}
+
 const getProductFilterationPipeline = (filterQueries) => {
     const pipeline = [];
     let {
@@ -359,4 +399,5 @@ module.exports = {
     getPaginationBasePipeline,
     getProductBasePipeline,
     createHash,
+    getVendorPayoutFilterationPipeline
 };

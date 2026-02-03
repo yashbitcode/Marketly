@@ -5,7 +5,7 @@ const VendorSchema = new mongoose.Schema(
     {
         ...baseVendorSchema,
         stripeAccountId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
         },
         stripeAccountOnboarded: {
             type: Boolean,

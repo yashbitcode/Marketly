@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
+const Vendor = require("./vendor.models");
+const SellerOrder = require("./sellerOrder.models");
 
-const VendorPaymentSchema = mongoose.Schema({
+const VendorPayoutSchema = mongoose.Schema({
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: Vendor,
         required: [true, "Vendor ID is required"]
     },
     sellerOrder: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: SellerOrder,
         required: [true, "Seller order ID is required"]
     },
     amount: {
@@ -20,6 +24,6 @@ const VendorPaymentSchema = mongoose.Schema({
     }
 })
 
-const VendorPayment = mongoose.model("vendor-payments", VendorPaymentSchema);
+const VendorPayout = mongoose.model("vendor-payouts", VendorPayoutSchema);
 
-module.exports = VendorPayment;
+module.exports = VendorPayout;

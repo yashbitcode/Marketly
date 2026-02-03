@@ -3,7 +3,7 @@ const Order = require("../models/order.models");
 const Product = require("../models/product.models");
 const SellerOrder = require("../models/sellerOrder.models");
 const { getPaginationBasePipeline } = require("../utils/helpers");
-const vendorPaymentService = require("./vendorPayment.service");
+const vendorPayoutService = require("./vendorPayout.service");
 
 class OrderService {
     async createOrder(payload) {
@@ -235,7 +235,7 @@ class OrderService {
         ]);
 
         let sellerOrdersPayload = [];
-        let vendorPaymentsPayload = [];
+        let vendorPayoutsPayload = [];
 
         groupedProducts.forEach((el) => {
             const sellerOrderId = new mongoose.Types.ObjectId();
@@ -248,7 +248,7 @@ class OrderService {
                 products: el.products,
             });
 
-            vendorPaymentsPayload.push({
+            vendorPayoutsPayload.push({
                 vendor: el._id,
                 sellerOrder: sellerOrderId,
                 amount: el.totalAmount,
@@ -256,10 +256,10 @@ class OrderService {
         });
 
         const sellerOrders = await SellerOrder.insertMany(sellerOrdersPayload);
-        const vendorPayments = await vendorPaymentService.createBulkVendorPayments(vendorPaymentsPayload)
+        const vendorPayouts = await vendorPayoutService.createBulkVendorPayouts(vendorPayoutsPayload)
         // console.log(util.inspect(sellerOrders, { depth: null }));
 
-        return {sellerOrders, vendorPayments};
+        return {sellerOrders, vendorPayouts};
     }
 
     async updateParentOrder(filters = {}, payload = {}) {
