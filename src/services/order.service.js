@@ -1,7 +1,9 @@
+const { default: mongoose } = require("mongoose");
 const Order = require("../models/order.models");
 const Product = require("../models/product.models");
 const SellerOrder = require("../models/sellerOrder.models");
 const { getPaginationBasePipeline } = require("../utils/helpers");
+const vendorPaymentService = require("./vendorPayment.service");
 
 class OrderService {
     async createOrder(payload) {
@@ -215,22 +217,49 @@ class OrderService {
                             },
                         },
                     },
+                    totalAmount: {
+                        $sum: {
+                            $multiply: [
+                                "$price",
+                                {
+                                    $getField: {
+                                        field: "$slug",
+                                        input: products,
+                                    },
+                                },
+                            ],
+                        },
+                    },
                 },
             },
         ]);
 
-        const orders = groupedProducts.map((el) => ({
-            vendor: el._id,
-            user,
-            orderDocId,
-            products: el.products,
-        }));
+        let sellerOrdersPayload = [];
+        let vendorPaymentsPayload = [];
 
-        const sellerOrders = await SellerOrder.insertMany(orders);
+        groupedProducts.forEach((el) => {
+            const sellerOrderId = new mongoose.Types.ObjectId();
 
+            sellerOrdersPayload.push({
+                _id: sellerOrderId,
+                vendor: el._id,
+                user,
+                orderDocId,
+                products: el.products,
+            });
+
+            vendorPaymentsPayload.push({
+                vendor: el._id,
+                sellerOrder: sellerOrderId,
+                amount: el.totalAmount,
+            });
+        });
+
+        const sellerOrders = await SellerOrder.insertMany(sellerOrdersPayload);
+        const vendorPayments = await vendorPaymentService.createBulkVendorPayments(vendorPaymentsPayload)
         // console.log(util.inspect(sellerOrders, { depth: null }));
 
-        return sellerOrders;
+        return {sellerOrders, vendorPayments};
     }
 
     async updateParentOrder(filters = {}, payload = {}) {

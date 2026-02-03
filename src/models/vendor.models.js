@@ -4,7 +4,13 @@ const { baseVendorSchema } = require("../utils/baseSchemas");
 const VendorSchema = new mongoose.Schema(
     {
         ...baseVendorSchema,
-
+        stripeAccountId: {
+            type: mongoose.Schema.Types.ObjectId,
+        },
+        stripeAccountOnboarded: {
+            type: Boolean,
+            default: false
+        },
         metrics: {
             avgCustomerRating: {
                 type: Number,

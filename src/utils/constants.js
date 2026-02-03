@@ -2,8 +2,10 @@ const BASE_ENDPOINT = "/api/v1";
 const FRONTEND_URL = "*";
 const TOKEN_LENGTH = 6;
 const PAGINATION_LIMIT = 10;
+const COMMISSION_RATE = 10;
 
 const ROLES = ["user", "vendor", "super-admin"];
+const BUSINESS_SIZE = ["Just me", '1-10', "11-50", "51-100", "100+"];
 const VENDOR_TYPE = ["individual", "business"];
 const DATATYPES = ["string", "number"];
 const ADDRESS_TYPE = ["home", "work", "other"];
@@ -92,4 +94,6 @@ module.exports = {
     NOTIFICATION_TYPES,
     ORDER_STATUS,
     ORDER_DELIVERY_STATUS,
+    COMMISSION_RATE,
+    BUSINESS_SIZE
 };

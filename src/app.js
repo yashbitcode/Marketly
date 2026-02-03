@@ -27,6 +27,7 @@ const supportTicketRouter = require("./routes/supportTicket.routes");
 const mediaRouter = require("./routes/media.routes");
 const chatRouter = require("./routes/chat.routes");
 const orderRouter = require("./routes/order.routes");
+const vendorStripeRouter = require("./routes/vendorStripe.routes");
 
 app.use(cors());
 
@@ -51,6 +52,7 @@ app.use(BASE_ENDPOINT + "/support", supportTicketRouter);
 app.use(BASE_ENDPOINT + "/media", mediaRouter);
 app.use(BASE_ENDPOINT + "/chat", chatRouter);
 app.use(BASE_ENDPOINT + "/order", orderRouter);
+app.use(BASE_ENDPOINT + "/vendor-stripe", vendorStripeRouter);
 
 app.use(handleError);
 
