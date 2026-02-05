@@ -1,5 +1,5 @@
 const VendorPayout = require("../models/vendorPayout.models");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
+const { GENERAL_USER_FIELDS, VENDOR_TYPE } = require("../utils/constants");
 const {
     getPaginationBasePipeline,
     getVendorPayoutFilterationPipeline,
@@ -80,10 +80,18 @@ class VendorPayoutService {
         return allVendorPayouts;
     }
 
-    async updateVendorPayoutStatus(id) {
+    async getSpecificForAmount(id) {
+        const vendorPayout = await VendorPayout.findById(id).populate({
+            path: "vendor"
+        });
+
+        return vendorPayout;
+    }
+
+    async updateVendorPayout(id, payload) {
         const vendorPayout = await VendorPayout.findByIdAndUpdate(
             id,
-            { isPaid: true },
+            payload,
             {
                 new: true,
             },

@@ -29,8 +29,12 @@ const chatRouter = require("./routes/chat.routes");
 const orderRouter = require("./routes/order.routes");
 const vendorStripeRouter = require("./routes/vendorStripe.routes");
 const vendorPayoutRouter = require("./routes/vendorPayout.routes");
+const webhookRouter = require("./routes/webhook.routes");
+const {Stripe} = require("stripe");
 
 app.use(cors());
+
+app.use(BASE_ENDPOINT + "/webhook", webhookRouter);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -57,5 +61,18 @@ app.use(BASE_ENDPOINT + "/vendor-stripe", vendorStripeRouter);
 app.use(BASE_ENDPOINT + "/vendor-payout", vendorPayoutRouter);
 
 app.use(handleError);
+
+app.post("/ss", async (req, res) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const transfer = await stripe.transfers.create({
+            amount: 1100,
+            currency: "usd",
+            destination: "acct_1SvKqTQTRD3a16mE",
+            description: `Adding funds to account`,
+        });
+
+        res.send(transfer);
+})
 
 module.exports = httpServer;

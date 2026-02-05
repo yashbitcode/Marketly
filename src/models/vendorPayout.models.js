@@ -18,6 +18,12 @@ const VendorPayoutSchema = mongoose.Schema({
         required: [true, "Amount is required"],
         min: [1, "Amount cannot be less than 1"]
     },
+    transferId: {
+        type: String
+    },
+    payoutId: {
+        type: String
+    },
     isPaid: {
         type: Boolean,
         default: false

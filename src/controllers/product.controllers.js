@@ -90,7 +90,10 @@ const getSpecificProduct = asyncHandler(async (req, res) => {
 });
 
 const addVendorProduct = asyncHandler(async (req, res) => {
-    const { _id } = req.user.vendorId;
+    const { _id, stripeAccountOnboarded } = req.user.vendorId;
+
+    if(!stripeAccountOnboarded) throw new ApiError(403, "Get yourself onboarded first");
+
     const payload = req.body;
 
     const product = await productService.addProduct(_id, payload);

@@ -10,7 +10,7 @@ class StripeService {
         const { email, businessCategory, businessSize } = detailsPayload;
         const { vendorType, storeName, fullname, phoneNumber, _id: vendorId } = vendor;
 
-        const account = await stripe.v2.core.accounts.create({
+        const account = await this.stripe.v2.core.accounts.create({
             contact_email: email,
             contact_phone: phoneNumber,
             display_name: fullname,
@@ -51,7 +51,7 @@ class StripeService {
     }
 
     async getOnboardingLink(accountId) {
-        const accountLink = await stripe.v2.core.accountLinks.create({
+        const accountLink = await this.stripe.v2.core.accountLinks.create({
             account: accountId,
             use_case: {
                 type: "account_onboarding",
@@ -66,24 +66,30 @@ class StripeService {
         return accountLink.url;
     }
 
-    async makePaymentTransfer(amount, accountId) {
-        const transfer = await stripe.transfers.create({
-            amount: amount * 100,
-            currency: "inr",
+    async makePaymentTransfer(vendorPayoutId, amount, accountId) {
+        const transfer = await this.stripe.transfers.create({
+            amount: Math.floor((amount * 100) / 83),
+            currency: "usd",
             destination: accountId,
             description: `Adding funds to ${accountId} account`,
+            metadata: {
+vendorPayoutId
+            }
         });
 
         return transfer;
     }
 
-    async makePayout(amount, accountId) {
-        const payout = await stripe.payouts.create(
+    async makePayout(vendorPayoutId, amount, accountId) {
+        const payout = await this.stripe.payouts.create(
             {
-                amount: amount * 100,
-                currency: "inr",
+                amount: Math.floor((amount * 100) / 83),
+                currency: "usd",
                 method: "standard",
                 description: "Payout sent",
+                metadata: {
+                    vendorPayoutId
+                }
             },
             {
                 stripeAccount: accountId
@@ -94,7 +100,7 @@ class StripeService {
     }
 
     async updatePayoutSchedule(accountId) {
-        const balanceSettings = await stripe.balanceSettings.update(
+        const balanceSettings = await this.stripe.balanceSettings.update(
             {
                 payments: {
                     payouts: {
