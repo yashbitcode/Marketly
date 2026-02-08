@@ -68,13 +68,13 @@ const generateBaseTokens = (payload) => {
 
 const getVendorPayoutFilterationPipeline = (filterQueries) => {
     const pipeline = [];
-    
-    let {paid, notPaid, minPrice, maxPrice} = filterQueries;
+
+    let { paid, notPaid, minPrice, maxPrice } = filterQueries;
 
     minPrice = +minPrice;
     maxPrice = +maxPrice;
 
-    if(minPrice || maxPrice) {
+    if (minPrice || maxPrice) {
         pipeline.push({
             $match: {
                 ...((minPrice ||
@@ -90,21 +90,21 @@ const getVendorPayoutFilterationPipeline = (filterQueries) => {
                         }),
                     },
                 }),
-            }
-        })
+            },
+        });
     }
 
-    if((paid !== undefined && notPaid !== undefined) && !(paid && notPaid)) { 
+    if (paid !== undefined && notPaid !== undefined && !(paid && notPaid)) {
         pipeline.push({
             $match: {
-                ...(paid && {isPaid: true}),
-                ...(notPaid && {isPaid: false})
-            }
-        })
+                ...(paid && { isPaid: true }),
+                ...(notPaid && { isPaid: false }),
+            },
+        });
     }
 
     return pipeline;
-}
+};
 
 const getProductFilterationPipeline = (filterQueries) => {
     const pipeline = [];
@@ -399,5 +399,5 @@ module.exports = {
     getPaginationBasePipeline,
     getProductBasePipeline,
     createHash,
-    getVendorPayoutFilterationPipeline
+    getVendorPayoutFilterationPipeline,
 };

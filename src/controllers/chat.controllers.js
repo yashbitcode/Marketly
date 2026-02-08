@@ -1,4 +1,5 @@
-const notificationQueue = require("../queues/notification.queue");
+// const notificationQueue = require("../queues/notification.queue");
+const { inngest } = require("../inngest");
 const chatService = require("../services/chat.service");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
@@ -12,7 +13,7 @@ const createChatRequest = asyncHandler(async (req, res) => {
     );
 });
 
-const updateChatRequest = asyncHandler(async (req, res) => {
+const updateChatRequest = asyncHandler(async (req, res,next) => {
     const { status, chatReqId } = req.body;
 
     const chatReq = await chatService.getChatReq({ _id: chatReqId });
@@ -32,15 +33,17 @@ const updateChatRequest = asyncHandler(async (req, res) => {
         message: `Your Recent Chat Request Is: ${status}`,
     };
 
-    await notificationQueue.add(
-        "chat-update",
-        { notificationPayload, chatReq: updatedChatReq.chatReq },
-        {
-            removeOnComplete: true,
-            removeOnFail: true,
-            attempts: 3,
-        },
-    );
+    // await notificationQueue.add(
+    //     "chat-update",
+    //     { notificationPayload, chatReq: updatedChatReq.chatReq },
+    //     {
+    //         removeOnComplete: true,
+    //         removeOnFail: true,
+    //         attempts: 3,
+    //     },
+    // );
+
+    await inngest.send({name: "notification/send-chat-update", data: notificationPayload}).catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -67,7 +70,7 @@ const updateChatRequest = asyncHandler(async (req, res) => {
 // });
 
 const getAllChatsReqs = asyncHandler(async (req, res) => {
-    const {page} = req.params;
+    const { page } = req.params;
     const matchStage = {};
 
     // if (req.user.currentRole === "user") matchStage.user = req.user._id;

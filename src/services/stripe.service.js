@@ -8,7 +8,13 @@ class StripeService {
 
     async createConnectedAccount(vendor, detailsPayload) {
         const { email, businessCategory, businessSize } = detailsPayload;
-        const { vendorType, storeName, fullname, phoneNumber, _id: vendorId } = vendor;
+        const {
+            vendorType,
+            storeName,
+            fullname,
+            phoneNumber,
+            _id: vendorId,
+        } = vendor;
 
         const account = await this.stripe.v2.core.accounts.create({
             contact_email: email,
@@ -73,8 +79,8 @@ class StripeService {
             destination: accountId,
             description: `Adding funds to ${accountId} account`,
             metadata: {
-vendorPayoutId
-            }
+                vendorPayoutId,
+            },
         });
 
         return transfer;
@@ -88,11 +94,11 @@ vendorPayoutId
                 method: "standard",
                 description: "Payout sent",
                 metadata: {
-                    vendorPayoutId
-                }
+                    vendorPayoutId,
+                },
             },
             {
-                stripeAccount: accountId
+                stripeAccount: accountId,
             },
         );
 

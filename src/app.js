@@ -6,6 +6,8 @@ const { handleError } = require("./middlewares/errorHandling.middlewares");
 const cookieParser = require("cookie-parser");
 const { initSocket } = require("./config/socket/socket.manager");
 const { setupSocketIO } = require("./config/socket");
+const {serve} = require("inngest/express");
+const {inngest, functions} = require("./inngest"); 
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -30,7 +32,7 @@ const orderRouter = require("./routes/order.routes");
 const vendorStripeRouter = require("./routes/vendorStripe.routes");
 const vendorPayoutRouter = require("./routes/vendorPayout.routes");
 const webhookRouter = require("./routes/webhook.routes");
-const {Stripe} = require("stripe");
+// const inngestRouter = require("./routes/inngest.routes");
 
 app.use(cors());
 
@@ -59,20 +61,9 @@ app.use(BASE_ENDPOINT + "/chat", chatRouter);
 app.use(BASE_ENDPOINT + "/order", orderRouter);
 app.use(BASE_ENDPOINT + "/vendor-stripe", vendorStripeRouter);
 app.use(BASE_ENDPOINT + "/vendor-payout", vendorPayoutRouter);
+app.use("/api/inngest", serve({ client: inngest, functions }));
+// app.use(BASE_ENDPOINT + "/inngest", inngestRouter);
 
 app.use(handleError);
-
-app.post("/ss", async (req, res) => {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-    const transfer = await stripe.transfers.create({
-            amount: 1100,
-            currency: "usd",
-            destination: "acct_1SvKqTQTRD3a16mE",
-            description: `Adding funds to account`,
-        });
-
-        res.send(transfer);
-})
 
 module.exports = httpServer;

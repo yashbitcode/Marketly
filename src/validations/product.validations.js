@@ -97,5 +97,5 @@ module.exports = {
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
-    searchQueryValidations
+    searchQueryValidations,
 };

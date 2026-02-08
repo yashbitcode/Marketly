@@ -3,9 +3,8 @@ const notificationService = require("../services/notification.service");
 const sendChatUpdateJob = async (job) => {
     const { chatReq, notificationPayload } = job.data;
 
-    const notification = await notificationService.createNotification(
-        notificationPayload,
-    );
+    const notification =
+        await notificationService.createNotification(notificationPayload);
 
     await notificationService.sendChatUpdateNotification(chatReq, notification);
 };
@@ -13,9 +12,8 @@ const sendChatUpdateJob = async (job) => {
 const sendOrderUpdateJob = async (job) => {
     const { notificationPayload, order } = job.data;
 
-    const notification = await notificationService.createNotification(
-        notificationPayload,
-    );
+    const notification =
+        await notificationService.createNotification(notificationPayload);
 
     await notificationService.sendOrderUpdateNotification(order, notification);
 };

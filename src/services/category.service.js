@@ -38,9 +38,8 @@ class CategoryService {
     }
 
     async deleteParentCategory(parentCategoryId) {
-        const parentCategory = await ParentCategory.findByIdAndDelete(
-            parentCategoryId,
-        );
+        const parentCategory =
+            await ParentCategory.findByIdAndDelete(parentCategoryId);
 
         return parentCategory;
     }

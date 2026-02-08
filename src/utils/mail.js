@@ -1,24 +1,7 @@
-const Mailgen = require("mailgen");
-const nodemailer = require("nodemailer");
+const mailGenerator = require("../config/mailgen");
+const transporter = require("../config/nodemailer");
 
 const sendMail = async (options) => {
-    const mailGenerator = new Mailgen({
-        theme: "default",
-        product: {
-            name: "Marketly",
-            link: "https://taskmanager.example.com",
-        },
-    });
-
-    const transporter = nodemailer.createTransport({
-        host: process.env.MAILTRAP_HOST,
-        port: process.env.MAILTRAP_PORT,
-        auth: {
-            user: process.env.MAILTRAP_USERNAME,
-            pass: process.env.MAILTRAP_PASSWORD,
-        },
-    });
-
     const { from, to, subject, emailContent } = options;
 
     const emailHtml = mailGenerator.generate(emailContent);
@@ -33,7 +16,7 @@ const sendMail = async (options) => {
     };
 
     try {
-        const info = transporter.sendMail(mail);
+        const info = await transporter.sendMail(mail);
         return info;
     } catch (e) {
         throw new ApiError();

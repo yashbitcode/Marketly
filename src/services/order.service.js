@@ -256,10 +256,13 @@ class OrderService {
         });
 
         const sellerOrders = await SellerOrder.insertMany(sellerOrdersPayload);
-        const vendorPayouts = await vendorPayoutService.createBulkVendorPayouts(vendorPayoutsPayload)
+        const vendorPayouts =
+            await vendorPayoutService.createBulkVendorPayouts(
+                vendorPayoutsPayload,
+            );
         // console.log(util.inspect(sellerOrders, { depth: null }));
 
-        return {sellerOrders, vendorPayouts};
+        return { sellerOrders, vendorPayouts };
     }
 
     async updateParentOrder(filters = {}, payload = {}) {

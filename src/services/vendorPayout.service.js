@@ -82,20 +82,16 @@ class VendorPayoutService {
 
     async getSpecificForAmount(id) {
         const vendorPayout = await VendorPayout.findById(id).populate({
-            path: "vendor"
+            path: "vendor",
         });
 
         return vendorPayout;
     }
 
     async updateVendorPayout(id, payload) {
-        const vendorPayout = await VendorPayout.findByIdAndUpdate(
-            id,
-            payload,
-            {
-                new: true,
-            },
-        );
+        const vendorPayout = await VendorPayout.findByIdAndUpdate(id, payload, {
+            new: true,
+        });
 
         return vendorPayout;
     }

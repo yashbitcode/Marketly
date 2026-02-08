@@ -16,5 +16,5 @@ const createConnectedAccountValidations = z.object({
 });
 
 module.exports = {
-    createConnectedAccountValidations
-}
+    createConnectedAccountValidations,
+};

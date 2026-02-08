@@ -8,10 +8,7 @@ const { validate } = require("../middlewares/validate.middlewares");
 const { updateUserValidations } = require("../validations/user.validations");
 const router = Router();
 
-router.get("/:page", 
-    isAuthenticated, 
-    authorise("super-admin"), 
-    getAllUsers);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllUsers);
 
 router.patch(
     "/",

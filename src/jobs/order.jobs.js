@@ -1,9 +1,8 @@
 const orderService = require("../services/order.service");
-const emailQueue = require("../queues/email.queue");
 const { orderPlacedInvoiceMailContent } = require("../utils/mail");
 const { createInvoice } = require("../utils/helpers");
 const imageKitService = require("../services/imageKit.service");
-const notificationQueue = require("../queues/notification.queue");
+// const notificationQueue = require("../queues/notification.queue");
 
 const orderJob = async (job) => {
     const { user, status, products, orderDocId } = job.data;
@@ -35,16 +34,7 @@ const orderJob = async (job) => {
             },
         );
 
-        const emailData = {
-            emailContent: orderPlacedInvoiceMailContent(
-                user.fullname,
-                order.orderId,
-                url,
-            ),
-            from: process.env.MARKETLY_EMAIL,
-            to: user.email,
-            subject: "Your Order Placed Successfully",
-        };
+        
 
         await emailQueue.add("send-email", emailData, {
             removeOnComplete: true,

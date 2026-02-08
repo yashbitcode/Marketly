@@ -3,7 +3,11 @@ const userService = require("../services/user.service");
 const User = require("../models/user.models");
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
-const { COOKIE_OPTIONS, FRONTEND_URL, GENERAL_USER_FIELDS } = require("../utils/constants");
+const {
+    COOKIE_OPTIONS,
+    FRONTEND_URL,
+    GENERAL_USER_FIELDS,
+} = require("../utils/constants");
 const superAdminService = require("../services/superAdmin.service");
 const {
     registrationCodeMailContent,
@@ -11,11 +15,11 @@ const {
     registrationMailContent,
     passwordChangedMailContent,
 } = require("../utils/mail");
-const emailQueue = require("../queues/email.queue");
 const { pubClient: redisClient } = require("../config/redis/connection");
 const { createHash } = require("../utils/helpers");
+const { inngest } = require("../inngest");
 
-const register = asyncHandler(async (req, res) => {
+const register = asyncHandler(async (req, res, next) => {
     const { user, verificationToken } = await userService.createNewUser(
         req.body,
     );
@@ -32,11 +36,18 @@ const register = asyncHandler(async (req, res) => {
         subject: "Verify Your Account",
     };
 
-    await emailQueue.add("send-email", emailData, {
-        removeOnComplete: true,
-        removeOnFail: true,
-        attempts: 3,
-    });
+    // await emailQueue.add("send-email", emailData, {
+    //     removeOnComplete: true,
+    //     removeOnFail: true,
+    //     attempts: 3,
+    // });
+
+    await inngest
+            .send({
+                name: "mail/send-mail",
+                data: emailData,
+            })
+            .catch((err) => next(err));
 
     await redisClient.set(
         `emailVerificationToken:${user._id}`,
@@ -89,7 +100,7 @@ const login = asyncHandler(async (req, res) => {
             `emailVerificationSession:${hashedSessionId}`,
             JSON.stringify({
                 userId: user._id,
-                token
+                token,
             }),
         );
 
@@ -122,10 +133,13 @@ const logout = asyncHandler(async (req, res) => {
     const user = await userService.getUserById(_id);
 
     user.refreshToken = "";
-    
+
     await user.save({ validateBeforeSave: false });
 
-    let redisKey = req.user.currentRole === "vendor" ? `vendor:${user.vendorId._id}` : `user:${_id}`;
+    let redisKey =
+        req.user.currentRole === "vendor"
+            ? `vendor:${user.vendorId._id}`
+            : `user:${_id}`;
     await redisClient.del(redisKey);
 
     res.clearCookie("accessToken")
@@ -159,10 +173,13 @@ const loginVendor = asyncHandler(async (req, res) => {
         avatar: vendorUser.avatar,
         isEmailVerified: vendorUser.isEmailVerified,
         tokenVersion: vendorUser.tokenVersion,
-        vendorId: vendorUser.vendorId
+        vendorId: vendorUser.vendorId,
     };
 
-    await redisClient.set(`vendor:${vendorUser.vendorId._id}`, JSON.stringify(payload));
+    await redisClient.set(
+        `vendor:${vendorUser.vendorId._id}`,
+        JSON.stringify(payload),
+    );
     await redisClient.expire(`vendor:${vendorUser.vendorId._id}`, 60 * 60 * 24);
 
     res.cookie("accessToken", accessToken, COOKIE_OPTIONS)
@@ -221,9 +238,12 @@ const verifyEmailSessionId = asyncHandler(async (req, res) => {
 
     const sessionIdHash = createHash(sessionId, process.env.HASHED_MAC_SECRET);
 
-    const sessionCache = await redisClient.get(`emailVerificationSession:${sessionIdHash}`);
+    const sessionCache = await redisClient.get(
+        `emailVerificationSession:${sessionIdHash}`,
+    );
 
-    if(!sessionCache) throw new ApiError(400, "Session ID doesn't exist or expired");
+    if (!sessionCache)
+        throw new ApiError(400, "Session ID doesn't exist or expired");
 
     res.json(new ApiResponse(200, { sessionId }, "Valid session ID"));
 
@@ -236,7 +256,7 @@ const verifyEmailSessionId = asyncHandler(async (req, res) => {
     // res.json(new ApiResponse(200, { sessionId }, "Valid session ID"));
 });
 
-const verifyEmailCode = asyncHandler(async (req, res) => {
+const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const { sessionId, code } = req.params;
 
     if (!sessionId || !code)
@@ -244,32 +264,47 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
 
     const sessionIdHash = createHash(sessionId, process.env.HASHED_MAC_SECRET);
 
-    const sessionCache = JSON.parse(await redisClient.get(`emailVerificationSession:${sessionIdHash}`));
+    const sessionCache = JSON.parse(
+        await redisClient.get(`emailVerificationSession:${sessionIdHash}`),
+    );
 
     // const user = await userService.getEmailVerifySessionDoc(sessionId, {
     //     emailVerificationToken: 1,
     //     email: 1,
     // });
 
-    if (!sessionCache) throw new ApiError(400, "Session ID doesn't exist or expired");
+    if (!sessionCache)
+        throw new ApiError(400, "Session ID doesn't exist or expired");
 
     if (sessionCache.token !== code)
         throw new ApiError(422, "Code is incorrect");
 
-    const updatedUser = await userService.getEmailVerifiedById(sessionCache.userId);
+    const updatedUser = await userService.getEmailVerifiedById(
+        sessionCache.userId,
+    );
 
     const emailData = {
-        emailContent: registrationMailContent(updatedUser.fullname, FRONTEND_URL),
+        emailContent: registrationMailContent(
+            updatedUser.fullname,
+            FRONTEND_URL,
+        ),
         from: process.env.MARKETLY_EMAIL,
         to: updatedUser.email,
         subject: "Account Created Login Now",
     };
 
-    await emailQueue.add("send-email", emailData, {
-        removeOnComplete: true,
-        removeOnFail: true,
-        attempts: 3,
-    });
+    // await emailQueue.add("send-email", emailData, {
+    //     removeOnComplete: true,
+    //     removeOnFail: true,
+    //     attempts: 3,
+    // });
+
+    await inngest
+            .send({
+                name: "mail/send-mail",
+                data: emailData,
+            })
+            .catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -299,7 +334,7 @@ const verifyEmailCode = asyncHandler(async (req, res) => {
     //     .json(new ApiResponse(200, payload, "User logged in"));
 });
 
-const changePassword = asyncHandler(async (req, res) => {
+const changePassword = asyncHandler(async (req, res, next) => {
     const { _id } = req.user;
     const { oldPassword, newPassword } = req.body;
 
@@ -320,16 +355,23 @@ const changePassword = asyncHandler(async (req, res) => {
         subject: "Password Changed Successfully",
     };
 
-    await emailQueue.add("send-email", emailData, {
-        removeOnComplete: true,
-        removeOnFail: true,
-        attempts: 3,
-    });
+    // await emailQueue.add("send-email", emailData, {
+    //     removeOnComplete: true,
+    //     removeOnFail: true,
+    //     attempts: 3,
+    // });
+
+    await inngest
+            .send({
+                name: "mail/send-mail",
+                data: emailData,
+            })
+            .catch((err) => next(err));
 
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
 });
 
-const forgotPasswordLink = asyncHandler(async (req, res) => {
+const forgotPasswordLink = asyncHandler(async (req, res, next) => {
     const { email } = req.body;
 
     const user = await userService.getUserByEmail(email);
@@ -347,11 +389,17 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
 
     await user.save();
 
-    await redisClient.set(`forgotPasswordToken:${hashedResetToken}`, JSON.stringify({
-        userId: user._id
-    }));    
+    await redisClient.set(
+        `forgotPasswordToken:${hashedResetToken}`,
+        JSON.stringify({
+            userId: user._id,
+        }),
+    );
 
-    await redisClient.expire(`forgotPasswordToken:${hashedResetToken}`, 60 * 20);
+    await redisClient.expire(
+        `forgotPasswordToken:${hashedResetToken}`,
+        60 * 20,
+    );
 
     const emailData = {
         emailContent: passwordResetMailContent(
@@ -363,11 +411,18 @@ const forgotPasswordLink = asyncHandler(async (req, res) => {
         subject: "Reset Password",
     };
 
-    await emailQueue.add("send-email", emailData, {
-        removeOnComplete: true,
-        removeOnFail: true,
-        attempts: 3,
-    });
+    // await emailQueue.add("send-email", emailData, {
+    //     removeOnComplete: true,
+    //     removeOnFail: true,
+    //     attempts: 3,
+    // });
+
+    await inngest
+            .send({
+                name: "mail/send-mail",
+                data: emailData,
+            })
+            .catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -382,11 +437,14 @@ const forgotPasswordVerification = asyncHandler(async (req, res) => {
     const { resetToken } = req.params;
     const resetTokenHash = createHash(resetToken);
 
-    const forgotPasswordCache = await redisClient.get(`forgotPasswordToken:${resetTokenHash}`);
+    const forgotPasswordCache = await redisClient.get(
+        `forgotPasswordToken:${resetTokenHash}`,
+    );
 
     // const user = userService.getResetPasswordDoc(resetToken);
 
-    if (!forgotPasswordCache) throw new ApiError(400, "Reset token doesn't exist or expired");
+    if (!forgotPasswordCache)
+        throw new ApiError(400, "Reset token doesn't exist or expired");
 
     res.json(new ApiResponse(200, {}, "Valid reset token"));
 });
@@ -397,14 +455,20 @@ const resetPassword = asyncHandler(async (req, res) => {
 
     const resetTokenHash = createHash(resetToken);
 
-    const forgotPasswordCache = JSON.parse(await redisClient.get(`forgotPasswordToken:${resetTokenHash}`));
+    const forgotPasswordCache = JSON.parse(
+        await redisClient.get(`forgotPasswordToken:${resetTokenHash}`),
+    );
 
     // const user = userService.getResetPasswordDoc(resetToken);
-    if (!forgotPasswordCache) throw new ApiError(400, "Reset token doesn't exist or expired");
+    if (!forgotPasswordCache)
+        throw new ApiError(400, "Reset token doesn't exist or expired");
 
-    await userService.updateUserData({_id: forgotPasswordCache.userId}, {
-        password: newPassword
-    });
+    await userService.updateUserData(
+        { _id: forgotPasswordCache.userId },
+        {
+            password: newPassword,
+        },
+    );
 
     res.json(new ApiResponse(200, {}, "Password reset successful"));
 });

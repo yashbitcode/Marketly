@@ -19,8 +19,11 @@ const getAllUserAddresses = asyncHandler(async (req, res) => {
         );
 
     allAddresses = await addressService.getAllAddressesByUserId(_id);
-    
-    await redisClient.set(`user:addresses:${_id}`, JSON.stringify(allAddresses));
+
+    await redisClient.set(
+        `user:addresses:${_id}`,
+        JSON.stringify(allAddresses),
+    );
     await redisClient.expire(`user:addresses:${_id}`, 60 * 60 * 24);
 
     res.json(

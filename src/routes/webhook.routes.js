@@ -47,7 +47,10 @@ router.post(
                 { isPaid: true, payoutId: id },
             );
         } else if (event.type === "transfer.created") {
-            await vendorPayoutService.updateVendorPayout(metadata.vendorPayoutId, {transfer: id});
+            await vendorPayoutService.updateVendorPayout(
+                metadata.vendorPayoutId,
+                { transfer: id },
+            );
         }
 
         res.send();

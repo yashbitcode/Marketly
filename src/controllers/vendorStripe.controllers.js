@@ -9,7 +9,7 @@ const createStripeConnectedAcc = asyncHandler(async () => {
 
     const account = await stripeService(vendor, detailsPayload);
 
-    if(!account) throw new ApiError();
+    if (!account) throw new ApiError();
 
     await stripeService.updatePayoutSchedule(account.id);
 
@@ -25,15 +25,17 @@ const createStripeConnectedAcc = asyncHandler(async () => {
 const getStripeOnboardingLink = asyncHandler(async () => {
     const { stripeAccountId, stripeAccountOnboarded } = req.user.vendorId;
 
-    if(!stripeAccountId) throw new ApiError(400, "Stripe account ID not found");
-    if(stripeAccountOnboarded) throw new ApiError(400, "Account already onboarded");
+    if (!stripeAccountId)
+        throw new ApiError(400, "Stripe account ID not found");
+    if (stripeAccountOnboarded)
+        throw new ApiError(400, "Account already onboarded");
 
     const onboardLink = await stripeService.getOnboardingLink(stripeAccountId);
 
-    res.json(new ApiResponse(200, {onboardLink}))
+    res.json(new ApiResponse(200, { onboardLink }));
 });
 
 module.exports = {
     createStripeConnectedAcc,
-    getStripeOnboardingLink
+    getStripeOnboardingLink,
 };

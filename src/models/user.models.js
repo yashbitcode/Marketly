@@ -118,7 +118,10 @@ UserSchema.methods.verifyPassword = async function (password) {
 
 UserSchema.statics.generateTokens = function () {
     const sessionId = crypto.randomBytes(15).toString("hex");
-    const hashedSessionId = createHash(sessionId, process.env.HASHED_MAC_SECRET);
+    const hashedSessionId = createHash(
+        sessionId,
+        process.env.HASHED_MAC_SECRET,
+    );
     const token = generateRandomNumberString();
     const expiryDate = new Date(Date.now() + 1000 * 60 * 20);
 

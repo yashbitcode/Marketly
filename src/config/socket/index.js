@@ -7,6 +7,11 @@ const chatService = require("../../services/chat.service");
 const setupSocketIO = (io) => {
     io.use(isSocketAuthenticated);
 
+    // io.on("connection", (socket) => {
+    //     socket.join("/main");
+    //     console.log("conn");
+    // });
+
     const chatNamespace = io.of("/chat");
     const orderNamespace = io.of("/order");
     const notificationNamespace = io.of("/notification");

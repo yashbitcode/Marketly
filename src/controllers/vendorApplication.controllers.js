@@ -2,16 +2,16 @@ const vendorApplicationService = require("../services/vendorApplication.service"
 const ApiError = require("../utils/api-error");
 const ApiResponse = require("../utils/api-response");
 const { asyncHandler } = require("../utils/asyncHandler");
-const {pubClient: redisClient} = require("../config/redis/connection");
+const { pubClient: redisClient } = require("../config/redis/connection");
 
 const getAllApplications = asyncHandler(async (req, res) => {
     const { page } = req.params;
-    const {data, totalCount} = await vendorApplicationService.getAll(page);
+    const { data, totalCount } = await vendorApplicationService.getAll(page);
 
     res.json(
         new ApiResponse(
             200,
-            {applications: data, totalCount},
+            { applications: data, totalCount },
             "Applications fetched successfully",
         ),
     );
@@ -20,9 +20,8 @@ const getAllApplications = asyncHandler(async (req, res) => {
 const getUserSpecificApplications = asyncHandler(async (req, res) => {
     const { _id } = req.user;
 
-    const allApplications = await vendorApplicationService.getUserApplications(
-        _id,
-    );
+    const allApplications =
+        await vendorApplicationService.getUserApplications(_id);
 
     res.json(
         new ApiResponse(
@@ -54,9 +53,10 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
             ),
         );
 
-    const { vendor } = await vendorApplicationService.createVendorAndUpdateUser(
-        updatedApplication,
-    );
+    const { vendor } =
+        await vendorApplicationService.createVendorAndUpdateUser(
+            updatedApplication,
+        );
 
     updatedApplication.vendor = vendor._id;
 

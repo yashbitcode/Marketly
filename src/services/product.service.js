@@ -79,7 +79,12 @@ class ProductService {
         return product;
     }
 
-    async getFilteredProducts(matchStage = {}, filterQueries = {}, searchQuery = "", page = 1) {
+    async getFilteredProducts(
+        matchStage = {},
+        filterQueries = {},
+        searchQuery = "",
+        page = 1,
+    ) {
         const basePagination = getPaginationBasePipeline(+page);
         const baseFilterPipeline = getProductFilterationPipeline(filterQueries);
         const baseProductPipeline = getProductBasePipeline();
@@ -88,7 +93,7 @@ class ProductService {
             {
                 $match: {
                     ...matchStage,
-                    ...(searchQuery && {$text: { $search: searchQuery }})
+                    ...(searchQuery && { $text: { $search: searchQuery } }),
                 },
             },
             ...baseProductPipeline,
@@ -107,7 +112,7 @@ class ProductService {
     //     const [filteredProducts] = await Product.aggregate([
     //         {
     //             $match: {
-                    
+
     //             }
     //         },
     //         ...baseProductPipeline,

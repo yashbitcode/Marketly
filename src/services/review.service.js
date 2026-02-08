@@ -1,5 +1,5 @@
 const Review = require("../models/review.models");
-const { GENERAL_USER_FIELDS} = require("../utils/constants");
+const { GENERAL_USER_FIELDS } = require("../utils/constants");
 const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class ReviewService {
@@ -16,9 +16,9 @@ class ReviewService {
                     pipeline: [
                         {
                             $project: GENERAL_USER_FIELDS,
-                        }
-                    ]
-                }
+                        },
+                    ],
+                },
             },
             {
                 $lookup: {
@@ -26,18 +26,18 @@ class ReviewService {
                     localField: "product",
                     foreignField: "_id",
                     as: "product",
-                }
+                },
             },
             {
                 $addFields: {
                     product: { $arrayElemAt: ["$product", 0] },
                     user: { $arrayElemAt: ["$user", 0] },
-                }
+                },
             },
             {
                 $match: {
                     "product.slug": slug,
-                }
+                },
             },
             ...basePagination,
         ]);

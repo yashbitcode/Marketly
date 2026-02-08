@@ -3,7 +3,7 @@ const ApiError = require("../utils/api-error");
 const { asyncHandler } = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
 const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const {pubClient: redisClient} = require("../config/redis/connection");
+const { pubClient: redisClient } = require("../config/redis/connection");
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -39,21 +39,21 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         //     GENERAL_USER_FIELDS,
         // );
         // console.log(payload);
-    }
-    else {
+    } else {
         payload = JSON.parse(await redisClient.get(`user:${_id}`));
 
         // payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
     }
 
-    if(!payload || payload.tokenVersion !== tokenVersion) {
-            res.clearCookie("accessToken");
-            res.clearCookie("refreshToken");
+    if (!payload || payload.tokenVersion !== tokenVersion) {
+        res.clearCookie("accessToken");
+        res.clearCookie("refreshToken");
 
-        if(!payload) throw new ApiError(401, "Un-Authenticated");
-        
-        const keyToDelete = currentRole === "vendor" ?`vendor:${vendorId}` : `user:${_id}`;
-        
+        if (!payload) throw new ApiError(401, "Un-Authenticated");
+
+        const keyToDelete =
+            currentRole === "vendor" ? `vendor:${vendorId}` : `user:${_id}`;
+
         await redisClient.del(keyToDelete);
 
         throw new ApiError(401, "Un-authenticated token invalidated");
@@ -66,7 +66,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     //     res.clearCookie("refreshToken");
 
     //     const keyToDelete = currentRole === "vendor" ?`vendor:${vendorId}` : `user:${_id}`;
-        
+
     //     await redisClient.del(keyToDelete);
 
     //     throw new ApiError(401, "Un-authenticated token invalidated");
@@ -79,20 +79,40 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
 });
 
 const isSocketAuthenticated = async (socket, next) => {
-    const token = socket.handshake?.auth.token;
-    const decoded = await verifyToken(token);
+    let token = socket.handshake?.auth.token;
 
-    const user = await userService.getUserById(
-        decoded._id,
-        GENERAL_USER_FIELDS,
-    );
+    try {
+        const decoded = await verifyToken(token);
 
-    if (user.role === "super-admin")
-        next(new ApiError(401, "Un-Authenticated"));
-    else {
-        socket.user = user;
+        const user = await userService.getUserById(
+            decoded._id,
+            GENERAL_USER_FIELDS,
+        );
+
+        if (user.role !== "super-admin") socket.user = user;
         next();
+    } catch(error) {
+        next(new ApiError(error.statusCode), error.message);
     }
+
+    // token = token?.split(" ")?.[1];
+
+    // if (!token) return next(new ApiError(400, "Token is required"));
+
+    // let decoded;
+
+    // try {
+    //     decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    //     const user = await userService.getUserById(
+    //         decoded._id,
+    //         GENERAL_USER_FIELDS,
+    //     );
+
+    //     if (user.role !== "super-admin") socket.user = user;
+    //     next();
+    // } catch (error) {
+    //     next(new ApiError(400, "Invalid token"));
+    // }
 };
 
 const authorise = (...allowedRoles) => {

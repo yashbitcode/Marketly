@@ -9,7 +9,7 @@ const VendorSchema = new mongoose.Schema(
         },
         stripeAccountOnboarded: {
             type: Boolean,
-            default: false
+            default: false,
         },
         metrics: {
             avgCustomerRating: {

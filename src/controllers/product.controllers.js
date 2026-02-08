@@ -92,7 +92,8 @@ const getSpecificProduct = asyncHandler(async (req, res) => {
 const addVendorProduct = asyncHandler(async (req, res) => {
     const { _id, stripeAccountOnboarded } = req.user.vendorId;
 
-    if(!stripeAccountOnboarded) throw new ApiError(403, "Get yourself onboarded first");
+    if (!stripeAccountOnboarded)
+        throw new ApiError(403, "Get yourself onboarded first");
 
     const payload = req.body;
 
@@ -157,7 +158,7 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
     }
 
     redisKey += page ? page : "1";
-    
+
     await redisClient.set(redisKey, JSON.stringify(filteredProducts));
     await redisClient.expire(redisKey, 60 * 5);
 

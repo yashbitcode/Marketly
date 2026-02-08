@@ -11,7 +11,8 @@ const {
 const mongoose = require("mongoose");
 const addressService = require("../services/address.service");
 const orderQueue = require("../queues/order.queue");
-const notificationQueue = require("../queues/notification.queue");
+// const notificationQueue = require("../queues/notification.queue");
+const { inngest } = require("../inngest");
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
@@ -93,7 +94,7 @@ const getOrderByOrderId = asyncHandler(async (req, res) => {
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {
-    const {page} = req.params;
+    const { page } = req.params;
     let matchStage = {};
 
     // if (req.user.currentRole === "user") matchStage.user = req.user._id;
@@ -105,7 +106,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, allOrders, "Orders fetched successfully"));
 });
 
-const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
+const updateOrderDeliveryStatus = asyncHandler(async (req, res, next) => {
     const { _id } = req.user.vendorId;
     const { sellerOrderId, deliveryStatus } = req.body;
 
@@ -116,44 +117,51 @@ const updateOrderDeliveryStatus = asyncHandler(async (req, res) => {
 
     if (!order) throw new ApiError(404, "Order not found");
 
-    await notificationQueue.add(
-        "order-delivery-update",
-        { orders: [order] },
-        {
-            removeOnComplete: true,
-            removeOnFail: true,
-            attempts: 3,
-        },
-    );
+    // await notificationQueue.add(
+    //     "order-delivery-update",
+    //     { orders: [order] },
+    //     {
+    //         removeOnComplete: true,
+    //         removeOnFail: true,
+    //         attempts: 3,
+    //     },
+    // );
+
+    await inngest
+        .send({
+            name: "notification/send-order-delivery-update",
+            data: { orders: [order] },
+        })
+        .catch((err) => next(err));
 
     res.json(new ApiResponse(200, order, "Order updated successfully"));
 });
 
 const gg = asyncHandler(async (req, res) => {
-    const notificationPayload = {
-        receiverId: "695260f3fd88aeed840374de",
-        docModel: "users",
-        notificationType: "CHAT_REQUEST_UPDATE",
-        title: "Chat Request Update",
-        message: `Your Recent Chat Request Is: accepted`,
-    };
+    // const notificationPayload = {
+    //     receiverId: "695260f3fd88aeed840374de",
+    //     docModel: "users",
+    //     notificationType: "CHAT_REQUEST_UPDATE",
+    //     title: "Chat Request Update",
+    //     message: `Your Recent Chat Request Is: accepted`,
+    // };
 
-    await notificationQueue.add(
-        "chat-update",
-        {
-            notificationPayload,
-            chatReq: {
-                _id: "695b6de3cb37696a4d45088d",
-                user: "695260f3fd88aeed840374de",
-                vendor: "695260f3fd88aeed840374dc",
-                status: "pending",
-            },
-        },
-        {
-            removeOnComplete: true,
-            removeOnFail: true,
-        },
-    );
+    // await notificationQueue.add(
+    //     "chat-update",
+    //     {
+    //         notificationPayload,
+    //         chatReq: {
+    //             _id: "695b6de3cb37696a4d45088d",
+    //             user: "695260f3fd88aeed840374de",
+    //             vendor: "695260f3fd88aeed840374dc",
+    //             status: "pending",
+    //         },
+    //     },
+    //     {
+    //         removeOnComplete: true,
+    //         removeOnFail: true,
+    //     },
+    // );
     res.json({});
 });
 
@@ -205,16 +213,28 @@ const webhook = asyncHandler(async (req, res, next) => {
 
         if (event === "payment.failed") throw new ApiError();
 
-        await orderQueue.add(
-            "order-fulfillment",
-            {
-                orderDocId: order._id,
-                products: order.products,
-                status: order.status,
-                user: order.user,
-            },
-            { removeOnComplete: true, removeOnFail: true, attempts: 3 },
-        );
+        // await orderQueue.add(
+        //     "order-fulfillment",
+        //     {
+        //         orderDocId: order._id,
+        //         products: order.products,
+        //         status: order.status,
+        //         user: order.user,
+        //     },
+        //     { removeOnComplete: true, removeOnFail: true, attempts: 3 },
+        // );
+
+        await inngest
+            .send({
+                name: "order/order-fulfillment",
+                data: {
+                    orderDocId: order._id,
+                    products: order.products,
+                    status: order.status,
+                    user: order.user,
+                },
+            })
+            .catch((err) => {});
 
         res.json(new ApiResponse(200, {}));
     } catch (e) {

@@ -47,7 +47,7 @@ class UserService {
             {
                 $project: GENERAL_USER_FIELDS,
             },
-            ...basePagination    
+            ...basePagination,
         ]);
 
         return allUsers;
@@ -74,7 +74,10 @@ class UserService {
     }
 
     async getEmailVerifySessionDoc(sessionId, fieldsSelection = {}) {
-        const hashedSessionId = createHash(sessionId, process.env.HASHED_MAC_SECRET);
+        const hashedSessionId = createHash(
+            sessionId,
+            process.env.HASHED_MAC_SECRET,
+        );
 
         const user = await User.findOne({
             emailVerificationSessionId: hashedSessionId,
@@ -101,7 +104,10 @@ class UserService {
     }
 
     async getResetPasswordDoc(resetToken, fieldsSelection = {}) {
-        const hashedResetToken = createHash(resetToken, process.env.HASHED_MAC_SECRET);
+        const hashedResetToken = createHash(
+            resetToken,
+            process.env.HASHED_MAC_SECRET,
+        );
 
         const user = await User.findOne({
             forgotPasswordResetToken: hashedResetToken,

@@ -7,7 +7,7 @@ const { getPaginationBasePipeline } = require("../utils/helpers");
 class ChatService {
     async createChatReq(payload) {
         const { user, vendor } = payload;
-        
+
         const chatRequest = new ChatRequest({
             user,
             vendor,
@@ -34,8 +34,8 @@ class ChatService {
                     pipeline: [
                         {
                             $project: GENERAL_USER_FIELDS,
-                        }
-                    ]
+                        },
+                    ],
                 },
             },
             {
