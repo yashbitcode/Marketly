@@ -6,7 +6,7 @@ const MessageSchema = new mongoose.Schema({
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
         refPath: "docModel",
-        requrired: [true, "Sender ID is required"],
+        required: [true, "Sender ID is required"],
     },
     docModel: {
         type: String,

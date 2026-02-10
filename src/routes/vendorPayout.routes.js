@@ -11,7 +11,6 @@ const {
 } = require("../middlewares/auth.middlewares");
 const router = Router();
 
-// router.get("/", isAuthenticated, authorise("super-admin"), getAllVendorPayouts);
 router.get("/", isAuthenticated, authorise("super-admin"), getAllVendorPayouts);
 router.get(
     "/:vendorPayoutId",

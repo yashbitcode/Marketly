@@ -1,12 +1,18 @@
 const mongoose = require("mongoose");
 const Vendor = require("./vendor.models");
 const SellerOrder = require("./sellerOrder.models");
+const Order = require("./order.models");
 
 const VendorPayoutSchema = mongoose.Schema({
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: Vendor,
         required: [true, "Vendor ID is required"],
+    },
+    order: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Order,
+        required: [true, "Seller order ID is required"],
     },
     sellerOrder: {
         type: mongoose.Schema.Types.ObjectId,

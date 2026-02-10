@@ -252,6 +252,7 @@ class OrderService {
                 vendor: el._id,
                 sellerOrder: sellerOrderId,
                 amount: el.totalAmount,
+                order: orderDocId
             });
         });
 

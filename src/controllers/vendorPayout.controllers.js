@@ -43,10 +43,13 @@ const makeTransfer = asyncHandler(async (req, res) => {
     if (!vendorPayoutId)
         throw new ApiError(404, "Vendor payout ID is required");
 
+
     const vendorPayout =
         await vendorPayoutService.getSpecificForAmount(vendorPayoutId);
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
+
+    if(vendorPayout.order.refundApplication) throw new ApiError(404, "This order have refund application")
 
     const transfer = await stripeService.makePaymentTransfer(
         vendorPayoutId,
@@ -67,6 +70,8 @@ const makePayout = asyncHandler(async (req, res) => {
         await vendorPayoutService.getSpecificForAmount(vendorPayoutId);
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
+
+    if(vendorPayout.order.refundApplication) throw new ApiError(404, "This order have refund application")
 
     const payout = await stripeService.makePayout(
         vendorPayoutId,

@@ -15,12 +15,13 @@ const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
 const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
+const REFUND_APPLICATION_STATUS = ["under-process", "refunded"];
 const ORDER_STATUS = [
     "created",
     "attempted",
     "paid",
     "failed",
-    // "refunded"
+    "refunded"
 ];
 const ORDER_DELIVERY_STATUS = [
     "placed",
@@ -96,4 +97,5 @@ module.exports = {
     ORDER_DELIVERY_STATUS,
     COMMISSION_RATE,
     BUSINESS_SIZE,
+    REFUND_APPLICATION_STATUS
 };
