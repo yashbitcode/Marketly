@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 const User = require("./user.models");
 const { mediaSchema } = require("../utils/baseSchemas");
 const { REFUND_APPLICATION_STATUS } = require("../utils/constants");
-const Order = require("./order.models");
+// const Order = require("./order.models");
 
 const OrderRefundApplicationSchema = new mongoose.Schema({
     order: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Order,
-        required: [true, "User ID is required"],
+        ref: "orders",
+        required: [true, "Order ID is required"],
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

@@ -3,7 +3,7 @@ const { getPaginationBasePipeline } = require("../utils/helpers");
 
 class SupportTicketService {
     async getAll(matchStage = {}, page = 1) {
-        const basePagination = await getPaginationBasePipeline(+page);
+        const basePagination = getPaginationBasePipeline(+page);
 
         const [allTickets] = await SupportTicket.aggregate([
             {

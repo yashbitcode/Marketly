@@ -8,6 +8,22 @@ class RazorpayService {
         return order;
     }
 
+    async refundAmount(paymentId, amount, refundId) {
+        try {
+            const refund = await rzp.payments.refund(paymentId, {
+                speed: "optimum",
+                amount,
+                notes: {
+                    refundId
+                },
+            });
+
+            return refund;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async verify(payload) {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
             payload;

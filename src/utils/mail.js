@@ -126,6 +126,29 @@ const orderPlacedInvoiceMailContent = (fullname, orderId, invoiceUrl) => ({
     },
 });
 
+const refundSuccessfulMailContent = (
+    orderId,
+    refundId,
+    amount
+) => ({
+    body: {
+        title: "Your Refund Has Been Processed Successfully",
+        intro: [
+            `We wanted to let you know that your refund request has been successfully processed.`,
+            `Here are the refund details for your reference:`,
+            `• Order ID: ${orderId}`,
+            `• Refund ID: ${refundId}`,
+            `• Refunded Amount: ₹${amount}`,
+        ],
+        outro: [
+            "The refunded amount should reflect in your original payment method within sometime, depending on your bank or payment provider.",
+            "If you have any questions or need further assistance, feel free to contact our support team.",
+            "We appreciate your patience and hope to serve you again soon!",
+        ],
+    },
+});
+
+
 module.exports = {
     sendMail,
     passwordResetMailContent,
@@ -133,4 +156,5 @@ module.exports = {
     registrationCodeMailContent,
     passwordChangedMailContent,
     orderPlacedInvoiceMailContent,
+    refundSuccessfulMailContent
 };

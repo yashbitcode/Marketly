@@ -4,6 +4,7 @@ const orderService = require("../services/order.service");
 const imageKitService = require("../services/imageKit.service");
 const notificationService = require("../services/notification.service");
 const { createInvoice } = require("../utils/helpers");
+const orderRefundApplicationService = require("../services/orderRefundApplication.service");
 
 const inngest = new Inngest({ id: "my-app" });
 
@@ -185,13 +186,42 @@ const sendOrdersDeliveryUpdate = inngest.createFunction(
     },
 );
 
-// const test = inngest.createFunction({id: "sasa"}, {event: "sas"}, async ({event, step}) => {
-//     const io = getIO();
+const updateOrderRefundApplication = inngest.createFunction(
+    { id: "update-refund-application" },
+    { event: "refund/mark-refund" },
+    async ({ event, step }) => {
+        const { refundId, refundDocId, amount } = event.data;
 
-//     io.to("/main").emit("dsd", {a: 1});
+        const refundApplication = await step.run(
+            "mark-refund",
+            async () =>
+                await orderRefundApplicationService.updateApplication(
+                    { _id: refundDocId },
+                    { refundId, status: "refunded" },
+                ),
+        );
 
-//     return {io, "ds": "main"};
-// })
+        const emailData = {
+            emailContent: refundSuccessfulMailContent(
+                refundApplication.order,
+                refundId,
+                amount,
+            ),
+            from: process.env.MARKETLY_EMAIL,
+            to: user.email,
+            subject: "Your Amount Is Refunded Successfully",
+        };
+
+        await step.run("emit-email-event", async () => {
+            await inngest
+                .send({
+                    name: "mail/send-mail",
+                    data: emailData,
+                })
+                .catch((err) => {});
+        });
+    },
+);
 
 const functions = [
     handleMailing,
@@ -199,6 +229,7 @@ const functions = [
     sendChatUpdate,
     sendOrderUpdate,
     sendOrdersDeliveryUpdate,
+    updateOrderRefundApplication,
 ];
 
 module.exports = {

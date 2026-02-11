@@ -192,6 +192,12 @@ class OrderService {
         return order;
     }
 
+    async getBaseOrder(filters = {}) {
+        const order = await Order.findOne(filters);
+
+        return order;
+    }
+
     async createSellerOrders(orderDocId, user, products) {
         const productSlugs = Array.from(products.keys());
 

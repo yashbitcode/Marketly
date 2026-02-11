@@ -30,7 +30,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const allProducts = await productService.getAll({
         slug: {
             $in: Object.keys(products),
-            $in: products.map((el) => el.slug),
+            // $in: products.map((el) => el.slug),
         },
         "approval.status": {
             $eq: "accepted",
@@ -97,9 +97,9 @@ const getAllOrders = asyncHandler(async (req, res) => {
     const { page } = req.params;
     let matchStage = {};
 
-    // if (req.user.currentRole === "user") matchStage.user = req.user._id;
-    // if (req.user.currentRole === "vendor")
-    //     matchStage.vendor = req.user.vendorId._id;
+    if (req.user.currentRole === "user") matchStage.user = req.user._id;
+    if (req.user.currentRole === "vendor")
+        matchStage.vendor = req.user.vendorId._id;
 
     const allOrders = await orderService.getAll(matchStage, page);
 
@@ -184,12 +184,7 @@ const webhook = asyncHandler(async (req, res, next) => {
     const webhookBody = req.body;
     const webhookSignature = req.headers["x-razorpay-signature"];
 
-    const {
-        payload: {
-            payment: { entity },
-        },
-        event,
-    } = webhookBody;
+    const { payload, event } = webhookBody;
 
     try {
         validateWebhookSignature(
@@ -198,43 +193,62 @@ const webhook = asyncHandler(async (req, res, next) => {
             process.env.RAZORPAY_WEBHOOK_SECRET,
         );
 
-        const updateData = {
-            paymentId: entity.id,
-        };
+        if (event === "payment.captured" || event === "payment.failed") {
+            const {
+                payment: { entity },
+            } = payload;
 
-        if (event === "payment.captured") {
-            updateData.status = "paid";
-        } else if (event === "payment.failed") updateData.status = "failed";
+            const updateData = {
+                paymentId: entity.id,
+            };
 
-        const order = await orderService.updateParentOrder(
-            { orderId: entity.order_id },
-            updateData,
-        );
+            if (event === "payment.captured") {
+                updateData.status = "paid";
+            } else if (event === "payment.failed") updateData.status = "failed";
 
-        if (event === "payment.failed") throw new ApiError();
+            const order = await orderService.updateParentOrder(
+                { orderId: entity.order_id },
+                updateData,
+            );
 
-        // await orderQueue.add(
-        //     "order-fulfillment",
-        //     {
-        //         orderDocId: order._id,
-        //         products: order.products,
-        //         status: order.status,
-        //         user: order.user,
-        //     },
-        //     { removeOnComplete: true, removeOnFail: true, attempts: 3 },
-        // );
+            if (event === "payment.failed") throw new ApiError();
 
-        await inngest
-            .send({
-                name: "order/order-fulfillment",
+            //     await orderQueue.add(
+            //     "order-fulfillment",
+            //     {
+            //         orderDocId: order._id,
+            //         products: order.products,
+            //         status: order.status,
+            //         user: order.user,
+            //     },
+            //     { removeOnComplete: true, removeOnFail: true, attempts: 3 },
+            // );
+
+            await inngest
+                .send({
+                    name: "order/order-fulfillment",
+                    data: {
+                        orderDocId: order._id,
+                        products: order.products,
+                        status: order.status,
+                        user: order.user,
+                    },
+                })
+                .catch((err) => {});
+        } else if (event === "refund.processed") {
+            const {
+                refund: { entity },
+            } = payload;
+
+            await inngest.send({
+                name: "refund/mark-refund",
                 data: {
-                    orderDocId: order._id,
-                    products: order.products,
-                    status: order.status,
-                    user: order.user,
-                },
+                    refundDocId: entity.notes.refundId,
+                    refundId: entity.id,
+                    amount: entity.amount
+                }
             })
-            .catch((err) => {});
+        }
 
         res.json(new ApiResponse(200, {}));
     } catch (e) {
