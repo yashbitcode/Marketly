@@ -1,0 +1,10 @@
+user refund:
+    - user creates the refund app. for specific order
+    - refund app. goes under-process (by that time all vendor payment specific to order will be hold)
+    - admin make the refund 
+    - user receives the email of refund
+    - order status -> refunded (all vendor payment specific to order will be blocked)
+
+NOTES:
+    - update the order (refund-application-id) while creating refund - DONE
+    - vendor payouts will be on-hold - DONE

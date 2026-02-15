@@ -1,0 +1,5 @@
+- header (img, search-bar, cart, login/sign-up btn)
+- main hero banner
+
+
+App
