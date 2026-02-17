@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -8,6 +8,10 @@
     --color-dark: #0d0c0f;
     --color-orange: #ff9127;
     --color-base-white: #f6f6f6;
+    --shadow-base:
+        0px 2px 3px -1px rgba(0, 0, 0, 0.1),
+        0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+        0px 0px 0px 1px rgba(25, 28, 33, 0.08);
 
     --font-inter: "Inter";
     --font-roboto: "Roboto";
