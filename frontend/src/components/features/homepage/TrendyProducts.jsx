@@ -10,7 +10,7 @@ const TrendyProducts = () => {
             <Container className="mx-auto mt-10">
                 <div className="grid grid-cols-4 max-[1080px]:grid-cols-2 max-[570px]:grid-cols-1  items-center w-fit mx-auto gap-4">
                     {
-                        products.map((el) => <ProductCard {...el} />)
+                        products.map((el, idx) => <ProductCard key={idx} {...el} />)
                     }
                 </div>
             </Container>

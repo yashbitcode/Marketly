@@ -1,7 +1,7 @@
-import { Button, Container, Input } from "../../common";
+import { Button, Container, Input } from ".";
 import { BadgeQuestionMark, Handshake, Search, ShoppingBag, } from "lucide-react";
 
-const Header = () => {
+const BaseHeader = () => {
     return (
         <div className="py-4 px-6 shadow-2xs w-full font-inter">
             <Container className="flex justify-between mx-auto">
@@ -35,4 +35,4 @@ const Header = () => {
     )
 }
 
-export default Header;
+export default BaseHeader;
