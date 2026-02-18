@@ -10,7 +10,7 @@ const Hero = () => {
                         <h1 className="text-4xl text-green font-semibold pt-2 max-sm-440:text-2xl">From Trusted Sellers</h1>
                     </div>
 
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 italic">
                         Shop electronics, fashion, home & more —
                         all from verified vendors in one place
                     </p>
@@ -29,7 +29,7 @@ const Hero = () => {
                         <h1 className="text-2xl max-md-plus:text-3xl text-amber-900 font-semibold pt-1 max-sm-440:text-2xl">At Unbeatable Prices</h1>
                     </div>
 
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 italic">
                         New arrivals from top-rated sellers daily
                     </p>
 
@@ -47,7 +47,7 @@ const Hero = () => {
                         <h1 className="text-3xl text-blue-500 font-semibold pt-1 max-sm-440:text-2xl">Limited Time Only</h1>
                     </div>
 
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 italic">
                         Shop cool top-products with great quality
                     </p>
 

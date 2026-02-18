@@ -1,7 +1,9 @@
-import CategoryShop from "./components/features/hompage/CategoryShop";
-import Header from "./components/features/Hompage/Header";
-import Hero from "./components/features/Hompage/Hero";
-import TrendyProducts from "./components/features/hompage/TrendyProducts";
+import CategoryShop from "./components/features/homepage/CategoryShop";
+import Header from "./components/features/homepage/Header";
+import Hero from "./components/features/homepage/Hero";
+import JoinAsSeller from "./components/features/homepage/JoinAsSeller";
+import TrendyProducts from "./components/features/homepage/TrendyProducts";
+import TopVendors from "./components/features/vendor/TopVendors";
 
 const App = () => {
     return (
@@ -10,6 +12,8 @@ const App = () => {
             <Hero />
             <TrendyProducts />
             <CategoryShop />
+            <JoinAsSeller />
+            <TopVendors />
         </div>
     )
 }

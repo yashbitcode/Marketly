@@ -1,4 +1,4 @@
-import { trimStr } from "../../../utils/helpers";
+import { formatPrice, trimStr } from "../../../utils/helpers";
 import RenderStars from "../base-star/RenderStars";
 
 const ProductCard = ({ title, storeName, price, productImg, avgRating }) => {
@@ -10,8 +10,8 @@ const ProductCard = ({ title, storeName, price, productImg, avgRating }) => {
 
             <div className="flex flex-col gap-1.5">
                 <h1>{trimStr(title, 25)}</h1>
-                <h2 className="text-gray-600">{storeName}</h2>
-                <span className="text-[1.15rem] font-medium">₹{price}</span>
+                <h2 className="text-gray-600 italic">{storeName}</h2>
+                <span className="text-[1.1rem] font-medium">₹{formatPrice(price)}</span>
 
                 <RenderStars avgRating={avgRating} />
             </div>

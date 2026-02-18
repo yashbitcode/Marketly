@@ -19,7 +19,7 @@ const RenderStars = ({ avgRating }) => {
                 })
             }
 
-            <span className="text-gray-500">({avgRating})</span>
+            <span className="text-gray-500 -mt-px">({avgRating})</span>
         </div>
     )
 }
