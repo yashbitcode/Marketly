@@ -87,3 +87,24 @@ export const FOOTER_LINKS = {
         },
     ],
 };
+
+export const LOGIN_CHOICE = {
+    user: {
+        head: "Your marketplace, your way",
+        desc: "Sign in to continue shopping, track orders, and manage your profile effortlessly",
+        sideTag: "Welcome Back",
+        sideDesc: "Please Login To Your Account",
+    },
+    vendor: {
+        head: "Power your store with confidence",
+        desc: "Manage inventory, process orders, and grow your brand — all in one place",
+        sideTag: "",
+        sideDesc: "",
+    },
+    admin: {
+        head: "Marketplace control center",
+        desc: "Monitor activity, manage vendors, and scale operations with precision",
+        sideTag: "",
+        sideDesc: "",
+    },
+};
