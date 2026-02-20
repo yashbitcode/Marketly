@@ -1,5 +1,5 @@
-const SupportTicket = require("../models/supportTicket.models");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import SupportTicket from "../models/supportTicket.models.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class SupportTicketService {
     async getAll(matchStage = {}, page = 1) {
@@ -32,4 +32,4 @@ class SupportTicketService {
     }
 }
 
-module.exports = new SupportTicketService();
+export default new SupportTicketService();

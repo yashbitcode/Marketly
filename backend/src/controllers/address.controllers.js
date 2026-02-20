@@ -1,9 +1,9 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const Address = require("../models/address.models");
-const ApiResponse = require("../utils/api-response");
-const addressService = require("../services/address.service");
-const ApiError = require("../utils/api-error");
-const { pubClient: redisClient } = require("../config/redis/connection");
+import { asyncHandler } from "../utils/asyncHandler.js";
+import Address from "../models/address.models.js";
+import ApiResponse from "../utils/api-response.js";
+import addressService from "../services/address.service.js";
+import ApiError from "../utils/api-error.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
 
 const getAllUserAddresses = asyncHandler(async (req, res) => {
     const { _id } = req.user;
@@ -102,7 +102,7 @@ const markDefaultAddress = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = {
+export {
     getAllUserAddresses,
     addAddress,
     deleteAddress,

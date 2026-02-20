@@ -1,4 +1,4 @@
-const notificationService = require("../services/notification.service");
+import notificationService from "../services/notification.service.js";
 
 const sendChatUpdateJob = async (job) => {
     const { chatReq, notificationPayload } = job.data;
@@ -24,8 +24,4 @@ const sendOrdersDeliveryUpdateJob = async (job) => {
     await notificationService.sendOrderDeliveryUpdateNotification(orders);
 };
 
-module.exports = {
-    sendChatUpdateJob,
-    sendOrderUpdateJob,
-    sendOrdersDeliveryUpdateJob,
-};
+export { sendChatUpdateJob, sendOrderUpdateJob, sendOrdersDeliveryUpdateJob };

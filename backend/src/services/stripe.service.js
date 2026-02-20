@@ -1,5 +1,5 @@
-const { Stripe } = require("stripe");
-const { COMMISSION_RATE, FRONTEND_URL } = require("../utils/constants");
+import { Stripe } from "stripe";
+import { COMMISSION_RATE, FRONTEND_URL } from "../utils/constants.js";
 
 class StripeService {
     constructor() {
@@ -125,4 +125,4 @@ class StripeService {
     }
 }
 
-module.exports = new StripeService();
+export default new StripeService();

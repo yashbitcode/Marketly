@@ -1,5 +1,5 @@
-const { default: mongoose } = require("mongoose");
-const Address = require("../models/address.models");
+import mongoose from "mongoose";
+import Address from "../models/address.models.js";
 
 class AddressService {
     async getAllAddressesByUserId(userId) {
@@ -73,4 +73,4 @@ class AddressService {
     }
 }
 
-module.exports = new AddressService();
+export default new AddressService();

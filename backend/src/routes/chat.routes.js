@@ -1,18 +1,15 @@
-const { Router } = require("express");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import {
     getAllChatsReqs,
     createChatRequest,
     updateChatRequest,
-} = require("../controllers/chat.controllers");
-const {
+} from "../controllers/chat.controllers.js";
+import {
     createChatReqValidations,
     updateChatReqStatusValidations,
-} = require("../validations/chat.validations");
+} from "../validations/chat.validations.js";
 const router = Router();
 
 router.get(
@@ -38,4 +35,4 @@ router.patch(
     updateChatRequest,
 );
 
-module.exports = router;
+export default router;

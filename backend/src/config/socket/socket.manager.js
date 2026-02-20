@@ -1,7 +1,7 @@
-const { Server } = require("socket.io");
-const ApiError = require("../../utils/api-error");
-const { createAdapter } = require("@socket.io/redis-adapter");
-const { pubClient, subClient } = require("../redis/connection");
+import { Server } from "socket.io";
+import ApiError from "../../utils/api-error.js";
+import { createAdapter } from "@socket.io/redis-adapter";
+import { pubClient, subClient } from "../redis/connection.js";
 
 let io = null;
 
@@ -20,7 +20,4 @@ const getIO = () => {
     return io;
 };
 
-module.exports = {
-    initSocket,
-    getIO,
-};
+export { initSocket, getIO };

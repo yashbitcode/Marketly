@@ -1,8 +1,8 @@
-const vendorApplicationService = require("../services/vendorApplication.service");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
-const { pubClient: redisClient } = require("../config/redis/connection");
+import vendorApplicationService from "../services/vendorApplication.service.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler  } from "../utils/asyncHandler.js";
+import { pubClient as redisClient  } from "../config/redis/connection.js";
 
 const getAllApplications = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -87,7 +87,7 @@ const createVendorApplication = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = {
+export {
     getAllApplications,
     getUserSpecificApplications,
     createVendorApplication,

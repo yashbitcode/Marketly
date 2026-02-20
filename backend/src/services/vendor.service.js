@@ -1,5 +1,5 @@
-const Vendor = require("../models/vendor.models");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import Vendor from "../models/vendor.models.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class VendorService {
     async insertVendor(payload) {
@@ -53,4 +53,4 @@ class VendorService {
     }
 }
 
-module.exports = new VendorService();
+export default new VendorService();

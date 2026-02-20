@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { SUPPORT_QUERY_TYPES, REGEX } = require("../utils/constants");
-const { mediaSchema } = require("../utils/baseSchemas");
+import mongoose from "mongoose";
+import { SUPPORT_QUERY_TYPES, REGEX } from "../utils/constants.js";
+import { mediaSchema } from "../utils/baseSchemas.js";
 
 const SupportTicketSchema = new mongoose.Schema({
     fullname: {
@@ -38,4 +38,4 @@ const SupportTicketSchema = new mongoose.Schema({
 
 const SupportTicket = mongoose.model("support-tickets", SupportTicketSchema);
 
-module.exports = SupportTicket;
+export default SupportTicket;

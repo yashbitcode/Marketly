@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const Vendor = require("./vendor.models");
-const SellerOrder = require("./sellerOrder.models");
-const Order = require("./order.models");
+import mongoose from "mongoose";
+import Vendor from "./vendor.models.js";
+import SellerOrder from "./sellerOrder.models.js";
+import Order from "./order.models.js";
 
 const VendorPayoutSchema = mongoose.Schema({
     vendor: {
@@ -38,4 +38,4 @@ const VendorPayoutSchema = mongoose.Schema({
 
 const VendorPayout = mongoose.model("vendor-payouts", VendorPayoutSchema);
 
-module.exports = VendorPayout;
+export default VendorPayout;

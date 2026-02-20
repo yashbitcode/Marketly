@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const { baseVendorSchema } = require("../utils/baseSchemas");
-const { VENDOR_APPLICATION_STATUS } = require("../utils/constants");
-const User = require("./user.models");
-const Vendor = require("./vendor.models");
+import mongoose from "mongoose";
+import { baseVendorSchema } from "../utils/baseSchemas.js";
+import { VENDOR_APPLICATION_STATUS } from "../utils/constants.js";
+import User from "./user.models.js";
+import Vendor from "./vendor.models.js";
 
 const vendorApplicationSchema = new mongoose.Schema(
     {
@@ -42,4 +42,4 @@ const VendorApplication = mongoose.model(
     vendorApplicationSchema,
 );
 
-module.exports = VendorApplication;
+export default VendorApplication;

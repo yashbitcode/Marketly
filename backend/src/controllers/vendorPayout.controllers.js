@@ -1,8 +1,8 @@
-const stripeService = require("../services/stripe.service");
-const vendorPayoutService = require("../services/vendorPayout.service");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+import stripeService from "../services/stripe.service.js";
+import vendorPayoutService from "../services/vendorPayout.service.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getAllVendorPayouts = asyncHandler(async (req, res) => {
     const { data, totalCount } = await vendorPayoutService.getAll();
@@ -43,13 +43,13 @@ const makeTransfer = asyncHandler(async (req, res) => {
     if (!vendorPayoutId)
         throw new ApiError(404, "Vendor payout ID is required");
 
-
     const vendorPayout =
         await vendorPayoutService.getSpecificForAmount(vendorPayoutId);
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
 
-    if(vendorPayout.order.refundApplication) throw new ApiError(404, "This order have refund application")
+    if (vendorPayout.order.refundApplication)
+        throw new ApiError(404, "This order have refund application");
 
     const transfer = await stripeService.makePaymentTransfer(
         vendorPayoutId,
@@ -71,7 +71,8 @@ const makePayout = asyncHandler(async (req, res) => {
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
 
-    if(vendorPayout.order.refundApplication) throw new ApiError(404, "This order have refund application")
+    if (vendorPayout.order.refundApplication)
+        throw new ApiError(404, "This order have refund application");
 
     const payout = await stripeService.makePayout(
         vendorPayoutId,
@@ -82,7 +83,7 @@ const makePayout = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(201, payout, "Payout is made successfully"));
 });
 
-module.exports = {
+export {
     getAllVendorPayouts,
     getSpecificVendorPayout,
     makeTransfer,

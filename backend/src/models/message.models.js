@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { MESSAGE_DOC_MODEL_TYPES } = require("../utils/constants");
-const { mediaSchema } = require("../utils/baseSchemas");
+import mongoose from "mongoose";
+import { MESSAGE_DOC_MODEL_TYPES } from "../utils/constants.js";
+import { mediaSchema } from "../utils/baseSchemas.js";
 
 const MessageSchema = new mongoose.Schema({
     senderId: {
@@ -30,4 +30,4 @@ const MessageSchema = new mongoose.Schema({
 
 const Message = mongoose.model("messages", MessageSchema);
 
-module.exports = Message;
+export default Message;

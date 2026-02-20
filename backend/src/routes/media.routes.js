@@ -1,15 +1,12 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = Router();
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-// const multer = require("../utils/multerUpload");
-const {
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+// import multer from "../utils/multerUpload.js";
+import {
     getAuthParams,
     deleteFiles,
     getFiles,
-} = require("../controllers/media.controllers");
+} from "../controllers/media.controllers.js";
 
 router.post("/", isAuthenticated, authorise("user", "vendor"), getAuthParams);
 router.delete(
@@ -20,4 +17,4 @@ router.delete(
 );
 router.post("/files", isAuthenticated, authorise("user", "vendor"), getFiles);
 
-module.exports = router;
+export default router;

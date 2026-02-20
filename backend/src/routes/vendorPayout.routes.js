@@ -1,14 +1,11 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     getAllVendorPayouts,
     getSpecificVendorPayout,
     makePayout,
     makeTransfer,
-} = require("../controllers/vendorPayout.controllers");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
+} from "../controllers/vendorPayout.controllers.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("super-admin"), getAllVendorPayouts);
@@ -31,4 +28,4 @@ router.post(
     makePayout,
 );
 
-module.exports = router;
+export default router;

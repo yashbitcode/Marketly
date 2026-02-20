@@ -1,5 +1,5 @@
-const Notification = require("../models/notification.models");
-const initEmitter = require("../config/socket/socket.emitter");
+import Notification from "../models/notification.models.js";
+import initEmitter from "../config/socket/socket.emitter.js";
 
 class NotificationService {
     async createNotification(payload) {
@@ -48,4 +48,4 @@ class NotificationService {
     }
 }
 
-module.exports = new NotificationService();
+export default new NotificationService();

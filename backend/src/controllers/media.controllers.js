@@ -1,8 +1,8 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const imageKitService = require("../services/imageKit.service");
-const ApiResponse = require("../utils/api-response");
-const { getSearchQueryByFileIds } = require("../utils/helpers");
-const ApiError = require("../utils/api-error");
+import { asyncHandler } from "../utils/asyncHandler.js";
+import imageKitService from "../services/imageKit.service.js";
+import ApiResponse from "../utils/api-response.js";
+import { getSearchQueryByFileIds } from "../utils/helpers.js";
+import ApiError from "../utils/api-error.js";
 
 const getAuthParams = asyncHandler(async (req, res) => {
     const { token, expire, signature } = await imageKitService.getParams();
@@ -43,7 +43,7 @@ const deleteFiles = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, {}, "Files deleted successfully"));
 });
 
-module.exports = {
+export {
     getAuthParams,
     deleteFiles,
     getFiles,

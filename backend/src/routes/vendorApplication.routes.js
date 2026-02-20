@@ -1,19 +1,16 @@
-const { Router } = require("express");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const {
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import {
     getAllApplications,
     getUserSpecificApplications,
     createVendorApplication,
     updateVendorApplicationStatus,
-} = require("../controllers/vendorApplication.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
+} from "../controllers/vendorApplication.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import {
     updateVendorApplicationValidations,
     createVendorApplicationValidations,
-} = require("../validations/vendorApplication.validations");
+} from "../validations/vendorApplication.validations.js";
 const router = Router();
 
 router.get("/:page", authorise("super-admin"), getAllApplications);
@@ -41,4 +38,4 @@ router.patch(
     updateVendorApplicationStatus,
 );
 
-module.exports = router;
+export default router;

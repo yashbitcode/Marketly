@@ -1,11 +1,11 @@
-const z = require("zod");
-const {
+import z from "zod";
+import {
     REGEX,
     ADDRESS_TYPE,
     VENDOR_TYPE,
     ATTRIBUTE_DATATYPES,
-} = require("./constants");
-const { isValidObjectId } = require("mongoose");
+} from "./constants.js";
+import { isValidObjectId } from "mongoose";
 
 const baseMediaValidations = z.object({
     fileId: z.string({
@@ -221,7 +221,7 @@ const baseProductValidations = z.object({
         .min(1, "Atleast 1 image should be there"),
 });
 
-module.exports = {
+export {
     addressValidations,
     parentCategoryValidations,
     subCategoryValidations,

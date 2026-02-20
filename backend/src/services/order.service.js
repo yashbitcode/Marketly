@@ -1,9 +1,9 @@
-const { default: mongoose } = require("mongoose");
-const Order = require("../models/order.models");
-const Product = require("../models/product.models");
-const SellerOrder = require("../models/sellerOrder.models");
-const { getPaginationBasePipeline } = require("../utils/helpers");
-const vendorPayoutService = require("./vendorPayout.service");
+import mongoose from "mongoose";
+import Order from "../models/order.models.js";
+import Product from "../models/product.models.js";
+import SellerOrder from "../models/sellerOrder.models.js";
+import { getPaginationBasePipeline  } from "../utils/helpers.js";
+import vendorPayoutService from "./vendorPayout.service.js";
 
 class OrderService {
     async createOrder(payload) {
@@ -258,7 +258,7 @@ class OrderService {
                 vendor: el._id,
                 sellerOrder: sellerOrderId,
                 amount: el.totalAmount,
-                order: orderDocId
+                order: orderDocId,
             });
         });
 
@@ -297,4 +297,4 @@ class OrderService {
     }
 }
 
-module.exports = new OrderService();
+export default new OrderService();

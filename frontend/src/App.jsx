@@ -1,4 +1,5 @@
 import { BaseFooter, BaseHeader } from "./components/common";
+import Login from "./components/features/auth/Login";
 import CategoryShop from "./components/features/homepage/CategoryShop";
 import Hero from "./components/features/homepage/Hero";
 import JoinAsSeller from "./components/features/homepage/JoinAsSeller";
@@ -8,13 +9,14 @@ import TopVendors from "./components/features/vendor/TopVendors";
 const App = () => {
     return (
         <div>
-            <BaseHeader />
+            {/* <BaseHeader />
             <Hero />
             <TrendyProducts />
             <CategoryShop />
             <JoinAsSeller />
             <TopVendors />
-            <BaseFooter />
+            <BaseFooter /> */}
+            <Login />
         </div>
     )
 }

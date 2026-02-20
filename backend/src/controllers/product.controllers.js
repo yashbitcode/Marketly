@@ -1,13 +1,13 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const productService = require("../services/product.service");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const { pubClient: redisClient } = require("../config/redis/connection");
-const { createHash } = require("../utils/helpers");
+import { asyncHandler } from "../utils/asyncHandler.js";
+import productService from "../services/product.service.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
+import { createHash } from "../utils/helpers.js";
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
-    const matchStage = {};
+    let matchStage = {};
 
     let redisKey = "";
 
@@ -138,9 +138,10 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
     const { searchQuery } = req.body;
     const filterQueries = req.query;
 
+    console.log(searchQuery);
+
     const filteredProducts = await productService.getFilteredProducts(
         { "approval.status": "accepted", isActive: true },
-        {},
         filterQueries,
         searchQuery,
         +page,
@@ -158,6 +159,8 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
     }
 
     redisKey += page ? page : "1";
+
+    console.log(redisKey);
 
     await redisClient.set(redisKey, JSON.stringify(filteredProducts));
     await redisClient.expire(redisKey, 60 * 5);
@@ -179,7 +182,7 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
 //     res.json(new ApiResponse(200, filteredProducts, "Products fetched successfully"));
 // });
 
-module.exports = {
+export {
     getAllProducts,
     getSpecificProduct,
     // getAllVendorProducts,

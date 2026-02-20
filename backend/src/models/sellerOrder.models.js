@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const Vendor = require("./vendor.models");
-const User = require("./user.models");
-const Order = require("./order.models");
-const { sellerOrderProductsSchema } = require("../utils/baseSchemas");
-const { ORDER_DELIVERY_STATUS } = require("../utils/constants");
+import mongoose from "mongoose";
+import Vendor from "./vendor.models.js";
+import User from "./user.models.js";
+import Order from "./order.models.js";
+import { sellerOrderProductsSchema } from "../utils/baseSchemas.js";
+import { ORDER_DELIVERY_STATUS } from "../utils/constants.js";
 
 const SellerOrderSchema = new mongoose.Schema(
     {
@@ -43,4 +43,4 @@ const SellerOrderSchema = new mongoose.Schema(
 
 const SellerOrder = mongoose.model("seller-orders", SellerOrderSchema);
 
-module.exports = SellerOrder;
+export default SellerOrder;

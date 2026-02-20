@@ -1,5 +1,5 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/user.models");
+import bcrypt from "bcrypt";
+import User from "../models/user.models.js";
 
 class SuperAdminService {
     async createSuperAdmin(payload) {
@@ -39,6 +39,6 @@ class SuperAdminService {
     }
 }
 
-module.exports = new SuperAdminService();
+export default new SuperAdminService();
 
 // SuperAdmin@12

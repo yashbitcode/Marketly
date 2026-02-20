@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const User = require("./user.models");
-const { REGEX, ADDRESS_TYPE } = require("../utils/constants");
+import mongoose from "mongoose";
+import User from "./user.models.js";
+import { REGEX, ADDRESS_TYPE } from "../utils/constants.js";
 
 const AddressSchema = new mongoose.Schema(
     {
@@ -68,4 +68,4 @@ AddressSchema.pre("save", function () {
 
 const Address = mongoose.model("addresses", AddressSchema);
 
-module.exports = Address;
+export default Address;

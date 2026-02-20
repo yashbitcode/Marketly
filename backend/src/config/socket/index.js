@@ -1,8 +1,6 @@
-const { isSocketAuthenticated } = require("../../middlewares/auth.middlewares");
-const {
-    createMessageValidations,
-} = require("../../validations/chat.validations");
-const chatService = require("../../services/chat.service");
+import { isSocketAuthenticated } from "../../middlewares/auth.middlewares.js";
+import { createMessageValidations } from "../../validations/chat.validations.js";
+import chatService from "../../services/chat.service.js";
 
 const setupSocketIO = (io) => {
     io.use(isSocketAuthenticated);
@@ -43,6 +41,4 @@ const setupSocketIO = (io) => {
     });
 };
 
-module.exports = {
-    setupSocketIO,
-};
+export { setupSocketIO };

@@ -1,5 +1,5 @@
-const OrderRefundApplication = require("../models/orderRefundApplication.models");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
+import OrderRefundApplication from "../models/orderRefundApplication.models.js";
+import { GENERAL_USER_FIELDS } from "../utils/constants.js";
 
 class OrderRefundApplicationService {
     async createApplication(payload) {
@@ -68,4 +68,4 @@ class OrderRefundApplicationService {
     }
 }
 
-module.exports = new OrderRefundApplicationService();
+export default new OrderRefundApplicationService();

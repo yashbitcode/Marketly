@@ -1,5 +1,5 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     getAllParentCategories,
     updateParentCategory,
     getAllSubCategories,
@@ -8,18 +8,15 @@ const {
     addSubCategory,
     deleteParentCategory,
     deleteSubCategory,
-} = require("../controllers/category.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
+} from "../controllers/category.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import {
     addParentCategoryValidations,
     addSubCategoryValidations,
     updateParentCategoryValidations,
     updateSubCategoryValidations,
-} = require("../validations/category.validations");
-const {
-    authorise,
-    isAuthenticated,
-} = require("../middlewares/auth.middlewares");
+} from "../validations/category.validations.js";
+import { authorise, isAuthenticated } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.get(
@@ -82,4 +79,4 @@ router.patch(
     updateSubCategory,
 );
 
-module.exports = router;
+export default router;

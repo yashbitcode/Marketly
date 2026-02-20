@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const {
-    MESSAGE_DOC_MODEL_TYPES: NOTIFICATION_DOC_MODEL_TYPES,
+import mongoose from "mongoose";
+import {
+    MESSAGE_DOC_MODEL_TYPES as NOTIFICATION_DOC_MODEL_TYPES,
     NOTIFICATION_TYPES,
-} = require("../utils/constants");
+} from "../utils/constants.js";
 
 const NotificationSchema = new mongoose.Schema({
     receiverId: {
@@ -46,7 +46,7 @@ const NotificationSchema = new mongoose.Schema({
 
 const Notification = mongoose.model("notifications", NotificationSchema);
 
-module.exports = Notification;
+export default Notification;
 
 /* 
 - chat-req accepted

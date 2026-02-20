@@ -1,6 +1,6 @@
-const ParentCategory = require("../models/parentCategory.models");
-const Product = require("../models/product.models");
-const SubCategory = require("../models/subCategory.models");
+import ParentCategory from "../models/parentCategory.models.js";
+import Product from "../models/product.models.js";
+import SubCategory from "../models/subCategory.models.js";
 
 class CategoryService {
     async getAllParentCategories() {
@@ -77,4 +77,4 @@ class CategoryService {
     }
 }
 
-module.exports = new CategoryService();
+export default new CategoryService();

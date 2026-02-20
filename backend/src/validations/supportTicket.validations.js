@@ -1,6 +1,6 @@
-const z = require("zod");
-const { SUPPORT_QUERY_TYPES } = require("../utils/constants");
-const { baseMediaValidations } = require("../utils/baseValidations");
+import z from "zod";
+import { SUPPORT_QUERY_TYPES } from "../utils/constants.js";
+import { baseMediaValidations } from "../utils/baseValidations.js";
 
 const addSupportTicketValidations = z.object({
     fullname: z
@@ -27,6 +27,4 @@ const addSupportTicketValidations = z.object({
         .optional(),
 });
 
-module.exports = {
-    addSupportTicketValidations,
-};
+export { addSupportTicketValidations };

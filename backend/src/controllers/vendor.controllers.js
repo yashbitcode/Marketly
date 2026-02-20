@@ -1,9 +1,9 @@
-const userService = require("../services/user.service");
-const vendorService = require("../services/vendor.service");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
-const { ACCOUNT_STATUS, GENERAL_USER_FIELDS } = require("../utils/constants");
+import userService from "../services/user.service.js";
+import vendorService from "../services/vendor.service.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ACCOUNT_STATUS, GENERAL_USER_FIELDS } from "../utils/constants.js";
 
 const getAllVendors = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -84,9 +84,4 @@ const updateAccountStatus = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = {
-    getAllVendors,
-    createVendor,
-    updateVendor,
-    updateAccountStatus,
-};
+export { getAllVendors, createVendor, updateVendor, updateAccountStatus };

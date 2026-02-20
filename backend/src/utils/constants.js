@@ -16,13 +16,7 @@ const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
 const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const REFUND_APPLICATION_STATUS = ["under-process", "refunded"];
-const ORDER_STATUS = [
-    "created",
-    "attempted",
-    "paid",
-    "failed",
-    "refunded"
-];
+const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
 const ORDER_DELIVERY_STATUS = [
     "placed",
     "shipped",
@@ -72,7 +66,7 @@ const REGEX = {
     password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
 };
 
-module.exports = {
+export {
     BASE_ENDPOINT,
     TOKEN_LENGTH,
     COOKIE_OPTIONS,
@@ -97,5 +91,5 @@ module.exports = {
     ORDER_DELIVERY_STATUS,
     COMMISSION_RATE,
     BUSINESS_SIZE,
-    REFUND_APPLICATION_STATUS
+    REFUND_APPLICATION_STATUS,
 };

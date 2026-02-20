@@ -1,8 +1,8 @@
-const { Queue } = require("bullmq");
-const { pubClient } = require("../config/redis/connection");
+import { Queue } from "bullmq";
+import { pubClient } from "../config/redis/connection.js";
 
 const notificationQueue = new Queue("notification-queue", {
     connection: pubClient,
 });
 
-module.exports = notificationQueue;
+export default notificationQueue;

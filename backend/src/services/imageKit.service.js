@@ -1,5 +1,5 @@
-const ImageKit = require("@imagekit/nodejs");
-const { toFile } = require("@imagekit/nodejs");
+import ImageKit from "@imagekit/nodejs";
+import { toFile } from "@imagekit/nodejs";
 
 class ImageKitService {
     constructor() {
@@ -72,4 +72,4 @@ class ImageKitService {
     // }
 }
 
-module.exports = new ImageKitService();
+export default new ImageKitService();

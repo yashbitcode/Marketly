@@ -1,9 +1,6 @@
-const { addressValidations } = require("../utils/baseValidations");
+import { addressValidations } from "../utils/baseValidations.js";
 
 const addAddressValidations = addressValidations.strict();
 const updateAddressValidations = addressValidations.partial();
 
-module.exports = {
-    addAddressValidations,
-    updateAddressValidations,
-};
+export { addAddressValidations, updateAddressValidations };

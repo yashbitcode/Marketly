@@ -1,5 +1,5 @@
-const rzp = require("../config/razorpay");
-const { verifyRazorpaySignature } = require("../utils/helpers");
+import rzp from "../config/razorpay/index.js";
+import { verifyRazorpaySignature } from "../utils/helpers.js";
 
 class RazorpayService {
     async createOrder(payload) {
@@ -14,7 +14,7 @@ class RazorpayService {
                 speed: "optimum",
                 amount,
                 notes: {
-                    refundId
+                    refundId,
                 },
             });
 
@@ -38,4 +38,4 @@ class RazorpayService {
     }
 }
 
-module.exports = new RazorpayService();
+export default new RazorpayService();

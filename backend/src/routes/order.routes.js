@@ -1,6 +1,6 @@
-const express = require("express");
-const { Router } = require("express");
-const {
+import express from "express";
+import { Router } from "express";
+import {
     createOrder,
     verifyOrderPayment,
     webhook,
@@ -8,17 +8,14 @@ const {
     getOrderByOrderId,
     getAllOrders,
     gg,
-} = require("../controllers/orders.controllers");
-const {
+} from "../controllers/orders.controllers.js";
+import {
     verifyPaymentValidations,
     updateOrderDeliveryStatusValidations,
     createOrderValidations,
-} = require("../validations/order.validations");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
+} from "../validations/order.validations.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.get("/gg", gg);
@@ -62,4 +59,4 @@ router.patch(
     updateOrderDeliveryStatus,
 );
 
-module.exports = router;
+export default router;

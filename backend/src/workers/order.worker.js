@@ -1,7 +1,7 @@
-const { Worker } = require("bullmq");
-const { orderJob } = require("../jobs/order.jobs");
-const { workerDBConnect } = require("../utils/dbConnectWorker");
-const { pubClient } = require("../config/redis/connection");
+import { Worker } from "bullmq";
+import { orderJob } from "../jobs/order.jobs.js";
+import { workerDBConnect } from "../utils/dbConnectWorker.js";
+import { pubClient } from "../config/redis/connection.js";
 
 workerDBConnect(() => {
     const worker = new Worker(

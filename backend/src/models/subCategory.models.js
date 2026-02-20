@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const ParentCategory = require("./parentCategory.models");
-const { generateSlug } = require("../utils/helpers");
+import mongoose from "mongoose";
+import ParentCategory from "./parentCategory.models.js";
+import { generateSlug } from "../utils/helpers.js";
 
 const SubCategorySchema = new mongoose.Schema(
     {
@@ -62,4 +62,4 @@ SubCategorySchema.pre("findOneAndUpdate", function () {
 
 const SubCategory = mongoose.model("sub-categories", SubCategorySchema);
 
-module.exports = SubCategory;
+export default SubCategory;

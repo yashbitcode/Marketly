@@ -1,10 +1,10 @@
-const Product = require("../models/product.models");
-const { PAGINATION_LIMIT } = require("../utils/constants");
-const {
+import Product from "../models/product.models.js";
+import { PAGINATION_LIMIT } from "../utils/constants.js";
+import {
     getProductFilterationPipeline,
     getPaginationBasePipeline,
     getProductBasePipeline,
-} = require("../utils/helpers");
+} from "../utils/helpers.js";
 
 class ProductService {
     async getAll(matchStage = {}, page = 1) {
@@ -124,4 +124,4 @@ class ProductService {
     // }
 }
 
-module.exports = new ProductService();
+export default new ProductService();

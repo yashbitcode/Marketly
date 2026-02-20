@@ -1,20 +1,20 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     createVendor,
     updateVendor,
     updateAccountStatus,
     getAllVendors,
-} = require("../controllers/vendor.controllers");
-const {
+} from "../controllers/vendor.controllers.js";
+import {
     isAuthenticated,
     authorise,
-} = require("../middlewares/auth.middlewares");
-const {
+} from "../middlewares/auth.middlewares.js";
+import {
     createVendorValidations,
     updateVendorValidations,
     updateVendorAccStatusValidations,
-} = require("../validations/vendor.validations");
-const { validate } = require("../middlewares/validate.middlewares");
+} from "../validations/vendor.validations.js";
+import { validate } from "../middlewares/validate.middlewares.js";
 const router = Router();
 
 router.get("/:page", isAuthenticated, authorise("super-admin"), getAllVendors);
@@ -43,4 +43,4 @@ router.patch(
     updateAccountStatus,
 );
 
-module.exports = router;
+export default router;

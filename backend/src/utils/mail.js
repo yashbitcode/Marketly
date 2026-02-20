@@ -1,5 +1,5 @@
-const mailGenerator = require("../config/mailgen");
-const transporter = require("../config/nodemailer");
+import mailGenerator from "../config/mailgen/index.js";
+import transporter from "../config/nodemailer/index.js";
 
 const sendMail = async (options) => {
     const { from, to, subject, emailContent } = options;
@@ -126,11 +126,7 @@ const orderPlacedInvoiceMailContent = (fullname, orderId, invoiceUrl) => ({
     },
 });
 
-const refundSuccessfulMailContent = (
-    orderId,
-    refundId,
-    amount
-) => ({
+const refundSuccessfulMailContent = (orderId, refundId, amount) => ({
     body: {
         title: "Your Refund Has Been Processed Successfully",
         intro: [
@@ -148,13 +144,12 @@ const refundSuccessfulMailContent = (
     },
 });
 
-
-module.exports = {
+export {
     sendMail,
     passwordResetMailContent,
     registrationMailContent,
     registrationCodeMailContent,
     passwordChangedMailContent,
     orderPlacedInvoiceMailContent,
-    refundSuccessfulMailContent
+    refundSuccessfulMailContent,
 };

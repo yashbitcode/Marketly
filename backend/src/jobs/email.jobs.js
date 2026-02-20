@@ -1,4 +1,4 @@
-const { sendMail } = require("../utils/mail");
+import { sendMail } from "../utils/mail.js";
 
 const sendMailJob = async (job) => {
     const emailOptions = job.data;
@@ -7,6 +7,4 @@ const sendMailJob = async (job) => {
     return email;
 };
 
-module.exports = {
-    sendMailJob,
-};
+export { sendMailJob };

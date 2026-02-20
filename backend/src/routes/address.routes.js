@@ -1,20 +1,17 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     addAddress,
     getAllUserAddresses,
     deleteAddress,
     updateAddress,
     markDefaultAddress,
-} = require("../controllers/address.controllers");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
+} from "../controllers/address.controllers.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import {
     addAddressValidations,
     updateAddressValidations,
-} = require("../validations/address.validations");
+} from "../validations/address.validations.js";
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("user"), getAllUserAddresses);
@@ -44,4 +41,4 @@ router.patch(
     markDefaultAddress,
 );
 
-module.exports = router;
+export default router;

@@ -1,11 +1,11 @@
-require("dotenv").config();
-const main = require("../db");
+import "dotenv/config"
+import main from "../db/index.js";
 
 const workerDBConnect = async (workerInitialisationCB) => {
     await main();
     workerInitialisationCB();
 };
 
-module.exports = {
+export {
     workerDBConnect,
 };

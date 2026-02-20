@@ -1,11 +1,25 @@
-const {Router} = require("express");
-const { isAuthenticated, authorise } = require("../middlewares/auth.middlewares");
-const { createRefundApplication, getAllRefundApplications } = require("../controllers/orderRefundApplication.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const { createOrderRefundApplicationValidations } = require("../validations/orderRefundApplication.validations");
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import {
+    createRefundApplication,
+    getAllRefundApplications,
+} from "../controllers/orderRefundApplication.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { createOrderRefundApplicationValidations } from "../validations/orderRefundApplication.validations.js";
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllRefundApplications);
-router.post("/", isAuthenticated, authorise("user"), validate(createOrderRefundApplicationValidations), createRefundApplication);
+router.get(
+    "/",
+    isAuthenticated,
+    authorise("super-admin"),
+    getAllRefundApplications,
+);
+router.post(
+    "/",
+    isAuthenticated,
+    authorise("user"),
+    validate(createOrderRefundApplicationValidations),
+    createRefundApplication,
+);
 
-module.exports = router;
+export default router;
