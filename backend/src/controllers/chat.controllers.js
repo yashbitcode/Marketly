@@ -1,8 +1,8 @@
-// const notificationQueue = require("../queues/notification.queue");
-const { inngest } = require("../inngest");
-const chatService = require("../services/chat.service");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+// import notificationQueue from "../queues/notification.queue";
+import { inngest } from "../inngest/index.js";
+import chatService from "../services/chat.service.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createChatRequest = asyncHandler(async (req, res) => {
     const payload = req.body;
@@ -13,7 +13,7 @@ const createChatRequest = asyncHandler(async (req, res) => {
     );
 });
 
-const updateChatRequest = asyncHandler(async (req, res,next) => {
+const updateChatRequest = asyncHandler(async (req, res, next) => {
     const { status, chatReqId } = req.body;
 
     const chatReq = await chatService.getChatReq({ _id: chatReqId });
@@ -43,7 +43,12 @@ const updateChatRequest = asyncHandler(async (req, res,next) => {
     //     },
     // );
 
-    await inngest.send({name: "notification/send-chat-update", data: notificationPayload}).catch((err) => next(err));
+    await inngest
+        .send({
+            name: "notification/send-chat-update",
+            data: notificationPayload,
+        })
+        .catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -82,7 +87,7 @@ const getAllChatsReqs = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
 });
 
-module.exports = {
+export {
     createChatRequest,
     updateChatRequest,
     getAllChatsReqs,

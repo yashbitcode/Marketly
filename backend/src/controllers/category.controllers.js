@@ -1,8 +1,8 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const categoryService = require("../services/category.service");
-const ApiResponse = require("../utils/api-response");
-const ApiError = require("../utils/api-error");
-const { pubClient: redisClient } = require("../config/redis/connection");
+import { asyncHandler  } from "../utils/asyncHandler.js";
+import categoryService from "../services/category.service.js";
+import ApiResponse from "../utils/api-response.js";
+import ApiError from "../utils/api-error.js";
+import { pubClient as redisClient  } from "../config/redis/connection.js";
 
 const getAllParentCategories = asyncHandler(async (req, res) => {
     let allCategories = await redisClient.get("parent:categories");
@@ -158,7 +158,7 @@ const updateSubCategory = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = {
+export {
     getAllParentCategories,
     getAllSubCategories,
     addParentCategory,

@@ -1,13 +1,13 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     registerValidations,
     loginValidations,
     changePasswordValidations,
     forgotPasswordLinkValidations,
     resetPasswordValidations,
-} = require("../validations/auth.validations");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
+} from "../validations/auth.validations.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import {
     register,
     login,
     loginVendor,
@@ -19,11 +19,8 @@ const {
     forgotPasswordLink,
     forgotPasswordVerification,
     resetPassword,
-} = require("../controllers/auth.controllers");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
+} from "../controllers/auth.controllers.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.post("/register", validate(registerValidations), register);
@@ -62,4 +59,4 @@ router.get("/verify-email-code/:sessionId/:code", verifyEmailCode);
 
 router.get("/forgot-password/:resetToken", forgotPasswordVerification);
 
-module.exports = router;
+export default router;

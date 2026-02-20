@@ -1,9 +1,9 @@
-const z = require("zod");
-const {
-    MESSAGE_DOC_MODEL_TYPES: NOTIFICATION_DOC_MODEL_TYPES,
+import z from "zod";
+import {
+    MESSAGE_DOC_MODEL_TYPES as NOTIFICATION_DOC_MODEL_TYPES,
     NOTIFICATION_TYPES,
-} = require("../utils/constants");
-const { isValidObjectId } = require("mongoose");
+} from "../utils/constants.js";
+import { isValidObjectId } from "mongoose";
 
 const addNotificationValidations = z.object({
     receiverId: z
@@ -24,6 +24,4 @@ const addNotificationValidations = z.object({
     data: z.record(z.string(), z.string()).optional(),
 });
 
-module.exports = {
-    addNotificationValidations,
-};
+export { addNotificationValidations };

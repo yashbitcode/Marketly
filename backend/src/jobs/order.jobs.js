@@ -1,8 +1,8 @@
-const orderService = require("../services/order.service");
-const { orderPlacedInvoiceMailContent } = require("../utils/mail");
-const { createInvoice } = require("../utils/helpers");
-const imageKitService = require("../services/imageKit.service");
-// const notificationQueue = require("../queues/notification.queue");
+import orderService from "../services/order.service.js";
+import { orderPlacedInvoiceMailContent } from "../utils/mail.js";
+import { createInvoice } from "../utils/helpers.js";
+import imageKitService from "../services/imageKit.service.js";
+// import notificationQueue from "../queues/notification.queue.js";
 
 const orderJob = async (job) => {
     const { user, status, products, orderDocId } = job.data;
@@ -34,8 +34,6 @@ const orderJob = async (job) => {
             },
         );
 
-        
-
         await emailQueue.add("send-email", emailData, {
             removeOnComplete: true,
             removeOnFail: true,
@@ -65,6 +63,4 @@ const orderJob = async (job) => {
     );
 };
 
-module.exports = {
-    orderJob,
-};
+export { orderJob };

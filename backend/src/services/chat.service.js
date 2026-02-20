@@ -1,8 +1,8 @@
-const ChatRequest = require("../models/chatRequest.models");
-const { nanoid } = require("nanoid");
-const Message = require("../models/message.models");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import ChatRequest from "../models/chatRequest.models.js";
+import { nanoid } from "nanoid";
+import Message from "../models/message.models.js";
+import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class ChatService {
     async createChatReq(payload) {
@@ -106,4 +106,4 @@ class ChatService {
     }
 }
 
-module.exports = new ChatService();
+export default new ChatService();

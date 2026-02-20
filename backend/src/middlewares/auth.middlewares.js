@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-const ApiError = require("../utils/api-error");
-const { asyncHandler } = require("../utils/asyncHandler");
-const userService = require("../services/user.service");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const { pubClient: redisClient } = require("../config/redis/connection");
+import jwt from "jsonwebtoken";
+import ApiError from "../utils/api-error.js";
+import { asyncHandler  } from "../utils/asyncHandler.js";
+import userService from "../services/user.service.js";
+import { GENERAL_USER_FIELDS  } from "../utils/constants.js";
+import { pubClient as redisClient  } from "../config/redis/connection.js";
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -91,7 +91,7 @@ const isSocketAuthenticated = async (socket, next) => {
 
         if (user.role !== "super-admin") socket.user = user;
         next();
-    } catch(error) {
+    } catch (error) {
         next(new ApiError(error.statusCode), error.message);
     }
 
@@ -124,7 +124,7 @@ const authorise = (...allowedRoles) => {
     });
 };
 
-module.exports = {
+export {
     isAuthenticated,
     isSocketAuthenticated,
     authorise,

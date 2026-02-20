@@ -1,23 +1,23 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const userService = require("../services/user.service");
-const User = require("../models/user.models");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const {
+import { asyncHandler  } from "../utils/asyncHandler.js";
+import userService from "../services/user.service.js";
+import User from "../models/user.models.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import {
     COOKIE_OPTIONS,
     FRONTEND_URL,
     GENERAL_USER_FIELDS,
-} = require("../utils/constants");
-const superAdminService = require("../services/superAdmin.service");
-const {
+} from "../utils/constants.js";
+import superAdminService from "../services/superAdmin.service.js";
+import {
     registrationCodeMailContent,
     passwordResetMailContent,
     registrationMailContent,
     passwordChangedMailContent,
-} = require("../utils/mail");
-const { pubClient: redisClient } = require("../config/redis/connection");
-const { createHash } = require("../utils/helpers");
-const { inngest } = require("../inngest");
+} from "../utils/mail.js";
+import { pubClient as redisClient  } from "../config/redis/connection.js";
+import { createHash  } from "../utils/helpers.js";
+import { inngest  } from "../inngest/index.js";
 
 const register = asyncHandler(async (req, res, next) => {
     const { user, verificationToken } = await userService.createNewUser(
@@ -43,11 +43,11 @@ const register = asyncHandler(async (req, res, next) => {
     // });
 
     await inngest
-            .send({
-                name: "mail/send-mail",
-                data: emailData,
-            })
-            .catch((err) => next(err));
+        .send({
+            name: "mail/send-mail",
+            data: emailData,
+        })
+        .catch((err) => next(err));
 
     await redisClient.set(
         `emailVerificationToken:${user._id}`,
@@ -300,11 +300,11 @@ const verifyEmailCode = asyncHandler(async (req, res, next) => {
     // });
 
     await inngest
-            .send({
-                name: "mail/send-mail",
-                data: emailData,
-            })
-            .catch((err) => next(err));
+        .send({
+            name: "mail/send-mail",
+            data: emailData,
+        })
+        .catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -362,11 +362,11 @@ const changePassword = asyncHandler(async (req, res, next) => {
     // });
 
     await inngest
-            .send({
-                name: "mail/send-mail",
-                data: emailData,
-            })
-            .catch((err) => next(err));
+        .send({
+            name: "mail/send-mail",
+            data: emailData,
+        })
+        .catch((err) => next(err));
 
     res.json(new ApiResponse(200, { _id }, "Password changed successfully"));
 });
@@ -418,11 +418,11 @@ const forgotPasswordLink = asyncHandler(async (req, res, next) => {
     // });
 
     await inngest
-            .send({
-                name: "mail/send-mail",
-                data: emailData,
-            })
-            .catch((err) => next(err));
+        .send({
+            name: "mail/send-mail",
+            data: emailData,
+        })
+        .catch((err) => next(err));
 
     res.json(
         new ApiResponse(
@@ -473,7 +473,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, {}, "Password reset successful"));
 });
 
-module.exports = {
+export {
     register,
     login,
     loginVendor,

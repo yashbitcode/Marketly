@@ -1,11 +1,11 @@
-const Mailgen = require("mailgen");
+import Mailgen from "mailgen";
 
 const mailGenerator = new Mailgen({
-        theme: "default",
-        product: {
-            name: "Marketly",
-            link: "https://taskmanager.example.com",
-        },
-    });
+    theme: "default",
+    product: {
+        name: "Marketly",
+        link: "https://taskmanager.example.com",
+    },
+});
 
-    module.exports = mailGenerator;
+export default mailGenerator;

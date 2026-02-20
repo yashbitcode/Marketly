@@ -1,6 +1,6 @@
-const Review = require("../models/review.models");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import Review from "../models/review.models.js";
+import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class ReviewService {
     async getAllProductReviewsBySlug(slug, page = 1) {
@@ -56,4 +56,4 @@ class ReviewService {
     }
 }
 
-module.exports = new ReviewService();
+export default new ReviewService();

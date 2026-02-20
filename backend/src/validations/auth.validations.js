@@ -1,5 +1,5 @@
-const z = require("zod");
-const { REGEX } = require("../utils/constants");
+import z from "zod";
+import { REGEX } from "../utils/constants.js";
 
 const registerValidations = z
     .object({
@@ -146,7 +146,7 @@ const resetPasswordValidations = z
     )
     .strict();
 
-module.exports = {
+export {
     registerValidations,
     loginValidations,
     changePasswordValidations,

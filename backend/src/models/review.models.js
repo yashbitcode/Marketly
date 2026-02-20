@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const User = require("./user.models");
-const Product = require("./product.models");
+import mongoose from "mongoose";
+import User from "./user.models.js";
+import Product from "./product.models.js";
 
 const ReviewSchema = new mongoose.Schema(
     {
@@ -36,4 +36,4 @@ const ReviewSchema = new mongoose.Schema(
 
 const Review = mongoose.model("reviews", ReviewSchema);
 
-module.exports = Review;
+export default Review;

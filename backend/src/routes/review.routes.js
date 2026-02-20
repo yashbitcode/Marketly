@@ -1,16 +1,11 @@
-const { Router } = require("express");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const {
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import {
     getAllProductReviews,
     addProductReview,
-} = require("../controllers/review.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
-    addProductReviewValidations,
-} = require("../validations/review.validations");
+} from "../controllers/review.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { addProductReviewValidations } from "../validations/review.validations.js";
 const router = Router();
 
 router.get(
@@ -28,4 +23,4 @@ router.post(
     addProductReview,
 );
 
-module.exports = router;
+export default router;

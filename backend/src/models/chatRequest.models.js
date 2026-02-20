@@ -1,9 +1,7 @@
-const mongoose = require("mongoose");
-const User = require("./user.models");
-const Vendor = require("./vendor.models");
-const {
-    PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS,
-} = require("../utils/constants");
+import mongoose from "mongoose";
+import User from "./user.models.js";
+import Vendor from "./vendor.models.js";
+import { PRODUCT_APPROVAL_STATUS as APPROVAL_STATUS } from "../utils/constants.js";
 
 const ChatRequestSchema = new mongoose.Schema({
     user: {
@@ -27,4 +25,4 @@ const ChatRequestSchema = new mongoose.Schema({
 
 const ChatRequest = mongoose.model("chat-requests", ChatRequestSchema);
 
-module.exports = ChatRequest;
+export default ChatRequest;

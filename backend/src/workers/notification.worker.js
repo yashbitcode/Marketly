@@ -1,11 +1,11 @@
-const { Worker } = require("bullmq");
-const {
+import { Worker } from "bullmq";
+import {
     sendChatUpdateJob,
     sendOrderUpdateJob,
     sendOrdersDeliveryUpdateJob,
-} = require("../jobs/notification.jobs");
-const { workerDBConnect } = require("../utils/dbConnectWorker");
-const { pubClient } = require("../config/redis/connection");
+} from "../jobs/notification.jobs.js";
+import { workerDBConnect } from "../utils/dbConnectWorker.js";
+import { pubClient } from "../config/redis/connection.js";
 
 workerDBConnect(() => {
     const worker = new Worker(

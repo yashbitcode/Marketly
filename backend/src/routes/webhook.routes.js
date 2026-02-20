@@ -1,7 +1,7 @@
-const express = require("express");
-const { Router } = require("express");
-const { Stripe } = require("stripe");
-const vendorPayoutService = require("../services/vendorPayout.service");
+import express from "express";
+import { Router } from "express";
+import { Stripe } from "stripe";
+import vendorPayoutService from "../services/vendorPayout.service.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = Router();
@@ -57,4 +57,4 @@ router.post(
     },
 );
 
-module.exports = router;
+export default router;

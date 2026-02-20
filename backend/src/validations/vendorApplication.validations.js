@@ -1,6 +1,6 @@
-const z = require("zod");
-const { VENDOR_APPLICATION_STATUS } = require("../utils/constants");
-const { baseVendor } = require("../utils/baseValidations");
+import z from "zod";
+import { VENDOR_APPLICATION_STATUS } from "../utils/constants.js";
+import { baseVendor } from "../utils/baseValidations.js";
 
 const createVendorApplicationValidations = baseVendor.extend({
     description: z.string().min(10, "Minimum length should be 10").optional(),
@@ -15,7 +15,7 @@ const updateVendorApplicationValidations = z
     })
     .strict();
 
-module.exports = {
+export {
     createVendorApplicationValidations,
     updateVendorApplicationValidations,
 };

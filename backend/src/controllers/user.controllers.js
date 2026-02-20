@@ -1,6 +1,6 @@
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
-const userService = require("../services/user.service");
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import userService from "../services/user.service.js";
 
 const getAllUsers = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -24,7 +24,4 @@ const updateUser = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, user, "User updated successfully"));
 });
 
-module.exports = {
-    updateUser,
-    getAllUsers,
-};
+export { updateUser, getAllUsers };

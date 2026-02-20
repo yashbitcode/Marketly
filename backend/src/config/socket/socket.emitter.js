@@ -1,6 +1,6 @@
-require("dotenv").config();
-const { Emitter } = require("@socket.io/redis-emitter");
-const { createClient } = require("redis");
+import "dotenv/config";
+import { Emitter } from "@socket.io/redis-emitter";
+import { createClient } from "redis";
 
 let redisClient;
 let io;
@@ -22,4 +22,4 @@ const initEmitter = async () => {
     return initialising;
 };
 
-module.exports = initEmitter;
+export default initEmitter;

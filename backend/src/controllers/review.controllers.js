@@ -1,6 +1,6 @@
-const reviewService = require("../services/review.service");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+import reviewService from "../services/review.service.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getAllProductReviews = asyncHandler(async (req, res) => {
     const { slug, page } = req.params;
@@ -23,7 +23,7 @@ const addProductReview = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(201, review, "Review added successfully"));
 });
 
-module.exports = {
+export {
     getAllProductReviews,
     addProductReview,
 };

@@ -1,25 +1,21 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     getAllProducts,
     getSpecificProduct,
     addVendorProduct,
     updateVendorProduct,
     updateProductStatus,
     getFilteredProducts,
-} = require("../controllers/product.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
-    authorise,
-    isAuthenticated,
-} = require("../middlewares/auth.middlewares");
-const {
+} from "../controllers/product.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { authorise, isAuthenticated } from "../middlewares/auth.middlewares.js";
+import {
     addProductValidations,
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
     searchQueryValidations,
-} = require("../validations/product.validations");
-const razorpayService = require("../services/razorpay.service");
+} from "../validations/product.validations.js";
 const router = Router();
 
 router.get(
@@ -66,4 +62,4 @@ router.patch(
 
 router.get("/slug/:slug", getSpecificProduct);
 
-module.exports = router;
+export default router;

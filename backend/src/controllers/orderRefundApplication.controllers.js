@@ -1,15 +1,19 @@
-const orderService = require("../services/order.service");
-const orderRefundApplicationService = require("../services/orderRefundApplication.service");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+import orderService from "../services/order.service.js";
+import orderRefundApplicationService from "../services/orderRefundApplication.service.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createRefundApplication = asyncHandler(async (req, res) => {
     const { order, reason, attachments, status } = req.body;
 
-    const baseOrder = orderService.getBaseOrder({user: req.user._id, _id: order});
+    const baseOrder = orderService.getBaseOrder({
+        user: req.user._id,
+        _id: order,
+    });
 
-    if(!baseOrder) throw new ApiError(404, "Order not found");
-    if(baseOrder.status !== "paid" || !baseOrder.paymentId) throw new ApiError(400, "Invalid refund application");
+    if (!baseOrder) throw new ApiError(404, "Order not found");
+    if (baseOrder.status !== "paid" || !baseOrder.paymentId)
+        throw new ApiError(400, "Invalid refund application");
 
     const application = await orderRefundApplicationService.createApplication({
         user: req.user._id,
@@ -50,7 +54,4 @@ const getAllRefundApplications = asyncHandler(async (req, res) => {
 //     );
 // });
 
-module.exports = {
-    createRefundApplication,
-    getAllRefundApplications,
-};
+export { createRefundApplication, getAllRefundApplications };

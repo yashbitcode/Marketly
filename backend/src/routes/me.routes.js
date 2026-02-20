@@ -1,9 +1,9 @@
-const { getMe } = require("../controllers/me.controllers");
-const {
+import { getMe } from "../controllers/me.controllers.js";
+import {
     isAuthenticated,
     authorise,
-} = require("../middlewares/auth.middlewares");
-const { Router } = require("express");
+} from "../middlewares/auth.middlewares.js";
+import { Router } from "express";
 const router = Router();
 
 router.get(
@@ -13,4 +13,4 @@ router.get(
     getMe,
 );
 
-module.exports = router;
+export default router;

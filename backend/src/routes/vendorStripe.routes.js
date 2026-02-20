@@ -1,16 +1,11 @@
-const { Router } = require("express");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const {
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import {
     createStripeConnectedAcc,
-} = require("../controllers/vendorStripe.controllers");
-const { getOnboardingLink } = require("../services/stripe.service");
-const {
-    createConnectedAccountValidations,
-} = require("../validations/vendorStripe.validations");
-const { validate } = require("../middlewares/validate.middlewares");
+    getStripeOnboardingLink,
+} from "../controllers/vendorStripe.controllers.js";
+import { createConnectedAccountValidations } from "../validations/vendorStripe.validations.js";
+import { validate } from "../middlewares/validate.middlewares.js";
 const router = Router();
 
 router.post(
@@ -25,7 +20,7 @@ router.get(
     "/onboard-link",
     isAuthenticated,
     authorise("vendor"),
-    getOnboardingLink,
+    getStripeOnboardingLink,
 );
 
-module.exports = router;
+export default router;

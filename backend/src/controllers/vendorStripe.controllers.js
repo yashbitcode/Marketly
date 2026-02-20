@@ -1,7 +1,7 @@
-const stripeService = require("../services/stripe.service");
-const ApiError = require("../utils/api-error");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+import stripeService from "../services/stripe.service.js";
+import ApiError from "../utils/api-error.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createStripeConnectedAcc = asyncHandler(async () => {
     const vendor = req.user.vendorId;
@@ -35,7 +35,4 @@ const getStripeOnboardingLink = asyncHandler(async () => {
     res.json(new ApiResponse(200, { onboardLink }));
 });
 
-module.exports = {
-    createStripeConnectedAcc,
-    getStripeOnboardingLink,
-};
+export { createStripeConnectedAcc, getStripeOnboardingLink };

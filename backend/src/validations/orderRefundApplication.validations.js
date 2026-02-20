@@ -1,5 +1,5 @@
-const { isValidObjectId } = require("mongoose");
-const z = require("zod");
+import { isValidObjectId } from "mongoose";
+import z from "zod";
 
 const createOrderRefundApplicationValidations = z.object({
     vendor: z
@@ -17,6 +17,4 @@ const createOrderRefundApplicationValidations = z.object({
     attachments: z.array(baseMediaValidations).optional(),
 });
 
-module.exports = {
-    createOrderRefundApplicationValidations
-}
+export { createOrderRefundApplicationValidations };

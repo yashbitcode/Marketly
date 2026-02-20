@@ -1,8 +1,8 @@
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const vendorService = require("./vendor.service");
-const userService = require("./user.service");
-const VendorApplication = require("../models/vendorApplication.models");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import vendorService from "./vendor.service.js";
+import userService from "./user.service.js";
+import VendorApplication from "../models/vendorApplication.models.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class VendorApplicationService {
     async getAll(page) {
@@ -107,4 +107,4 @@ class VendorApplicationService {
     }
 }
 
-module.exports = new VendorApplicationService();
+export default new VendorApplicationService();

@@ -1,5 +1,5 @@
-const { validate } = require("../middlewares/validate.middlewares");
-const { asyncHandler } = require("../utils/asyncHandler");
+import { validate } from "../middlewares/validate.middlewares.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 const {
     acceptedVendorApplicationValidations,
     rejectedVendorApplicationValidations,
@@ -15,6 +15,4 @@ const vendorApplicationConditional = asyncHandler(async (req, res, next) => {
     next();
 });
 
-module.exports = {
-    vendorApplicationConditional,
-};
+export { vendorApplicationConditional };

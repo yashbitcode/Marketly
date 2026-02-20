@@ -93,7 +93,7 @@ const formatDate = (date) => {
     return year + "/" + month + "/" + day;
 };
 
-module.exports = {
+export {
     generateTableRow,
     generateHeader,
     generateCustomerInformation,

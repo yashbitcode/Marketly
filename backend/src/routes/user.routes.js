@@ -1,11 +1,8 @@
-const { Router } = require("express");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const { updateUser, getAllUsers } = require("../controllers/user.controllers");
-const { validate } = require("../middlewares/validate.middlewares");
-const { updateUserValidations } = require("../validations/user.validations");
+import { Router } from "express";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import { updateUser, getAllUsers } from "../controllers/user.controllers.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { updateUserValidations } from "../validations/user.validations.js";
 const router = Router();
 
 router.get("/:page", isAuthenticated, authorise("super-admin"), getAllUsers);
@@ -18,4 +15,4 @@ router.patch(
     updateUser,
 );
 
-module.exports = router;
+export default router;

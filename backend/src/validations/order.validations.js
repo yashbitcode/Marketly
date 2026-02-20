@@ -1,5 +1,5 @@
-const z = require("zod");
-const { ORDER_DELIVERY_STATUS, REGEX } = require("../utils/constants");
+import z from "zod";
+import { ORDER_DELIVERY_STATUS, REGEX } from "../utils/constants.js";
 
 const updateOrderDeliveryStatusValidations = z.object({
     sellerOrderId: z.string({
@@ -51,7 +51,7 @@ const verifyPaymentValidations = z.object({
     }),
 });
 
-module.exports = {
+export {
     createOrderValidations,
     verifyPaymentValidations,
     updateOrderDeliveryStatusValidations,

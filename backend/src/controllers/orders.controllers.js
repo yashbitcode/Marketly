@@ -1,18 +1,16 @@
-const { asyncHandler } = require("../utils/asyncHandler");
-const razorpayService = require("../services/razorpay.service");
-const ApiResponse = require("../utils/api-response");
-const productService = require("../services/product.service");
-const orderService = require("../services/order.service");
-const ApiError = require("../utils/api-error");
-const {
-    validateWebhookSignature,
-} = require("razorpay/dist/utils/razorpay-utils");
+import { asyncHandler } from "../utils/asyncHandler.js";
+import razorpayService from "../services/razorpay.service.js";
+import ApiResponse from "../utils/api-response.js";
+import productService from "../services/product.service.js";
+import orderService from "../services/order.service.js";
+import ApiError from "../utils/api-error.js";
+import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 
-const mongoose = require("mongoose");
-const addressService = require("../services/address.service");
-const orderQueue = require("../queues/order.queue");
-// const notificationQueue = require("../queues/notification.queue");
-const { inngest } = require("../inngest");
+import mongoose from "mongoose";
+import addressService from "../services/address.service.js";
+// import orderQueue from "../queues/order.queue.js";
+// import notificationQueue from "../queues/notification.queue";
+import { inngest } from "../inngest/index.js";
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
@@ -245,9 +243,9 @@ const webhook = asyncHandler(async (req, res, next) => {
                 data: {
                     refundDocId: entity.notes.refundId,
                     refundId: entity.id,
-                    amount: entity.amount
-                }
-            })
+                    amount: entity.amount,
+                },
+            });
         }
 
         res.json(new ApiResponse(200, {}));
@@ -257,7 +255,7 @@ const webhook = asyncHandler(async (req, res, next) => {
     }
 });
 
-module.exports = {
+export {
     createOrder,
     getOrderByOrderId,
     verifyOrderPayment,

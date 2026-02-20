@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
-const crypto = require("node:crypto");
-const bcrypt = require("bcrypt");
-const {
+import mongoose from "mongoose";
+import crypto from "node:crypto";
+import bcrypt from "bcrypt";
+import {
     generateRandomNumberString,
     generateBaseTokens,
     createHash,
-} = require("../utils/helpers");
-const { REGEX, ROLES } = require("../utils/constants");
-const Vendor = require("./vendor.models");
-const { mediaSchema } = require("../utils/baseSchemas");
+} from "../utils/helpers.js";
+import { REGEX, ROLES } from "../utils/constants.js";
+import Vendor from "./vendor.models.js";
+import { mediaSchema } from "../utils/baseSchemas.js";
 
 const UserSchema = new mongoose.Schema(
     {
@@ -135,4 +135,4 @@ UserSchema.statics.generateTokens = function () {
 
 const User = mongoose.model("users", UserSchema);
 
-module.exports = User;
+export default User;

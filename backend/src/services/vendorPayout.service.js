@@ -1,9 +1,9 @@
-const VendorPayout = require("../models/vendorPayout.models");
-const { GENERAL_USER_FIELDS, VENDOR_TYPE } = require("../utils/constants");
-const {
+import VendorPayout from "../models/vendorPayout.models.js";
+import { GENERAL_USER_FIELDS, VENDOR_TYPE } from "../utils/constants.js";
+import {
     getPaginationBasePipeline,
     getVendorPayoutFilterationPipeline,
-} = require("../utils/helpers");
+} from "../utils/helpers.js";
 
 class VendorPayoutService {
     async createVendorPayout(payload) {
@@ -83,11 +83,11 @@ class VendorPayoutService {
     async getSpecificForAmount(id) {
         const vendorPayout = await VendorPayout.findById(id).populate([
             {
-            path: "vendor",
-        },
+                path: "vendor",
+            },
             {
-            path: "orderId",
-        },
+                path: "orderId",
+            },
         ]);
 
         return vendorPayout;
@@ -102,4 +102,4 @@ class VendorPayoutService {
     }
 }
 
-module.exports = new VendorPayoutService();
+export default new VendorPayoutService();

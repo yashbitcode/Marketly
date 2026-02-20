@@ -1,7 +1,7 @@
-const User = require("../models/user.models");
-const ApiError = require("../utils/api-error");
-const { GENERAL_USER_FIELDS } = require("../utils/constants");
-const { getPaginationBasePipeline } = require("../utils/helpers");
+import User from "../models/user.models.js";
+import ApiError from "../utils/api-error.js";
+import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class UserService {
     async createNewUser(userData) {
@@ -129,4 +129,4 @@ class UserService {
     }
 }
 
-module.exports = new UserService();
+export default new UserService();

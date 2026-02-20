@@ -1,20 +1,15 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
     getAllTickets,
     createTicket,
-} = require("../controllers/supportTicket.controllers");
-const {
-    isAuthenticated,
-    authorise,
-} = require("../middlewares/auth.middlewares");
-const { validate } = require("../middlewares/validate.middlewares");
-const {
-    addSupportTicketValidations,
-} = require("../validations/supportTicket.validations");
+} from "../controllers/supportTicket.controllers.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
+import { validate } from "../middlewares/validate.middlewares.js";
+import { addSupportTicketValidations } from "../validations/supportTicket.validations.js";
 const router = Router();
 
 router.get("/:page", getAllTickets);
 
 router.post("/", validate(addSupportTicketValidations), createTicket);
 
-module.exports = router;
+export default router;

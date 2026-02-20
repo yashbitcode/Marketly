@@ -1,5 +1,5 @@
-const z = require("zod");
-const { BUSINESS_SIZE } = require("../utils/constants");
+import z from "zod";
+import { BUSINESS_SIZE } from "../utils/constants.js";
 
 const createConnectedAccountValidations = z.object({
     email: z
@@ -15,6 +15,4 @@ const createConnectedAccountValidations = z.object({
     businessSize: z.enum(BUSINESS_SIZE),
 });
 
-module.exports = {
-    createConnectedAccountValidations,
-};
+export { createConnectedAccountValidations };

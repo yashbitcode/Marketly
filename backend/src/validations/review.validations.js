@@ -1,5 +1,5 @@
-const { isValidObjectId } = require("mongoose");
-const z = require("zod");
+import { isValidObjectId } from "mongoose";
+import z from "zod";
 
 const addProductReviewValidations = z.object({
     user: z
@@ -34,6 +34,4 @@ const addProductReviewValidations = z.object({
         .min(5, "Minimum length should be 5"),
 });
 
-module.exports = {
-    addProductReviewValidations,
-};
+export { addProductReviewValidations };

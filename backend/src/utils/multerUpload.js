@@ -1,7 +1,7 @@
-const Multer = require("multer");
-const { ALLOWED_FILETYPES } = require("./constants");
+import Multer from "multer";
+import { ALLOWED_FILETYPES } from "./constants.js";
 const storage = Multer.memoryStorage();
-const ApiError = require("./api-error");
+import ApiError from "./api-error.js";
 
 const filterFileConfig = function (req, file, cb) {
     const isValid = ALLOWED_FILETYPES.includes(file.mimetype);
@@ -19,7 +19,7 @@ const filterFileConfig = function (req, file, cb) {
 
 const multer = Multer({ storage, fileFilter: filterFileConfig });
 
-module.exports = multer;
+export default multer;
 
 // const storageConfig = multer.diskStorage({
 //     destination: path.join(__dirname, "uploads"),
@@ -37,4 +37,4 @@ module.exports = multer;
 //     fileFilter: filterFileConfig
 // });
 
-// module.exports = upload;
+// export default upload;

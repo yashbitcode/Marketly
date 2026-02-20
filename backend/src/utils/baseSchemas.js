@@ -1,11 +1,11 @@
-const {
+import {
     REGEX,
     VENDOR_TYPE,
     ACCOUNT_STATUS,
     ATTRIBUTE_DATATYPES,
     ATTRIBUTE_SCHEMA_TYPES,
-} = require("./constants");
-const mongoose = require("mongoose");
+} from "./constants.js";
+import mongoose from "mongoose";
 
 const mediaSchema = {
     fileId: {
@@ -163,7 +163,7 @@ const sellerOrderProductsSchema = {
     },
 };
 
-module.exports = {
+export {
     prefillsSchema,
     notesSchema,
     baseVendorSchema,

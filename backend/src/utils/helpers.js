@@ -1,16 +1,15 @@
-const crypto = require("node:crypto");
-const { TOKEN_LENGTH, PAGINATION_LIMIT } = require("./constants");
-const slugify = require("slugify");
-const { nanoid } = require("nanoid");
-const jwt = require("jsonwebtoken");
-const ApiError = require("./api-error");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
-const {
+import crypto from "node:crypto";
+import { TOKEN_LENGTH, PAGINATION_LIMIT } from "./constants.js";
+import slugify from "slugify";
+import { nanoid } from "nanoid";
+import jwt from "jsonwebtoken";
+import ApiError from "./api-error.js";
+import PDFDocument from "pdfkit";
+import {
     generateTableRow,
     generateHeader,
     generateCustomerInformation,
-} = require("./invoiceHelpers");
+} from "./invoiceHelpers.js";
 
 const createHash = (body, secret) => {
     return crypto.createHmac("sha256", secret).update(body).digest("hex");
@@ -386,7 +385,7 @@ const createInvoice = (invoice) => {
     });
 };
 
-module.exports = {
+export {
     generateRandomNumberString,
     generateSlug,
     generateUniqueSlug,

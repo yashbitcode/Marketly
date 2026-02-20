@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const User = require("./user.models");
-const { mediaSchema } = require("../utils/baseSchemas");
-const { REFUND_APPLICATION_STATUS } = require("../utils/constants");
-// const Order = require("./order.models");
+import mongoose from "mongoose";
+import User from "./user.models.js";
+import { mediaSchema } from "../utils/baseSchemas.js";
+import { REFUND_APPLICATION_STATUS } from "../utils/constants.js";
+// import Order from "./order.models.js";
 
 const OrderRefundApplicationSchema = new mongoose.Schema({
     order: {
@@ -28,13 +28,16 @@ const OrderRefundApplicationSchema = new mongoose.Schema({
         type: String,
         enum: {
             values: REFUND_APPLICATION_STATUS,
-            message: "`{VALUE}` is not valid value"
+            message: "`{VALUE}` is not valid value",
         },
-        default: "under-process"
+        default: "under-process",
     },
-    refundId: String
+    refundId: String,
 });
 
-const OrderRefundApplication = mongoose.model("order-refund-applications", OrderRefundApplicationSchema);
+const OrderRefundApplication = mongoose.model(
+    "order-refund-applications",
+    OrderRefundApplicationSchema,
+);
 
-module.exports = OrderRefundApplication;
+export default OrderRefundApplication;

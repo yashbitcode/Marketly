@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { baseVendorSchema } = require("../utils/baseSchemas");
+import mongoose from "mongoose";
+import { baseVendorSchema } from "../utils/baseSchemas.js";
 
 const VendorSchema = new mongoose.Schema(
     {
@@ -43,4 +43,4 @@ const VendorSchema = new mongoose.Schema(
 
 const Vendor = mongoose.model("vendors", VendorSchema);
 
-module.exports = Vendor;
+export default Vendor;

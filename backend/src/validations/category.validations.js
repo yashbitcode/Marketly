@@ -1,14 +1,14 @@
-const {
+import {
     parentCategoryValidations,
     subCategoryValidations,
-} = require("../utils/baseValidations");
+} from "../utils/baseValidations.js";
 
 const addParentCategoryValidations = parentCategoryValidations.strict();
 const addSubCategoryValidations = subCategoryValidations.strict();
 const updateParentCategoryValidations = parentCategoryValidations.partial();
 const updateSubCategoryValidations = subCategoryValidations.partial();
 
-module.exports = {
+export {
     addParentCategoryValidations,
     addSubCategoryValidations,
     updateParentCategoryValidations,

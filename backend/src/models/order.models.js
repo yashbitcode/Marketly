@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
-const { ORDER_STATUS, ORDER_DELIVERY_STATUS } = require("../utils/constants");
-const {
+import mongoose from "mongoose";
+import { ORDER_STATUS, ORDER_DELIVERY_STATUS } from "../utils/constants.js";
+import {
     productItemSchema,
     prefillsSchema,
     notesSchema,
     mediaSchema,
-} = require("../utils/baseSchemas");
-const User = require("./user.models");
-const Address = require("./address.models");
-const OrderRefundApplication = require("./orderRefundApplication.models");
+} from "../utils/baseSchemas.js";
+import User from "./user.models.js";
+import Address from "./address.models.js";
+import OrderRefundApplication from "./orderRefundApplication.models.js";
 
 const OrderSchema = new mongoose.Schema(
     {
@@ -82,7 +82,7 @@ const OrderSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: OrderRefundApplication,
         },
-        refundId: String
+        refundId: String,
     },
     {
         timestamps: true,
@@ -91,4 +91,4 @@ const OrderSchema = new mongoose.Schema(
 
 const Order = mongoose.model("orders", OrderSchema);
 
-module.exports = Order;
+export default Order;

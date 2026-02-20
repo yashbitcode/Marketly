@@ -1,6 +1,6 @@
-const z = require("zod");
-const { REGEX } = require("../utils/constants");
-const { baseMediaValidations } = require("../utils/baseValidations");
+import z from "zod";
+import { REGEX } from "../utils/constants.js";
+import { baseMediaValidations } from "../utils/baseValidations.js";
 
 const updateUserValidations = baseMediaValidations
     .extend({
@@ -12,6 +12,4 @@ const updateUserValidations = baseMediaValidations
     })
     .partial();
 
-module.exports = {
-    updateUserValidations,
-};
+export { updateUserValidations };

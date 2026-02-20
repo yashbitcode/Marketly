@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const SubCategory = require("./subCategory.models");
-const Vendor = require("./vendor.models");
-const { PRODUCT_APPROVAL_STATUS } = require("../utils/constants");
-const { generateUniqueSlug } = require("../utils/helpers");
-const { productAttributeSchema, mediaSchema } = require("../utils/baseSchemas");
+import mongoose from "mongoose";
+import SubCategory from "./subCategory.models.js";
+import Vendor from "./vendor.models.js";
+import { PRODUCT_APPROVAL_STATUS } from "../utils/constants.js";
+import { generateUniqueSlug } from "../utils/helpers.js";
+import { productAttributeSchema, mediaSchema } from "../utils/baseSchemas.js";
 
 const ProductSchema = new mongoose.Schema(
     {
@@ -143,4 +143,4 @@ ProductSchema.index({ name: "text", brandName: "text" });
 
 const Product = mongoose.model("products", ProductSchema);
 
-module.exports = Product;
+export default Product;

@@ -1,7 +1,7 @@
-require("dotenv").config();
-const { Worker } = require("bullmq");
-const { sendMailJob } = require("../jobs/email.jobs");
-const { pubClient } = require("../config/redis/connection");
+import "dotenv/config";
+import { Worker } from "bullmq";
+import { sendMailJob } from "../jobs/email.jobs.js";
+import { pubClient } from "../config/redis/connection.js";
 
 const worker = new Worker(
     "email-queue",

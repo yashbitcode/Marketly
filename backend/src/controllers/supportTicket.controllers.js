@@ -1,6 +1,6 @@
-const supportTicketService = require("../services/supportTicket.service");
-const ApiResponse = require("../utils/api-response");
-const { asyncHandler } = require("../utils/asyncHandler");
+import supportTicketService from "../services/supportTicket.service.js";
+import ApiResponse from "../utils/api-response.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getAllTickets = asyncHandler(
     async (req, res) => {
@@ -31,7 +31,4 @@ const createTicket = asyncHandler(async (req, res) => {
     );
 });
 
-module.exports = {
-    getAllTickets,
-    createTicket,
-};
+export { getAllTickets, createTicket };

@@ -1,7 +1,7 @@
-const z = require("zod");
-const { ACCOUNT_STATUS } = require("../utils/constants");
-const { isValidObjectId } = require("mongoose");
-const { baseVendor } = require("../utils/baseValidations");
+import z from "zod";
+import { ACCOUNT_STATUS } from "../utils/constants.js";
+import { isValidObjectId } from "mongoose";
+import { baseVendor } from "../utils/baseValidations.js";
 
 const createVendorValidations = baseVendor
     .extend({
@@ -31,7 +31,7 @@ const updateVendorAccStatusValidations = z
 
 const updateVendorValidations = baseVendor.partial();
 
-module.exports = {
+export {
     createVendorValidations,
     updateVendorValidations,
     updateVendorAccStatusValidations,

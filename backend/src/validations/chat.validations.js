@@ -1,10 +1,10 @@
-const z = require("zod");
-const {
+import z from "zod";
+import {
     MESSAGE_DOC_MODEL_TYPES,
-    PRODUCT_APPROVAL_STATUS: APPROVAL_STATUS,
-} = require("../utils/constants");
-const { baseMediaValidations } = require("../utils/baseValidations");
-const { isValidObjectId } = require("mongoose");
+    PRODUCT_APPROVAL_STATUS as APPROVAL_STATUS,
+} from "../utils/constants.js";
+import { baseMediaValidations } from "../utils/baseValidations.js";
+import { isValidObjectId } from "mongoose";
 
 const createChatReqValidations = z.object({
     user: z
@@ -55,7 +55,7 @@ const createMessageValidations = z.object({
         .optional(),
 });
 
-module.exports = {
+export {
     createChatReqValidations,
     updateChatReqStatusValidations,
     createMessageValidations,

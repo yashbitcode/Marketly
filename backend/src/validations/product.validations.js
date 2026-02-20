@@ -1,9 +1,9 @@
-const z = require("zod");
-const {
+import z from "zod";
+import {
     baseProductValidations,
     baseProductAttributeValidations,
-} = require("../utils/baseValidations");
-const { PRODUCT_APPROVAL_STATUS } = require("../utils/constants");
+} from "../utils/baseValidations.js";
+import { PRODUCT_APPROVAL_STATUS } from "../utils/constants.js";
 
 const addProductValidations = baseProductValidations
     .extend({
@@ -92,7 +92,7 @@ const productQueryValidations = z
             });
     });
 
-module.exports = {
+export {
     addProductValidations,
     updateProductValidations,
     updateProductStatusValidations,

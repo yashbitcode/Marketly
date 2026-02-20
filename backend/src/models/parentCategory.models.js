@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { generateSlug } = require("../utils/helpers");
+import mongoose from "mongoose";
+import { generateSlug } from "../utils/helpers.js";
 
 const ParentCategorySchema = new mongoose.Schema(
     {
@@ -41,4 +41,4 @@ const ParentCategory = mongoose.model(
     ParentCategorySchema,
 );
 
-module.exports = ParentCategory;
+export default ParentCategory;
