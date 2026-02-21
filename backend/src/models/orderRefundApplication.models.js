@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./user.models.js";
 import { mediaSchema } from "../utils/baseSchemas.js";
-import { REFUND_APPLICATION_STATUS } from "../utils/constants.js";
+import { REFUND_APPLICATION_STATUS } from "../../../shared/constants.js";
 // import Order from "./order.models.js";
 
 const OrderRefundApplicationSchema = new mongoose.Schema({

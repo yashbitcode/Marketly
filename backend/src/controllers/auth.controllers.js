@@ -1,4 +1,4 @@
-import { asyncHandler  } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import userService from "../services/user.service.js";
 import User from "../models/user.models.js";
 import ApiError from "../utils/api-error.js";
@@ -7,7 +7,7 @@ import {
     COOKIE_OPTIONS,
     FRONTEND_URL,
     GENERAL_USER_FIELDS,
-} from "../utils/constants.js";
+} from "../../../shared/constants.js";
 import superAdminService from "../services/superAdmin.service.js";
 import {
     registrationCodeMailContent,
@@ -15,9 +15,9 @@ import {
     registrationMailContent,
     passwordChangedMailContent,
 } from "../utils/mail.js";
-import { pubClient as redisClient  } from "../config/redis/connection.js";
-import { createHash  } from "../utils/helpers.js";
-import { inngest  } from "../inngest/index.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
+import { createHash } from "../utils/helpers.js";
+import { inngest } from "../inngest/index.js";
 
 const register = asyncHandler(async (req, res, next) => {
     const { user, verificationToken } = await userService.createNewUser(

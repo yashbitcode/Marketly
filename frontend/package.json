@@ -1,8 +1,17 @@
 {
-  "name": "marketly",
+  "name": "@marketly/frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "MultiVendor Ecommerce Project Using MERN Stack",
+  "keywords": [
+    "marketly",
+    "mern",
+    "web-dev",
+    "multivendor-ecommerce",
+    "ecommerce",
+    "full-stack"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,11 +19,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
     "lucide-react": "^0.564.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.71.2",
     "react-router": "^7.13.0",
     "react-router-dom": "^7.13.0",
     "tailwind-merge": "^3.4.0",

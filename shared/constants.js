@@ -1,0 +1,96 @@
+const BASE_ENDPOINT = "/api/v1";
+const FRONTEND_URL = "*";
+const TOKEN_LENGTH = 6;
+const PAGINATION_LIMIT = 10;
+const COMMISSION_RATE = 10;
+
+const ROLES = ["user", "vendor", "super-admin"];
+const BUSINESS_SIZE = ["Just me", "1-10", "11-50", "51-100", "100+"];
+const VENDOR_TYPE = ["individual", "business"];
+const DATATYPES = ["string", "number"];
+const ADDRESS_TYPE = ["home", "work", "other"];
+const ACCOUNT_STATUS = ["active", "suspended", "banned"];
+const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
+const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
+const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
+const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
+const ATTRIBUTE_DATATYPES = ["text", "number"];
+const REFUND_APPLICATION_STATUS = ["under-process", "refunded"];
+const ORDER_STATUS = ["created", "attempted", "paid", "failed", "refunded"];
+const ORDER_DELIVERY_STATUS = [
+    "placed",
+    "shipped",
+    "out of delivery",
+    "delivered",
+    // "returned",
+];
+const NOTIFICATION_TYPES = [
+    "CHAT_REQUEST_UPDATE",
+    "ORDER_UPDATE",
+    "GENERAL_UPDATE",
+];
+const ATTRIBUTE_SCHEMA_TYPES = [String, Number, [String], [Number]];
+const SUPPORT_QUERY_TYPES = [
+    "order issue",
+    "payment issue",
+    "delivery issue",
+    "product issue",
+    // "return or refund",
+    "account issue",
+    "technical issue",
+    "general issue",
+];
+
+const GENERAL_USER_FIELDS = {
+    fullname: 1,
+    email: 1,
+    username: 1,
+    avatar: 1,
+    role: 1,
+    tokenVersion: 1,
+    phoneNumber: 1,
+    isEmailVerified: 1,
+};
+
+const COOKIE_OPTIONS = {
+    httpOnly: true,
+    secure: true,
+};
+
+const REGEX = {
+    file: /jpeg|jpg|png/,
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    url: /^(https?:\/\/)?[\da-z.-]+\.[a-z.]{2,6}(\/[\w.-]*)*\/?$/,
+    username: /^[a-zA-Z][a-zA-Z0-9_]{2,15}$/,
+    phoneNumber: /^\+[1-9]\d{1,14}$/,
+    password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+    objectId: /^[a-fA-F0-9]{24}$/,
+};
+
+export {
+    BASE_ENDPOINT,
+    TOKEN_LENGTH,
+    COOKIE_OPTIONS,
+    ROLES,
+    DATATYPES,
+    REGEX,
+    ADDRESS_TYPE,
+    VENDOR_TYPE,
+    ACCOUNT_STATUS,
+    GENERAL_USER_FIELDS,
+    VENDOR_APPLICATION_STATUS,
+    PRODUCT_APPROVAL_STATUS,
+    ATTRIBUTE_DATATYPES,
+    ATTRIBUTE_SCHEMA_TYPES,
+    PAGINATION_LIMIT,
+    SUPPORT_QUERY_TYPES,
+    FRONTEND_URL,
+    ALLOWED_FILETYPES,
+    MESSAGE_DOC_MODEL_TYPES,
+    NOTIFICATION_TYPES,
+    ORDER_STATUS,
+    ORDER_DELIVERY_STATUS,
+    COMMISSION_RATE,
+    BUSINESS_SIZE,
+    REFUND_APPLICATION_STATUS,
+};

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { baseVendorSchema } from "../utils/baseSchemas.js";
-import { VENDOR_APPLICATION_STATUS } from "../utils/constants.js";
+import { VENDOR_APPLICATION_STATUS } from "../../../shared/constants.js";
 import User from "./user.models.js";
 import Vendor from "./vendor.models.js";
 

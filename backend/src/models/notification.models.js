@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import {
     MESSAGE_DOC_MODEL_TYPES as NOTIFICATION_DOC_MODEL_TYPES,
     NOTIFICATION_TYPES,
-} from "../utils/constants.js";
+} from "../../../shared/constants.js";
 
 const NotificationSchema = new mongoose.Schema({
     receiverId: {

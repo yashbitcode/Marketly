@@ -5,15 +5,12 @@ import {
     updateAccountStatus,
     getAllVendors,
 } from "../controllers/vendor.controllers.js";
-import {
-    isAuthenticated,
-    authorise,
-} from "../middlewares/auth.middlewares.js";
+import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 import {
     createVendorValidations,
     updateVendorValidations,
     updateVendorAccStatusValidations,
-} from "../validations/vendor.validations.js";
+} from "../../../shared/validations/vendor.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 const router = Router();
 

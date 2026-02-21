@@ -5,7 +5,7 @@ import {
     addProductReview,
 } from "../controllers/review.controllers.js";
 import { validate } from "../middlewares/validate.middlewares.js";
-import { addProductReviewValidations } from "../validations/review.validations.js";
+import { addProductReviewValidations } from "../../../shared/validations/review.validations.js";
 const router = Router();
 
 router.get(

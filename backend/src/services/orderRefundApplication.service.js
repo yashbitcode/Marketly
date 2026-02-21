@@ -1,5 +1,5 @@
 import OrderRefundApplication from "../models/orderRefundApplication.models.js";
-import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 
 class OrderRefundApplicationService {
     async createApplication(payload) {

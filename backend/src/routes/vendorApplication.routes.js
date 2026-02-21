@@ -10,7 +10,7 @@ import { validate } from "../middlewares/validate.middlewares.js";
 import {
     updateVendorApplicationValidations,
     createVendorApplicationValidations,
-} from "../validations/vendorApplication.validations.js";
+} from "../../../shared/validations/vendorApplication.validations.js";
 const router = Router();
 
 router.get("/:page", authorise("super-admin"), getAllApplications);

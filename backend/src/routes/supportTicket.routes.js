@@ -5,7 +5,7 @@ import {
 } from "../controllers/supportTicket.controllers.js";
 import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 import { validate } from "../middlewares/validate.middlewares.js";
-import { addSupportTicketValidations } from "../validations/supportTicket.validations.js";
+import { addSupportTicketValidations } from "../../../shared/validations/supportTicket.validations.js";
 const router = Router();
 
 router.get("/:page", getAllTickets);

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import User from "./user.models.js";
-import { REGEX, ADDRESS_TYPE } from "../utils/constants.js";
+import { REGEX, ADDRESS_TYPE } from "../../../shared/constants.js";
 
 const AddressSchema = new mongoose.Schema(
     {

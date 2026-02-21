@@ -4,7 +4,7 @@ import {
     createStripeConnectedAcc,
     getStripeOnboardingLink,
 } from "../controllers/vendorStripe.controllers.js";
-import { createConnectedAccountValidations } from "../validations/vendorStripe.validations.js";
+import { createConnectedAccountValidations } from "../../../shared/validations/vendorStripe.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 const router = Router();
 

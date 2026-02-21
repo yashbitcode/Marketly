@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { SUPPORT_QUERY_TYPES, REGEX } from "../utils/constants.js";
+import { SUPPORT_QUERY_TYPES, REGEX } from "../../../shared/constants.js";
 import { mediaSchema } from "../utils/baseSchemas.js";
 
 const SupportTicketSchema = new mongoose.Schema({

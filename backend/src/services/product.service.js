@@ -1,5 +1,5 @@
 import Product from "../models/product.models.js";
-import { PAGINATION_LIMIT } from "../utils/constants.js";
+import { PAGINATION_LIMIT } from "../../../shared/constants.js";
 import {
     getProductFilterationPipeline,
     getPaginationBasePipeline,

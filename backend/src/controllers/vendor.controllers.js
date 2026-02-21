@@ -3,7 +3,10 @@ import vendorService from "../services/vendor.service.js";
 import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ACCOUNT_STATUS, GENERAL_USER_FIELDS } from "../utils/constants.js";
+import {
+    ACCOUNT_STATUS,
+    GENERAL_USER_FIELDS,
+} from "../../../shared/constants.js";
 
 const getAllVendors = asyncHandler(async (req, res) => {
     const { page } = req.params;

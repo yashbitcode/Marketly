@@ -1,5 +1,5 @@
 import Review from "../models/review.models.js";
-import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class ReviewService {

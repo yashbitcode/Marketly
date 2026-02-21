@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import { ORDER_STATUS, ORDER_DELIVERY_STATUS } from "../utils/constants.js";
+import {
+    ORDER_STATUS,
+    ORDER_DELIVERY_STATUS,
+} from "../../../shared/constants.js";
 import {
     productItemSchema,
     prefillsSchema,

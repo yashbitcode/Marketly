@@ -1,5 +1,5 @@
 {
-  "name": "marketly",
+  "name": "@marketly/backend",
   "version": "1.0.0",
   "description": "MultiVendor Ecommerce Project Using MERN Stack",
   "keywords": [
@@ -16,8 +16,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "worker:notification": "node src/workers/notification.worker.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@imagekit/nodejs": "^7.1.1",

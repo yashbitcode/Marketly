@@ -1,0 +1,19 @@
+{
+  "name": "@marketly/shared",
+  "version": "1.0.0",
+  "description": "MultiVendor Ecommerce Project Using MERN Stack",
+  "keywords": [
+    "marketly",
+    "mern",
+    "web-dev",
+    "multivendor-ecommerce",
+    "ecommerce",
+    "full-stack"
+  ],
+  "license": "ISC",
+  "author": "YashBitCode",
+  "type": "module",
+  "dependencies": {
+    "zod": "^4.3.6"
+  }
+}

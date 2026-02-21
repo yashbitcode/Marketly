@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./user.models.js";
 import Vendor from "./vendor.models.js";
-import { PRODUCT_APPROVAL_STATUS as APPROVAL_STATUS } from "../utils/constants.js";
+import { PRODUCT_APPROVAL_STATUS as APPROVAL_STATUS } from "../../../shared/constants.js";
 
 const ChatRequestSchema = new mongoose.Schema({
     user: {

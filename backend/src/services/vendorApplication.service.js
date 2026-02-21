@@ -1,4 +1,4 @@
-import { GENERAL_USER_FIELDS } from "../utils/constants.js";
+import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 import vendorService from "./vendor.service.js";
 import userService from "./user.service.js";
 import VendorApplication from "../models/vendorApplication.models.js";

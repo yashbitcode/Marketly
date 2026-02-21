@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import ApiError from "../utils/api-error.js";
-import { asyncHandler  } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import userService from "../services/user.service.js";
-import { GENERAL_USER_FIELDS  } from "../utils/constants.js";
-import { pubClient as redisClient  } from "../config/redis/connection.js";
+import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -124,8 +124,4 @@ const authorise = (...allowedRoles) => {
     });
 };
 
-export {
-    isAuthenticated,
-    isSocketAuthenticated,
-    authorise,
-};
+export { isAuthenticated, isSocketAuthenticated, authorise };
