@@ -1,29 +1,28 @@
-import { BaseFooter, BaseHeader } from "./components/common";
-import ForgotPassword from "./components/features/auth/ForgotPassword";
+import { Homepage } from "./pages";
+import AuthLayout from "./layouts/AuthLayout";
+import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
-import Register from "./components/features/auth/register";
+import ForgotPassword from "./components/features/auth/ForgotPassword";
 import ResetPassword from "./components/features/auth/ResetPassword";
-import CategoryShop from "./components/features/homepage/CategoryShop";
-import Hero from "./components/features/homepage/Hero";
-import JoinAsSeller from "./components/features/homepage/JoinAsSeller";
-import TrendyProducts from "./components/features/homepage/TrendyProducts";
-import TopVendors from "./components/features/vendor/TopVendors";
+import Register from "./components/features/auth/Register";
 
 const App = () => {
     return (
-        <div>
-            {/* <BaseHeader />
-            <Hero />
-            <TrendyProducts />
-            <CategoryShop />
-            <JoinAsSeller />
-            <TopVendors />
-            <BaseFooter /> */}
-            {/* <Login choice={"user"} />
-            <Register />
-            <ForgotPassword /> */}
-            {/* <ResetPassword /> */}
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<Homepage />} />
+                <Route>
+                    <Route element={<AuthLayout />}>
+                        <Route path="login" element={<Login />} />
+                        <Route path="vendor-login" element={<Login />} />
+                        <Route path="admin-login" element={<Login />} />
+                        <Route path="forgot-password" element={<ForgotPassword />} />
+                        <Route path="reset-password" element={<ResetPassword />} />
+                    </Route>
+                    <Route path="register" element={<Register />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
