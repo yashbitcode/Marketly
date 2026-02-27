@@ -8,3 +8,14 @@ export const formatPrice = (price) => {
         maximumFractionDigits: 2,
     }).format(price);
 };
+
+export const getAccessToken = () => {
+    const cookie = document.cookie;
+    let accessToken;
+
+    cookie.split("; ")?.forEach((el) => {
+        if (el.startsWith("accessToken")) accessToken = el.split("=")[1];
+    });
+
+    return accessToken;
+};

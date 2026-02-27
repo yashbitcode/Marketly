@@ -6,6 +6,27 @@ import {
     IndianRupee,
     Twitter,
 } from "lucide-react";
+import authApi from "../apis/authApi";
+
+export const baseBackendURL = "http://localhost:8000/api/v1";
+
+export const apiEndpoints = {
+    auth: {
+        login: "/auth/login",
+        vendorLogin: "/auth/vendor-login",
+        superAdminLogin: "/auth/super-admin-login",
+        forgotPassword: "/auth/forgot-password",
+        resetPassword: "/auth/reset-password",
+        register: "/auth/register",
+        logout: "/auth/logout",
+        verifyEmail: "/auth/verify-email",
+        changePassword: "/auth/change-password",
+        forgotPasswordLink: "/auth/forgot-password-link",
+    },
+    user: {
+        me: "/me",
+    },
+};
 
 export const VENDOR_FEATURES = [
     {
@@ -95,6 +116,7 @@ export const AUTH_CHOICE = {
             "Sign in to continue shopping, track orders, and manage your profile effortlessly",
         rightHead: "Welcome Back",
         rightDesc: "Please Login To Your Account",
+        api: authApi.login,
     },
     "vendor-login": {
         leftHead: "Power your store with confidence",
@@ -102,6 +124,7 @@ export const AUTH_CHOICE = {
             "Manage inventory, process orders, and grow your brand in one place.",
         rightHead: "Welcome back, Vendor",
         rightDesc: "Sign in to access your dashboard and manage your store.",
+        api: authApi.vendorLogin,
     },
 
     "admin-login": {
@@ -110,6 +133,7 @@ export const AUTH_CHOICE = {
             "Monitor vendors, track activity, and scale operations smoothly.",
         rightHead: "Admin Access Portal",
         rightDesc: "Log in to manage platform operations and analytics.",
+        api: authApi.superAdminLogin,
     },
     "forgot-password": {
         leftHead: "Forgot your password?",
@@ -117,6 +141,7 @@ export const AUTH_CHOICE = {
             "No worries. Enter your email and we’ll help you get back into your account",
         rightHead: "Recover Access",
         rightDesc: "Get Forgot Password Link On Your Email...",
+        // api: authApi.forgotPasswordLink,
     },
 
     "reset-password": {
@@ -124,5 +149,6 @@ export const AUTH_CHOICE = {
         leftDesc: "No worries. Enter Your New Password",
         rightHead: "Set New Password",
         rightDesc: "Get Your New Password Now...",
+        // api: authApi.resetPassword,
     },
 };

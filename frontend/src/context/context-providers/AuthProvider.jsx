@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import AuthContext from "../AuthContext";
+import { getAccessToken } from "../../utils/helpers";
+import UserApi from "../../apis/userApi";
 
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
@@ -10,13 +12,15 @@ const AuthProvider = ({children}) => {
         setLoading(false);
     }, []);
 
-    const logout = useCallback(() => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-    }, []);
+    // const logout = useCallback(() => {
+    //     localStorage.removeItem("accessToken");
+    //     localStorage.removeItem("refreshToken");
+    // }, []);
 
     const checkAuth = useCallback(async () => {
-        const token = localStorage.getItem("accessToken");
+        if(user) return;
+
+       const token = getAccessToken()
 
         if (!token) {
             setAuth({ mainUser: null });
@@ -24,22 +28,23 @@ const AuthProvider = ({children}) => {
         }
 
         try {
-            const mainUser = {} //main user fetching
-            setAuth({ mainUser });
+            const res = await UserApi.me();
+            setAuth({ mainUser: res.data.data });
         } catch {
-            logout();
             console.log("Error");
         } finally {
-            setAuth({ mainUser: null });
+            setLoading(false);
         }
-    }, [setAuth, logout]);
+    }, [setAuth, user]);
 
     useEffect(() => {
         checkAuth();
     }, [checkAuth])
 
+    console.log(user)
+
     return (
-        <AuthContext.Provider value={{ user, loading, logout, setUser }}>
+        <AuthContext.Provider value={{ user, loading, setUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -2,14 +2,28 @@ import { Button, Input } from "../../common";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordLinkValidations } from "../../../../../shared/validations/auth.validations";
+import AuthApi from "../../../apis/authApi";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(forgotPasswordLinkValidations)
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            const res = await AuthApi.forgotPasswordLink(data);
+
+            if (res.data.success) {
+                toast.success(res.data.message, {
+                    position: "right-top"
+                });
+            }
+        } catch(err) {
+            toast.error(err?.response?.data?.message || "Something went wrong", {
+                position: "right-top"
+            });
+        }
     }
 
     return (

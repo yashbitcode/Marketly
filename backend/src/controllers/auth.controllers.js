@@ -396,6 +396,8 @@ const forgotPasswordLink = asyncHandler(async (req, res, next) => {
         }),
     );
 
+    console.log(hashedResetToken);
+
     await redisClient.expire(
         `forgotPasswordToken:${hashedResetToken}`,
         60 * 20,
@@ -435,7 +437,13 @@ const forgotPasswordLink = asyncHandler(async (req, res, next) => {
 
 const forgotPasswordVerification = asyncHandler(async (req, res) => {
     const { resetToken } = req.params;
-    const resetTokenHash = createHash(resetToken);
+    console.log(resetToken);
+    const resetTokenHash = createHash(
+        resetToken,
+        process.env.HASHED_MAC_SECRET,
+    );
+
+    console.log(resetTokenHash);
 
     const forgotPasswordCache = await redisClient.get(
         `forgotPasswordToken:${resetTokenHash}`,
@@ -453,7 +461,10 @@ const resetPassword = asyncHandler(async (req, res) => {
     const { resetToken } = req.params;
     const { newPassword } = req.body;
 
-    const resetTokenHash = createHash(resetToken);
+    const resetTokenHash = createHash(
+        resetToken,
+        process.env.HASHED_MAC_SECRET,
+    );
 
     const forgotPasswordCache = JSON.parse(
         await redisClient.get(`forgotPasswordToken:${resetTokenHash}`),
@@ -467,8 +478,12 @@ const resetPassword = asyncHandler(async (req, res) => {
         { _id: forgotPasswordCache.userId },
         {
             password: newPassword,
+            forgotPasswordResetToken: null,
+            forgotPasswordTokenExpiry: null,
         },
     );
+
+    await redisClient.del(`forgotPasswordToken:${resetTokenHash}`);
 
     res.json(new ApiResponse(200, {}, "Password reset successful"));
 });

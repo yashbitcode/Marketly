@@ -5,7 +5,7 @@ import { AUTH_CHOICE } from "../utils/constants";
 const AuthLayout = () => {
     const {pathname} = useLocation();
     
-    const {leftHead, leftDesc, rightHead, rightDesc} = AUTH_CHOICE[pathname.substring(1)];
+    const {leftHead, leftDesc, rightHead, rightDesc} = AUTH_CHOICE[pathname?.split("/")?.[1]];
 
     return (
         <Container className="font-inter flex p-4 gap-15 max-w-5xl h-screen m-auto justify-between items-center">
@@ -20,13 +20,13 @@ const AuthLayout = () => {
                 }
 
                 <div className="w-full -mt-4">
-                    <img src="auth.png" alt="auth" className="w-full max-w-100 mx-auto" />
+                    <img src="/auth.png" alt="auth" className="w-full max-w-100 mx-auto" />
                 </div>
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 w-full -mt-30 max-[900px]:mt-0 max-[900px]:mx-auto text-dark max-w-120">
                 <div className="w-full max-w-40">
-                    <img src="logo3.jpg" alt="logo" className="w-full object-cover" />
+                    <img src="/logo3.jpg" alt="logo" className="w-full object-cover" />
                 </div>
                 <div className="text-center">
                     <h1 className="text-3xl font-medium max-sm:text-3xl">{rightHead}</h1>

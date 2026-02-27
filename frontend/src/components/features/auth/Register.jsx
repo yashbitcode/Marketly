@@ -2,14 +2,29 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Container, Input } from "../../common";
 import { registerValidations } from "../../../../../shared/validations/auth.validations";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import AuthApi from "../../../apis/authApi";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(registerValidations)
     });
 
-    const onSubmit = (data) => {
-        console.log(data)
+    const onSubmit = async (data) => {
+        try {
+            const res = await AuthApi.register(data);
+            console.log(res)
+
+            if (res.data.success) {
+                toast.success(res.data.message, {
+                    position: "right-top"
+                });
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Something went wrong", {
+                position: "right-top"
+            });
+        }
     }
 
     return (

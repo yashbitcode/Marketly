@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { Button, Container, Input } from ".";
 import { BadgeQuestionMark, Handshake, Search, ShoppingBag, } from "lucide-react";
 
@@ -26,7 +27,9 @@ const BaseHeader = () => {
                             <BadgeQuestionMark strokeWidth={1.8} />
                         </div>
 
+                       {/* <Link to="/login"> */}
                         <Button variant="secondary" className="border-gray-300 text-gray-500 hover:text-white hover:bg-orange hover:border-orange">Login</Button>
+                       {/* </Link> */}
                         <Button variant="secondary" className="border-gray-300 text-gray-500 hover:text-white hover:bg-orange hover:border-orange">Sign Up</Button>
                     </div>
                 </div>

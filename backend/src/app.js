@@ -33,7 +33,12 @@ import vendorStripeRouter from "./routes/vendorStripe.routes.js";
 import vendorPayoutRouter from "./routes/vendorPayout.routes.js";
 import webhookRouter from "./routes/webhook.routes.js";
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }),
+);
 
 app.use(BASE_ENDPOINT + "/webhook", webhookRouter);
 

@@ -53,8 +53,8 @@ const GENERAL_USER_FIELDS = {
 };
 
 const COOKIE_OPTIONS = {
-    httpOnly: true,
-    secure: true,
+    // httpOnly: true,
+    // secure: true,
 };
 
 const REGEX = {
