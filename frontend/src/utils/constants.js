@@ -10,6 +10,10 @@ import authApi from "../apis/authApi";
 
 export const baseBackendURL = "http://localhost:8000/api/v1";
 
+export const preventNumInp = ["e", "-", "."];
+
+export const preventKeys = ["ArrowRight", "ArrowLeft", "Backspace"];
+
 export const apiEndpoints = {
     auth: {
         login: "/auth/login",
@@ -20,6 +24,7 @@ export const apiEndpoints = {
         register: "/auth/register",
         logout: "/auth/logout",
         verifyEmail: "/auth/verify-email",
+        verifyEmailCode: "/auth/verify-email-code",
         changePassword: "/auth/change-password",
         forgotPasswordLink: "/auth/forgot-password-link",
     },

@@ -41,7 +41,7 @@ const AuthProvider = ({children}) => {
         checkAuth();
     }, [checkAuth])
 
-    console.log(user)
+    // console.log(user)
 
     return (
         <AuthContext.Provider value={{ user, loading, setUser }}>

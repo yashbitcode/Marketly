@@ -34,6 +34,7 @@ class UserService {
                     sessionId,
                 },
                 verificationToken: token,
+                hashedSessionId,
             };
         } catch (error) {
             throw new ApiError(400, error.message);

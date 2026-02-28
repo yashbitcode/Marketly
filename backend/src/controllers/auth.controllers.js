@@ -20,9 +20,8 @@ import { createHash } from "../utils/helpers.js";
 import { inngest } from "../inngest/index.js";
 
 const register = asyncHandler(async (req, res, next) => {
-    const { user, verificationToken } = await userService.createNewUser(
-        req.body,
-    );
+    const { user, verificationToken, hashedSessionId } =
+        await userService.createNewUser(req.body);
 
     if (!user) throw new ApiError();
 
@@ -50,10 +49,17 @@ const register = asyncHandler(async (req, res, next) => {
         .catch((err) => next(err));
 
     await redisClient.set(
-        `emailVerificationToken:${user._id}`,
-        verificationToken,
+        `emailVerificationSession:${hashedSessionId}`,
+        JSON.stringify({
+            userId: user._id,
+            token: verificationToken,
+        }),
     );
 
+    await redisClient.expire(
+        `emailVerificationSession:${hashedSessionId}`,
+        60 * 20,
+    );
     res.json(new ApiResponse(201, user, "User registered successfully"));
 });
 
@@ -292,6 +298,8 @@ const verifyEmailCode = asyncHandler(async (req, res, next) => {
         to: updatedUser.email,
         subject: "Account Created Login Now",
     };
+
+    await redisClient.del(`emailVerificationSession:${sessionIdHash}`);
 
     // await emailQueue.add("send-email", emailData, {
     //     removeOnComplete: true,

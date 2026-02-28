@@ -8,6 +8,7 @@ import Register from "./components/features/auth/Register";
 import Protected from "./components/features/protected/Protected";
 import AuthProvider from "./context/context-providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
+import VerifyEmail from "./components/features/auth/VerifyEmail";
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                             <Route path="reset-password/:token" element={<ResetPassword />} />
                         </Route>
                         <Route path="register" element={<Register />} />
+                        <Route path="verify-email/:sessionId" element={<VerifyEmail />} />
                     </Route>
                     <Route path="/dash" element={<Protected />}>
                         <Route index element={<div>dashsaijsaij</div>} />

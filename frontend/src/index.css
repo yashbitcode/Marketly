@@ -21,3 +21,15 @@
     --breakpoint-md-plus: 1160px;
     --breakpoint-sm-440: 440px;
 }
+
+@layer utilities {
+    .no-spinner::-webkit-outer-spin-button,
+    .no-spinner::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .no-spinner {
+        -moz-appearance: textfield;
+    }
+}

@@ -24,9 +24,9 @@ const AuthApi = {
         ),
     verifyEmailSession: async (sessionId) =>
         axiosClient.get(apiEndpoints.auth.verifyEmail + `/${sessionId}`),
-    verifyEmailToken: async ({ sessionId, token }) =>
+    verifyEmailToken: async (sessionId, token) =>
         axiosClient.get(
-            apiEndpoints.auth.verifyEmail + `/${sessionId}/${token}`,
+            apiEndpoints.auth.verifyEmailCode + `/${sessionId}/${token}`,
         ),
 };
 

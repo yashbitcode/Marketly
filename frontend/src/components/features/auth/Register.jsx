@@ -4,6 +4,7 @@ import { registerValidations } from "../../../../../shared/validations/auth.vali
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import AuthApi from "../../../apis/authApi";
+import { Link } from "react-router";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -46,7 +47,7 @@ const Register = () => {
                     <Input label="Password" placeholder={"Password"} type="password" className="px-4 py-2" {...register("password")} error={errors?.password?.message} />
                     <Input label="Confirm Password" placeholder={"Confirm Password"} type="password" className="px-4 py-2" {...register("confirmPassword")} error={errors?.confirmPassword?.message} />
 
-                    <p className="text-sm text-end -mt-2">Already Have An Account?</p>
+                    <Link to={"/login"} className="text-sm text-end -mt-2">Already Have An Account?</Link>
                     <Button className="rounded-[8px] py-2 text-[1.1rem] bg-blue-400" type="submit">Register</Button>
                 </form>
             </div>
