@@ -1,8 +1,8 @@
-import { asyncHandler  } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import categoryService from "../services/category.service.js";
 import ApiResponse from "../utils/api-response.js";
 import ApiError from "../utils/api-error.js";
-import { pubClient as redisClient  } from "../config/redis/connection.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
 
 const getAllParentCategories = asyncHandler(async (req, res) => {
     let allCategories = await redisClient.get("parent:categories");
@@ -26,6 +26,32 @@ const getAllParentCategories = asyncHandler(async (req, res) => {
             200,
             allCategories,
             "Parent categories fetched successfully",
+        ),
+    );
+});
+
+const getAllCategories = asyncHandler(async (req, res) => {
+    let allCategories = await redisClient.get("all:categories");
+
+    if (allCategories)
+        return res.json(
+            new ApiResponse(
+                200,
+                JSON.parse(allCategories),
+                "All categories fetched successfully",
+            ),
+        );
+
+    allCategories = await categoryService.getAll();
+
+    await redisClient.set("all:categories", JSON.stringify(allCategories));
+    await redisClient.expire("all:categories", 10 * 60);
+
+    res.json(
+        new ApiResponse(
+            200,
+            allCategories,
+            "All categories fetched successfully",
         ),
     );
 });
@@ -159,6 +185,7 @@ const updateSubCategory = asyncHandler(async (req, res) => {
 });
 
 export {
+    getAllCategories,
     getAllParentCategories,
     getAllSubCategories,
     addParentCategory,

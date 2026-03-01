@@ -21,7 +21,6 @@ const router = Router();
 router.get(
     "/filter/:page",
     validate(productQueryValidations, true),
-    validate(searchQueryValidations),
     getFilteredProducts,
 );
 

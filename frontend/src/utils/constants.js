@@ -10,7 +10,7 @@ import authApi from "../apis/authApi";
 
 export const baseBackendURL = "http://localhost:8000/api/v1";
 
-export const preventNumInp = ["e", "-", "."];
+export const preventNumInp = ["e", "-", ".", "E"];
 
 export const preventKeys = ["ArrowRight", "ArrowLeft", "Backspace"];
 
@@ -31,7 +31,15 @@ export const apiEndpoints = {
     user: {
         me: "/me",
     },
+    category: {
+        getAll: "/category/all",
+    },
+    product: {
+        getFiltered: "/product/filter",
+    },
 };
+
+export const TOKEN_LENGTH = 6;
 
 export const VENDOR_FEATURES = [
     {

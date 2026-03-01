@@ -32,4 +32,22 @@
     .no-spinner {
         -moz-appearance: textfield;
     }
+
+    .scrollbar-thin-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin-custom::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  .scrollbar-thin-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin-custom::-webkit-scrollbar-thumb {
+    background: #6b7280; /* gray-500 */
+    border-radius: 9999px;
+  }
 }

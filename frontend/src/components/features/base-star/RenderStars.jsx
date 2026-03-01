@@ -4,7 +4,7 @@ const RenderStars = ({ avgRating }) => {
     let tempRating = avgRating;
 
     return (
-        <div className="flex gap-1 mt-1">
+        <div className="flex gap-1 mt-1 items-center">
             {
                 Array.from({ length: 5 }).map((_, idx) => {
                     let fill = 100;
@@ -15,11 +15,11 @@ const RenderStars = ({ avgRating }) => {
                         tempRating = 0
                     }
 
-                    return <Star key={idx} fill={fill} />
+                    return <Star key={idx} size={15} fill={fill} />
                 })
             }
 
-            <span className="text-gray-500 -mt-px">({avgRating})</span>
+            <span className="text-gray-500 ">({avgRating})</span>
         </div>
     )
 }

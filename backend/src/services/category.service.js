@@ -15,6 +15,13 @@ class CategoryService {
         return allCategories;
     }
 
+    async getAll() {
+        const parentCategories = await ParentCategory.find({});
+        const subCategories = await SubCategory.find({});
+
+        return { parentCategories, subCategories };
+    }
+
     async insertParentCategory({ name }) {
         const category = new ParentCategory({ name });
         await category.save();

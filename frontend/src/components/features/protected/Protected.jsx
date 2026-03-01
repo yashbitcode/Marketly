@@ -3,7 +3,6 @@ import useAuth from "../../../hooks/useAuth";
 
 const Protected = ({authenticate = true}) => {
     const {user, loading} = useAuth();
-    // console.log(user, loading)
 
     if(loading) return <div>Loading...</div>;
 

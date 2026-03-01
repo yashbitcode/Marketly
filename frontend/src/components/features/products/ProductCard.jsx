@@ -1,20 +1,22 @@
 import { formatPrice, trimStr } from "../../../utils/helpers";
+import { Button } from "../../common";
 import RenderStars from "../base-star/RenderStars";
 
-const ProductCard = ({ title, storeName, price, productImg, avgRating }) => {
+const ProductCard = ({ name, brandName, price, images, avgRating }) => {
     return (
-        <div className="p-4 bg-white w-full rounded-base max-w-70 font-inter hover:scale-102 transition-all shadow-base">
+        <div className="p-4 bg-white w-full rounded-base max-w-72 font-inter hover:scale-102 transition-all shadow-base cursor-pointer">
             <div className="w-full max-w-50 mx-auto">
-                <img src={productImg} alt={title} className="w-full" />
+                <img src={images[0].url} alt={name} className="w-full" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-                <h1>{trimStr(title, 25)}</h1>
-                <h2 className="text-gray-600 italic">{storeName}</h2>
-                <span className="text-[1.1rem] font-medium">₹{formatPrice(price)}</span>
+                <h1>{trimStr(name, 22)}</h1>
+                <h2 className="text-gray-600 italic">{brandName}</h2>
+                <span className="font-medium">₹{formatPrice(price)}</span>
 
-                <RenderStars avgRating={avgRating} />
+                <RenderStars avgRating={(+avgRating || 0).toFixed(1)} />
             </div>
+            <Button className="mx-auto w-full mt-3 bg-dark/80 text-sm">Add To Cart</Button>
         </div>
     )
 };

@@ -74,3 +74,26 @@ export const categories = [
     "Electronics",
     "Gaming",
 ];
+
+export const ALL_CATEGORIES = [
+    "Electronics",
+    "Fashion",
+    "Home & Living",
+    "Sports",
+    "Books",
+    "Beauty",
+    "Toys",
+    "Automotive",
+];
+
+export const ALL_SUB_CATEGORIES = [
+    "Smartphones",
+    "Laptops",
+    "Shirts",
+    "Shoes",
+    "Furniture",
+    "Kitchen",
+    "Fitness",
+    "Fiction",
+    "Skincare",
+];

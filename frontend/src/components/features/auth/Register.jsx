@@ -32,9 +32,9 @@ const Register = () => {
         <Container className="font-inter flex px-4 gap-15 max-w-5xl py-7 m-auto justify-center items-center">
 
             <div className="flex flex-col items-center justify-center gap-5 w-full  text-dark max-w-120">
-                <div className="w-full max-w-30">
+                {/* <div className="w-full max-w-30">
                     <img src="logo3.jpg" alt="logo" className="w-full object-cover" />
-                </div>
+                </div> */}
                 <div className="text-center">
                     <h1 className="text-4xl font-medium max-sm:text-3xl">Join Marketly today</h1>
                     <p className="text-gray-600 mt-2 italic text-center max-sm:text-sm">Create your account to discover amazing products, enjoy seamless checkout, and shop smarter every day</p>

@@ -8,6 +8,7 @@ import {
     addSubCategory,
     deleteParentCategory,
     deleteSubCategory,
+    getAllCategories,
 } from "../controllers/category.controllers.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 import {
@@ -25,6 +26,8 @@ router.get(
     authorise("super-admin"),
     getAllParentCategories,
 );
+
+router.get("/all", getAllCategories);
 
 router.post(
     "/",

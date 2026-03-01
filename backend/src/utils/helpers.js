@@ -289,6 +289,24 @@ const getProductBasePipeline = () => {
                 category: { $arrayElemAt: ["$category", 0] },
             },
         },
+        {
+            $lookup: {
+                from: "reviews",
+                localField: "_id",
+                foreignField: "product",
+                as: "reviews",
+            },
+        },
+        {
+            $addFields: {
+                avgRating: {
+                    $avg: "$reviews.ratings",
+                },
+            },
+        },
+        {
+            $unset: ["reviews"],
+        },
     ];
 };
 

@@ -135,8 +135,8 @@ const updateProductStatus = asyncHandler(async (req, res) => {
 
 const getFilteredProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
-    const { searchQuery } = req.body;
     const filterQueries = req.query;
+    const { searchQuery } = filterQueries;
 
     console.log(searchQuery);
 

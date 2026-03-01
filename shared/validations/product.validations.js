@@ -62,6 +62,7 @@ const productQueryValidations = z
         ratings: z.string(),
         brandName: z.string(),
         stockAvailability: z.string(),
+        searchQuery: z.string(),
     })
     .partial()
     .superRefine((data, ctx) => {

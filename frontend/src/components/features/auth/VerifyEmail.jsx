@@ -3,23 +3,20 @@ import { Button, Container, Input } from "../../common";
 import useVerifyToken from "../../../hooks/useVerifyToken";
 import AuthApi from "../../../apis/authApi";
 import toast from "react-hot-toast";
-import { useRef, useState } from "react";
-import { preventKeys, preventNumInp } from "../../../utils/constants";
+import { TOKEN_LENGTH } from "../../../utils/constants";
+import useTokenInput from "../../../hooks/useTokenInput";
 
 const VerifyEmail = () => {
     const { sessionId } = useParams();
     const { loading, navigate } = useVerifyToken(AuthApi.verifyEmailSession, sessionId);
-    const [currentInp, setCurrentInp] = useState(0);
-    const [tokenError, setTokenError] = useState(null);
-
-    const inputRefs = useRef(Array.from({ length: 6 }));
+    const {setCurrentInp, tokenError, setTokenError, handleKeyPress, inputRefs, handleChange} = useTokenInput();
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
         const token = inputRefs.current?.map((el) => el.value).join("");
 
-        if (token.length !== 6) {
+        if (token.length !== TOKEN_LENGTH) {
             setTokenError("Fill The Token")
             return;
         }
@@ -42,53 +39,6 @@ const VerifyEmail = () => {
         }
     }
 
-    const getPosition = () => {
-        let prev = -1;
-        let next = -1;
-
-        inputRefs.current?.forEach((el, idx) => {
-            const val = el.value;
-
-            if (idx !== currentInp && !val) {
-                if (idx < currentInp && prev === -1) prev = idx;
-                else if (idx > currentInp && next === -1) next = idx;
-            }
-        });
-
-        return { prev, next };
-    }
-
-    const handleKeyPress = (e) => {
-        const key = e.key;
-        const val = e.target.value;
-
-        if (preventNumInp.includes(key) || (val && !preventKeys.includes(key))) {
-            e.preventDefault();
-            return;
-        }
-
-        if (key === "Backspace" && !val && currentInp) {
-            setCurrentInp(currentInp - 1);
-            inputRefs.current?.[currentInp - 1]?.focus();
-        }
-    }
-
-    const handleChange = (e) => {
-        setTokenError(null);
-        const val = e.target.value;
-
-        const { prev, next } = getPosition();
-        const pos = next !== -1 ? next : prev;
-
-        if (val) {
-            if (pos !== -1) {
-                setCurrentInp(pos);
-                inputRefs.current?.[pos]?.focus();
-            }
-        }
-    }
-
-
     if (loading) return <div>loading...</div>
 
     return (
@@ -108,8 +58,14 @@ const VerifyEmail = () => {
                 <form className="w-full flex flex-col gap-1" onSubmit={onSubmit}>
 
                     <div className="flex max-w-3xl gap-4 mx-auto"   >{
-                        Array.from({ length: 6 }).map((_, idx) => (
-                            <Input key={idx} ref={(el) => (inputRefs.current[idx] = el)} className="w-15 max-sm:w-10 flex justify-center items-center no-spinner text-center" onFocus={() => setCurrentInp(idx)} type="number" onChange={handleChange} onKeyDown={handleKeyPress} />
+                        Array.from({ length: TOKEN_LENGTH }).map((_, idx) => (
+                            <Input key={idx} ref={(el) => (inputRefs.current[idx] = el)} className="w-15 max-sm:w-10 flex justify-center items-center no-spinner text-center" onFocus={() => setCurrentInp(idx)} type="number" onChange={handleChange} onKeyDown={handleKeyPress} onPaste={(e) => {
+                                const pasteData = e.clipboardData.getData("text");
+
+                                if (!/^\d+$/.test(pasteData)) {
+                                    e.preventDefault();
+                                }
+                            }} />
                         ))
                     }
                     </div>
