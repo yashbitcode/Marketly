@@ -122,46 +122,6 @@ const getProductFilterationPipeline = (filterQueries) => {
     categories = categories?.split(",");
     subCategories = subCategories?.split(",");
 
-    // pipeline.push(
-    //     ...[
-    //         {
-    //             $lookup: {
-    //                 from: "sub-categories",
-    //                 localField: "category",
-    //                 foreignField: "_id",
-    //                 as: "category",
-    //                 pipeline: [
-    //                     {
-    //                         $lookup: {
-    //                             from: "parent-categories",
-    //                             localField: "parentCategory",
-    //                             foreignField: "_id",
-    //                             as: "parentCategory",
-    //                         },
-    //                     },
-    //                 ],
-    //             },
-    //         },
-    //         {
-    //             $lookup: {
-    //                 from: "vendors",
-    //                 localField: "vendor",
-    //                 foreignField: "_id",
-    //                 as: "vendor",
-    //             },
-    //         },
-    //         {
-    //             $unwind: "$category",
-    //         },
-    //         {
-    //             $unwind: "$category.parentCategory",
-    //         },
-    //         {
-    //             $unwind: "$vendor",
-    //         },
-    //     ],
-    // );
-
     if (brandName)
         pipeline.push({
             $match: {
@@ -192,8 +152,8 @@ const getProductFilterationPipeline = (filterQueries) => {
                         }),
                     },
                 }),
-                ...(stockAvailability && { stockAvailability: { $gt: 0 } }),
-                ...(ratings && { ratings: { $gte: ratings } }),
+                ...(stockAvailability && { stockQuantity: { $gt: 0 } }),
+                ...(+ratings && { avgRating: { $gte: +ratings } }),
             },
         });
 

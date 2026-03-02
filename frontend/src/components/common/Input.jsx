@@ -5,7 +5,7 @@ const Input = ({ type = "text", className = "", name = "", defaultId, error, lab
     const id = useId();
 
     const variants = {
-        primary: "border-gray-200 bg-base-white focus:border-gray-300",
+        primary: "border-gray-200 bg-gray-50 focus:border-gray-300",
         error: "border-red-200 bg-red-100/40 focus:border-red-300"
     };
 

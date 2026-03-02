@@ -33,7 +33,9 @@ const AuthProvider = ({children}) => {
         } catch {
             console.log("Error");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
         }
     }, [setAuth, user]);
 

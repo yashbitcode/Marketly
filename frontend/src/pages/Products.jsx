@@ -1,89 +1,72 @@
-import { Search } from "lucide-react"
+import { Search, SlidersHorizontal } from "lucide-react"
 import { Button, Container, Input } from "../components/common"
 import ProductsFilter from "../components/features/products/ProductsFilter";
 import ProductCard from "../components/features/products/ProductCard";
-import { useCallback, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import CategoryApi from "../apis/categoryApi";
-import ProductApi from "../apis/productApi";
 import Pagination from "../components/common/Pagination";
-import { PAGINATION_LIMIT } from "../../../shared/constants";
+import useCategories from "../hooks/useCategories";
+import useProducts from "../hooks/useProducts";
+import { useState } from "react";
+import ProductCardSkeleton from "../components/loadings/ProductCardSkeleton";
 
 const Products = () => {
-    const [categories, setCategories] = useState(null);
-    const [products, setProducts] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
-    const [pageError, setPageError] = useState(null);
-
-    // console.log(products)
-
-    const fetchProducts = useCallback(async () => {
-        try {
-            setLoading(true);
-            setPageError(null);
-            const {data} = await ProductApi.getAllFilteredProducts({}, page);
-            
-            if(Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page) setProducts(data?.data || []);
-            else setPageError("Invalid Page Number");
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top"
-            });
-        } finally {
-            setLoading(false);
-        }
-    }, [page]);
-
-    useEffect(() => {
-        console.log("HIHI")
-        const fetchData = async () => {
-            try {
-                const categoriesRes = await CategoryApi.getAllCategories();
-                setCategories(categoriesRes?.data?.data);
-            } catch (err) {
-                toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top"
-                });
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]);
-
-    if(loading) return <div>loading...</div>
+    const { categories } = useCategories();
+    const { products, pageError, pageHandler, searchParams, page, setSearchParams, search, searchHandler } = useProducts();
+    const [filterMenu, setFilterMenu] = useState(false);
 
     return (
-        <Container className="w-full max-w-350 mx-auto my-8">
-            <div className="w-full border-2 rounded-full border-gray-200 gap-1.5 bg-base-white p-2 flex items-center max-w-130 mx-auto">
+        <>
+        <div className={`fixed top-0 z-10 h-full w-full bg-black/30 min-[1100px]:hidden ${!filterMenu && "hidden"}`} />
+        <Container className="w-full max-w-350 mx-auto my-8 font-inter">
+            <div className="px-4">
+                <div className="w-full border-2 rounded-full border-gray-200 gap-1.5 bg-gray-50 p-2 flex items-center mx-auto max-w-130">
                 <Search className="text-gray-400" />
-                <Input className="w-full p-0 border-0 rounded-none" />
-                <Button className="bg-orange">Search</Button>
+                <Input className="w-full p-0 border-0 rounded-none" value={search} onChange={searchHandler} />
+                <Button className="bg-orange" onClick={() => {
+                    setSearchParams((prev) => {
+                        prev.set("searchQuery", search);
+
+                        return prev;
+                    });
+
+                    pageHandler(1);
+                }}>Search</Button>
             </div>
+            </div>
+            <Button className="px-4 py-0 bg-transparent text-dark mt-3 min-[1100px]:hidden flex items-center gap-2" onClick={() => setFilterMenu(!filterMenu)}>
+                <SlidersHorizontal />
+                <span className="text-xl">Filters</span>
+            </Button>
             <div className="flex mt-8 w-full relative">
-                <div className="sticky top-4 h-full">
-                    <ProductsFilter categories={categories?.parentCategories} subCategories={categories?.subCategories} />
+                <div className={`min-[1100px]:sticky min-[1100px]:top-4 h-full max-[1100px]:z-90 max-[1100px]:absolute max-[1100px]:-top-45 max-[1100px]:mx-auto max-[1100px]:left-1/2 max-[1100px]:-translate-x-1/2 ${!filterMenu && "max-[1100px]:hidden"}`}>
+                    <ProductsFilter filters={Object.fromEntries([...searchParams])} categories={categories?.parentCategories} subCategories={categories?.subCategories} onApply={(appliedFilters) => {
+                        if (search) appliedFilters.searchQuery = search;
+
+                        setSearchParams(appliedFilters);
+                        pageHandler(1);
+                    }} menuHandler={() => setFilterMenu(false)} />
                 </div>
                 {
                     !pageError ? (
                         <div className="mx-auto">
-                    <div className="grid grid-cols-4 max-[1080px]:grid-cols-2 max-[570px]:grid-cols-1  items-center w-fit mr-4 gap-4">
-                        {
-                            products?.data?.map((el) => <ProductCard key={el._id} {...el} />)
-                        }
-                    </div>
-                    <Pagination page={page} totalCount={products?.totalCount} pageHandler={(newPage) => setPage(newPage)} />
-                </div>
+                            <div className="grid grid-cols-4 max-[1360px]:grid-cols-3 max-[750px]:grid-cols-2 max-[540px]:grid-cols-1 items-center w-fit mr-4 max-[1100px]:mx-4 gap-4">
+                                {
+                                    products ? products?.data?.map((el) => <ProductCard key={el._id} {...el} />) : Array.from({length: 8}).map((_, idx) => <ProductCardSkeleton key={idx} />)
+                                }
+                            </div>
+                            {
+                                products && (
+                                    <Pagination page={page} totalCount={products?.totalCount} pageHandler={pageHandler} />
+                                )
+                            }
+                        </div>
                     ) : (
-                        <div className="px-2 py-1 shadow-base">{pageError}</div>
+                        <div className="px-2 py-1 shadow-base h-full rounded-[7px] text-2xl m-auto -rotate-10">Invalid page number</div>
                     )
                 }
             </div>
         </Container>
+
+        </>
     )
 }
 

@@ -39,6 +39,29 @@ export const apiEndpoints = {
     },
 };
 
+export const loadingMessages = [
+    "Preparing amazing deals for you...",
+    "Loading fresh products...",
+    "Fetching trending items...",
+    "Setting up your shopping experience...",
+    "Organizing the best picks...",
+    "Checking the latest arrivals...",
+    "Almost ready with your favorites...",
+    "Bringing the marketplace to you...",
+    "Loading smart shopping tools...",
+    "Finding products you'll love...",
+    "Updating prices and offers...",
+    "Gathering top-rated products...",
+    "Preparing secure checkout...",
+    "Syncing your cart...",
+    "Loading exclusive discounts...",
+    "Curating something special...",
+    "Warming up the storefront...",
+    "Checking inventory status...",
+    "Personalizing your experience...",
+    "Almost there, Marketly is getting ready...",
+];
+
 export const TOKEN_LENGTH = 6;
 
 export const VENDOR_FEATURES = [

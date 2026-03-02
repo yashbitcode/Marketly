@@ -1,32 +1,25 @@
 import { useState } from "react";
 import { Button, Input } from "../../common";
-import Star from "../base-star/Star";
-import { ALL_CATEGORIES, ALL_SUB_CATEGORIES } from "../../../utils/dummy";
 import { getFormatedStr } from "../../../utils/helpers";
-
-const Section = ({ title, children }) => (
-    <div className="flex flex-col gap-2.5">
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-            {title}
-        </span>
-        {children}
-    </div>
-);
-
-const Divider = () => <hr className="border-gray-100" />;
+import { Tag, Divider, Section, RatingRow } from "./product-filter-misc";
+import { X } from "lucide-react";
 
 const ProductsFilter = ({
-    categories = ALL_CATEGORIES,
-    subCategories = ALL_SUB_CATEGORIES,
+    categories,
+    subCategories,
+    filters,
     onApply,
+    menuHandler
 }) => {
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-    const [brandSearch, setBrandSearch] = useState("");
-    const [rating, setRating] = useState(0); 
-    const [inStockOnly, setInStockOnly] = useState(false);
+    const {minPrice: minP, maxPrice: maxP, ratings, categories: baseCategories, subCategories: baseSubCategories, stockAvailability, brandName} = filters;
+
+    const [minPrice, setMinPrice] = useState(() => +minP ? minP : "");
+    const [maxPrice, setMaxPrice] = useState(() => +maxP ? maxP : "");
+    const [selectedCategories, setSelectedCategories] = useState(() => baseCategories?.split(",") || []);
+    const [selectedSubCategories, setSelectedSubCategories] = useState(() => baseSubCategories?.split(",") || []);
+    const [brandSearch, setBrandSearch] = useState(() => brandName ? brandName : "");
+    const [rating, setRating] = useState(() => ratings ? ratings : 0); 
+    const [inStockOnly, setInStockOnly] = useState(() => stockAvailability ? true : false);
 
     const toggleTag = (value, list, setList) => {
         setList(
@@ -45,78 +38,27 @@ const ProductsFilter = ({
     };
 
     const handleApply = () => {
-        console.log({
-            minPrice: minPrice === "" ? null : +minPrice,
-            maxPrice: maxPrice === "" ? null : +maxPrice,
-            categories: selectedCategories,
-            subCategories: selectedSubCategories,
-            brandName: brandSearch.trim(),
-            rating,
-            inStockOnly,
-        })
-        // onApply?.({
-        //     minPrice: minPrice === "" ? null : +minPrice,
-        //     maxPrice: maxPrice === "" ? null : +maxPrice,
-        //     categories: selectedCategories,
-        //     subCategories: selectedSubCategories,
-        //     brandName: brandSearch.trim(),
-        //     rating,
-        //     inStockOnly,
-        // });
-    };
-
-    const Tag = ({ label, active, onClick }) => (
-        <Button
-            onClick={onClick}
-            className={`px-3 py-1 rounded-full text-xs font-medium border-2 transition-all whitespace-nowrap
-        ${active
-                    ? "bg-dark text-white border-dark"
-                    : "border-gray-200 text-gray-600 hover:border-gray-400 bg-white"
-                }`}
-        >
-            {label}
-        </Button>
-    );
-
-    const RatingRow = ({ value }) => {
-        const isActive = rating === value;
-        return (
-            <Button
-                onClick={() => setRating(isActive ? 0 : value)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border-2 transition-all w-fit bg-transparent
-          ${isActive
-                        ? "border-dark/50 bg-dark/5 shadow-sm"
-                        : "border-transparent hover:border-gray-200"
-                    }`}
-            >
-                <span className="flex items-center gap-0.5">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                        <Star
-                            key={s}
-                            size={16}
-                            fill={s <= value ? 100 : 0}
-                        />
-                    ))}
-                </span>
-                <span className="text-xs font-medium text-gray-500">
-                    {value === 5 ? "Only" : "& up"}
-                </span>
-            </Button>
-        );
+        onApply?.({
+            ...(minPrice && {minPrice: +minPrice}),
+            ...(maxPrice && {maxPrice: +maxPrice}),
+            ...(selectedCategories?.length && {categories: selectedCategories.join(",")}),
+            ...(selectedSubCategories?.length && {subCategories: selectedSubCategories.join(",")}),
+            ...(brandSearch && {brandName: brandSearch.trim()}),
+            ...(rating && {ratings: rating}),
+            ...(inStockOnly && {stockAvailability: "1"}),
+        });
     };
 
     return (
-        <div className="w-75 bg-white rounded-base border-2 border-gray-100  flex flex-col overflow-hidden font-inter h-140 mx-4">
-
-            {/* ── Header ── */}
+        <div className="w-75 max-[350px]:w-70 bg-white rounded-base border-2 border-gray-100  flex flex-col overflow-hidden font-inter h-140 mx-4">
             <div className="flex items-center justify-between px-5 py-4 border-b-2 border-gray-100">
+                <div className="flex gap-2 items-center">
+                    <Button className="p-0 min-[1100px]:hidden text-dark bg-transparent" onClick={menuHandler}><X size={20} /></Button>
                 <h2 className="font-semibold text-sm text-gray-800 tracking-tight">Filters</h2>
-
-
+                </div>
                 <Button onClick={handleReset} className="p-0 bg-transparent text-dark text-sm">Reset all</Button>
             </div>
 
-            {/* ── Scrollable body ── */}
             <div className="flex flex-col gap-5 px-5 py-5 overflow-y-auto max-h-[calc(100vh-10rem)] scrollbar-thin-custom">
 
                 <Section title="Price Range">
@@ -164,7 +106,7 @@ const ProductsFilter = ({
                             <Tag
                                 key={sub.slug}
                                 label={getFormatedStr(sub.name)}
-                                active={selectedSubCategories.includes(sub.slug)}
+                                active={selectedSubCategories?.includes(sub.slug)}
                                 onClick={() => toggleTag(sub.slug, selectedSubCategories, setSelectedSubCategories)}
                             />
                         ))}
@@ -207,8 +149,8 @@ const ProductsFilter = ({
                 {/* Rating */}
                 <Section title="Customer Rating">
                     <div className="flex flex-col gap-0.5">
-                        {[5, 4, 3, 2, 1].map((v) => (
-                            <RatingRow key={v} value={v} />
+                        {[5, 4, 3, 2, 1].map((value) => (
+                            <RatingRow key={value} value={value} rating={rating} onClickHandler={() => setRating((rating === value) ? 0 : value)} />
                         ))}
                     </div>
                 </Section>

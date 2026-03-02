@@ -138,7 +138,7 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
     const filterQueries = req.query;
     const { searchQuery } = filterQueries;
 
-    console.log(searchQuery);
+    console.log(filterQueries);
 
     const filteredProducts = await productService.getFilteredProducts(
         { "approval.status": "accepted", isActive: true },
@@ -147,23 +147,23 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
         +page,
     );
 
-    let redisKey = "product:";
+    // let redisKey = "product:";
 
-    if (searchQuery) redisKey += searchQuery + ":";
-    if (filterQueries?.length > 0) {
-        const filterQueriesHash = createHash(
-            JSON.stringify(filterQueries),
-            process.env.REDIS_KEY_HASH,
-        );
-        redisKey += filterQueriesHash.slice(0, 8) + ":";
-    }
+    // if (searchQuery) redisKey += searchQuery + ":";
+    // if (filterQueries?.length > 0) {
+    //     const filterQueriesHash = createHash(
+    //         JSON.stringify(filterQueries),
+    //         process.env.REDIS_KEY_HASH,
+    //     );
+    //     redisKey += filterQueriesHash.slice(0, 8) + ":";
+    // }
 
-    redisKey += page ? page : "1";
+    // redisKey += page ? page : "1";
 
-    console.log(redisKey);
+    // console.log(redisKey);
 
-    await redisClient.set(redisKey, JSON.stringify(filteredProducts));
-    await redisClient.expire(redisKey, 60 * 5);
+    // await redisClient.set(redisKey, JSON.stringify(filteredProducts));
+    // await redisClient.expire(redisKey, 60 * 5);
 
     res.json(
         new ApiResponse(200, filteredProducts, "Products fetched successfully"),

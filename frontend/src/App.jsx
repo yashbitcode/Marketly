@@ -10,12 +10,12 @@ import { Toaster } from "react-hot-toast";
 import VerifyEmail from "./components/features/auth/VerifyEmail";
 import MainBaseLayout from "./layouts/MainBaseLayout";
 import useAuth from "./hooks/useAuth";
+import PageLoader from "./components/loadings/PageLoader";
 
 const App = () => {
     const { loading } = useAuth();
 
-    if (loading) return <div>loading</div>
-
+    if (loading) return <PageLoader />
 
     return (
         <>
