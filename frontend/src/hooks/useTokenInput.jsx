@@ -26,7 +26,10 @@ const useTokenInput = () => {
         const key = e.key;
         const val = e.target.value;
 
-        if (preventNumInp.includes(key) || (val && !preventKeys.includes(key))) {
+        if (
+            preventNumInp.includes(key) ||
+            (val && !preventKeys.includes(key))
+        ) {
             e.preventDefault();
             return;
         }
@@ -48,18 +51,19 @@ const useTokenInput = () => {
             if (val.length > 1) {
                 let cnt = 0;
 
-                while (cnt < val.length && (currentInp + cnt) < TOKEN_LENGTH) {
+                while (cnt < val.length && currentInp + cnt < TOKEN_LENGTH) {
                     const inpVal = inputRefs.current[currentInp + cnt].value;
 
-                    if (inpVal) inputRefs.current[currentInp + cnt].value = inpVal[0];
+                    if (inpVal)
+                        inputRefs.current[currentInp + cnt].value = inpVal[0];
                     else inputRefs.current[currentInp + cnt].value = val[cnt];
 
-                    if ((currentInp + cnt) < (TOKEN_LENGTH - 1)) cnt++;
-                    else break
+                    if (currentInp + cnt < TOKEN_LENGTH - 1) cnt++;
+                    else break;
                 }
 
                 inputRefs.current[currentInp + cnt].focus();
-                setCurrentInp(currentInp + cnt)
+                setCurrentInp(currentInp + cnt);
             } else if (pos !== -1) {
                 setCurrentInp(pos);
                 inputRefs.current?.[pos]?.focus();
@@ -67,7 +71,14 @@ const useTokenInput = () => {
         }
     };
 
-    return {setCurrentInp, tokenError,inputRefs, setTokenError, handleKeyPress, handleChange}
-}
+    return {
+        setCurrentInp,
+        tokenError,
+        inputRefs,
+        setTokenError,
+        handleKeyPress,
+        handleChange,
+    };
+};
 
 export default useTokenInput;

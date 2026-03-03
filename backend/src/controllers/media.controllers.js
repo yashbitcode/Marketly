@@ -5,15 +5,10 @@ import { getSearchQueryByFileIds } from "../utils/helpers.js";
 import ApiError from "../utils/api-error.js";
 
 const getAuthParams = asyncHandler(async (req, res) => {
-    const { token, expire, signature } = await imageKitService.getParams();
+    const { totalCounts } = req.body;
+    const params = await imageKitService.getParams(totalCounts);
 
-    res.json(
-        new ApiResponse(
-            200,
-            { token, expire, signature },
-            "Params generated successully",
-        ),
-    );
+    res.json(new ApiResponse(200, params, "Params generated successully"));
 });
 
 const getFiles = asyncHandler(async (req, res) => {
@@ -43,8 +38,4 @@ const deleteFiles = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, {}, "Files deleted successfully"));
 });
 
-export {
-    getAuthParams,
-    deleteFiles,
-    getFiles,
-};
+export { getAuthParams, deleteFiles, getFiles };

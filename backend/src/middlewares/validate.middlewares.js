@@ -5,6 +5,7 @@ import z from "zod";
 const validate = (validationSchema, isQuery = false) => {
     return asyncHandler((req, res, next) => {
         try {
+            console.dir(req.body, { depth: null });
             const validation = validationSchema.safeParse(
                 (isQuery ? req.query : req.body) || {},
             );
@@ -19,7 +20,7 @@ const validate = (validationSchema, isQuery = false) => {
 
             next();
         } catch (err) {
-            console.log(err);
+            console.dir(err, { depth: null });
         }
     });
 };

@@ -1,2 +1,3 @@
 export { default as Homepage } from "./Homepage";
 export { default as Products } from "./Products";
+export { default as Support } from "./Support";

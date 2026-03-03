@@ -58,6 +58,9 @@ app.post("/inn", async (req, res) => {
 
     res.json(ab);
 });
+import crypto from "crypto";
+
+console.log(crypto.createHmac);
 
 app.use(BASE_ENDPOINT + "/health-check", healthRouter);
 app.use(BASE_ENDPOINT + "/auth", authRouter);

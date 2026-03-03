@@ -4,7 +4,7 @@ import RenderStars from "../base-star/RenderStars";
 
 const ProductCard = ({ name, brandName, price, images, avgRating }) => {
     return (
-        <div className="p-4 bg-white w-full rounded-base max-w-72 font-inter hover:scale-102 transition-all shadow-base cursor-pointer">
+        <div className="p-4 bg-white w-full rounded-[10px] max-w-72 font-inter hover:scale-102 transition-all shadow-base cursor-pointer">
             <div className="w-full max-w-50 mx-auto">
                 <img src={images[0].url} alt={name} className="w-full" />
             </div>
@@ -18,7 +18,7 @@ const ProductCard = ({ name, brandName, price, images, avgRating }) => {
             </div>
             <Button className="mx-auto w-full mt-3 bg-dark/80 text-sm">Add To Cart</Button>
         </div>
-    )
+    );
 };
 
 /* 

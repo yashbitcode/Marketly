@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { PAGINATION_LIMIT } from "../../../shared/constants";
 import toast from "react-hot-toast";
-import ProductApi from "../apis/productApi";
+import { ProductApi } from "../apis";
 
 const useProducts = () => {
     const [products, setProducts] = useState(null);
@@ -13,7 +13,7 @@ const useProducts = () => {
 
     const pageHandler = (pageNum) => {
         setPage(pageNum);
-    }
+    };
 
     const searchHandler = (e) => setSearch(e.target.value);
 
@@ -22,13 +22,17 @@ const useProducts = () => {
             try {
                 setPageError(null);
 
-                const { data } = await ProductApi.getAllFilteredProducts(Object.fromEntries([...searchParams]), page);
+                const { data } = await ProductApi.getAllFilteredProducts(
+                    Object.fromEntries([...searchParams]),
+                    page,
+                );
 
-                if (Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page) setProducts(data?.data || []);
+                if (Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page)
+                    setProducts(data?.data || []);
                 else setPageError("Invalid Page Number");
             } catch (err) {
                 toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top"
+                    position: "right-top",
                 });
             }
         };
@@ -36,7 +40,16 @@ const useProducts = () => {
         fetchProducts();
     }, [page, searchParams]);
 
-    return { products, pageError, pageHandler, setSearchParams, searchParams, page, search, searchHandler };
-}
+    return {
+        products,
+        pageError,
+        pageHandler,
+        setSearchParams,
+        searchParams,
+        page,
+        search,
+        searchHandler,
+    };
+};
 
 export default useProducts;

@@ -13,17 +13,16 @@ const useVerifyToken = (verifyApi, token) => {
             else navigate("/login", { replace: true });
         } catch {
             navigate("/login", { replace: true });
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
-    }, [navigate, token, verifyApi])
+    }, [navigate, token, verifyApi]);
 
     useEffect(() => {
         verifyToken();
     }, [token, verifyToken]);
 
-    return {loading, navigate};
-}
+    return { loading, navigate };
+};
 
 export default useVerifyToken;

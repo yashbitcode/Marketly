@@ -1,5 +1,7 @@
-import ImageKit from "@imagekit/nodejs";
-import { toFile } from "@imagekit/nodejs";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const ImageKit = require("@imagekit/nodejs");
+const { toFile } = require("@imagekit/nodejs");
 
 class ImageKitService {
     constructor() {
@@ -8,10 +10,26 @@ class ImageKitService {
         });
     }
 
-    async getParams() {
-        const params = this.client.helper.getAuthenticationParameters();
+    async getParams(totalCounts) {
+        try {
+            const params = [];
 
-        return params;
+            while (totalCounts--) {
+                const { token, expire, signature } =
+                    this.client.helper.getAuthenticationParameters();
+
+                params.push({
+                    token,
+                    expire,
+                    signature,
+                    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+                });
+            }
+
+            return params;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     async getList(filterQuery, path) {
@@ -34,7 +52,8 @@ class ImageKitService {
     async upload(buffer) {
         return await this.client.files.upload({
             file: await toFile(buffer),
-            fileName: "sasa",
+            fileName: "invoice",
+            folder: "/order-invoices",
         });
     }
 

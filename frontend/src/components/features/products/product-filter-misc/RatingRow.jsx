@@ -7,18 +7,15 @@ const RatingRow = ({ value, rating, onClickHandler }) => {
         <Button
             onClick={onClickHandler}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-full border-2 transition-all w-fit bg-transparent
-          ${isActive
-                    ? "border-dark/50 bg-dark/5 shadow-sm"
-                    : "border-transparent hover:border-gray-200"
-                }`}
+          ${
+              isActive
+                  ? "border-dark/50 bg-dark/5 shadow-sm"
+                  : "border-transparent hover:border-gray-200"
+          }`}
         >
             <span className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                        key={s}
-                        size={16}
-                        fill={s <= value ? 100 : 0}
-                    />
+                    <Star key={s} size={16} fill={s <= value ? 100 : 0} />
                 ))}
             </span>
             <span className="text-xs font-medium text-gray-500">

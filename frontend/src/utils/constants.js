@@ -6,9 +6,6 @@ import {
     IndianRupee,
     Twitter,
 } from "lucide-react";
-import authApi from "../apis/authApi";
-
-export const baseBackendURL = "http://localhost:8000/api/v1";
 
 export const preventNumInp = ["e", "-", ".", "E"];
 
@@ -36,6 +33,12 @@ export const apiEndpoints = {
     },
     product: {
         getFiltered: "/product/filter",
+    },
+    media: {
+        getAuthParams: "/media",
+    },
+    support: {
+        createTicket: "/support",
     },
 };
 
@@ -152,32 +155,29 @@ export const AUTH_CHOICE = {
             "Sign in to continue shopping, track orders, and manage your profile effortlessly",
         rightHead: "Welcome Back",
         rightDesc: "Please Login To Your Account",
-        api: authApi.login,
+        api: (creds) => import("../apis").then((m) => m.AuthApi.login(creds)),
     },
     "vendor-login": {
         leftHead: "Power your store with confidence",
-        leftDesc:
-            "Manage inventory, process orders, and grow your brand in one place.",
+        leftDesc: "Manage inventory, process orders, and grow your brand in one place.",
         rightHead: "Welcome back, Vendor",
         rightDesc: "Sign in to access your dashboard and manage your store.",
-        api: authApi.vendorLogin,
+        api: (creds) => import("../apis").then((m) => m.AuthApi.vendorLogin(creds)),
     },
 
     "admin-login": {
         leftHead: "Marketplace control center",
-        leftDesc:
-            "Monitor vendors, track activity, and scale operations smoothly.",
+        leftDesc: "Monitor vendors, track activity, and scale operations smoothly.",
         rightHead: "Admin Access Portal",
         rightDesc: "Log in to manage platform operations and analytics.",
-        api: authApi.superAdminLogin,
+        api: (creds) => import("../apis").then((m) => m.AuthApi.superAdminLogin(creds)),
     },
     "forgot-password": {
         leftHead: "Forgot your password?",
-        leftDesc:
-            "No worries. Enter your email and we’ll help you get back into your account",
+        leftDesc: "No worries. Enter your email and we’ll help you get back into your account",
         rightHead: "Recover Access",
         rightDesc: "Get Forgot Password Link On Your Email...",
-        // api: authApi.forgotPasswordLink,
+        // api: AuthApi.forgotPasswordLink,
     },
 
     "reset-password": {
@@ -185,6 +185,6 @@ export const AUTH_CHOICE = {
         leftDesc: "No worries. Enter Your New Password",
         rightHead: "Set New Password",
         rightDesc: "Get Your New Password Now...",
-        // api: authApi.resetPassword,
+        // api: AuthApi.resetPassword,
     },
 };

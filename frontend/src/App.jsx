@@ -1,4 +1,4 @@
-import { Homepage, Products } from "./pages";
+import { Homepage, Products, Support } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -9,13 +9,13 @@ import Protected from "./components/features/protected/Protected";
 import { Toaster } from "react-hot-toast";
 import VerifyEmail from "./components/features/auth/VerifyEmail";
 import MainBaseLayout from "./layouts/MainBaseLayout";
-import useAuth from "./hooks/useAuth";
+import { useAuth } from "./hooks";
 import PageLoader from "./components/loadings/PageLoader";
 
 const App = () => {
     const { loading } = useAuth();
 
-    if (loading) return <PageLoader />
+    if (loading) return <PageLoader />;
 
     return (
         <>
@@ -24,6 +24,7 @@ const App = () => {
                 <Routes>
                     <Route element={<MainBaseLayout />}>
                         <Route index element={<Homepage />} />
+                        <Route path="/support" element={<Support />} />
                         <Route path="/products" element={<Products />} />
                         <Route element={<Protected authenticate={false} />}>
                             <Route element={<AuthLayout />}>
@@ -36,7 +37,7 @@ const App = () => {
                             <Route path="register" element={<Register />} />
                             <Route path="verify-email/:sessionId" element={<VerifyEmail />} />
                         </Route>
-                        
+
                         {/* <Route path="dash" element={<Protected />}>
                             <Route index element={<ProductsFilter />} />
                         </Route> */}
@@ -44,7 +45,7 @@ const App = () => {
                 </Routes>
             </BrowserRouter>
         </>
-    )
-}
+    );
+};
 
 export default App;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CategoryApi from "../apis/categoryApi";
+import { CategoryApi } from "../apis";
 import toast from "react-hot-toast";
 
 const useCategories = () => {
@@ -12,7 +12,7 @@ const useCategories = () => {
                 setCategories(categoriesRes?.data?.data);
             } catch (err) {
                 toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top"
+                    position: "right-top",
                 });
             }
         };
@@ -21,6 +21,6 @@ const useCategories = () => {
     }, []);
 
     return { categories };
-}
+};
 
 export default useCategories;

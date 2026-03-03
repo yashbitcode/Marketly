@@ -1,16 +1,7 @@
 import { useId } from "react";
 import { cn } from "../../utils/cn";
 
-const Input = ({
-    type = "text",
-    className = "",
-    name = "",
-    defaultId,
-    error,
-    label,
-    ref,
-    ...props
-}) => {
+const Textarea = ({ className = "", name = "", defaultId, error, label, ref, ...props }) => {
     const id = useId();
 
     const variants = {
@@ -21,25 +12,21 @@ const Input = ({
     return (
         <div className="w-full flex flex-col gap-1.5">
             {label && <label htmlFor={defaultId || id}>{label}</label>}
-            <input
-                type={type}
+            <textarea
                 ref={ref}
                 id={defaultId || id}
                 name={name}
+                rows="7"
                 className={cn(
-                    "border-2 outline-0 px-4 rounded-base py-2 text-black/80",
+                    "border-2 outline-0 px-4 resize-none rounded-base py-2 text-black/80",
                     !error ? variants.primary : variants.error,
                     className,
                 )}
                 {...props}
             />
-            {error && (
-                <span className="text-red-500 text-[0.8rem] -mt-1">
-                    {error}
-                </span>
-            )}
+            {error && <span className="text-red-500 text-[0.8rem] -mt-1">{error}</span>}
         </div>
     );
 };
 
-export default Input;
+export default Textarea;

@@ -28,7 +28,12 @@ const Star = ({ fill = 0, size = 20, color = "#FFD700", bg = "#e0e0e0" }) => {
   `;
 
     return (
-        <svg width={size} height={size} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg
+            width={size}
+            height={size}
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+        >
             <defs>
                 <clipPath id={uid}>
                     <rect x="0" y="0" width={fill} height="100" />

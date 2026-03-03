@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react";
 import AuthContext from "../AuthContext";
 import { getAccessToken } from "../../utils/helpers";
-import UserApi from "../../apis/userApi";
+import { UserApi } from "../../apis";
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -18,9 +18,9 @@ const AuthProvider = ({children}) => {
     // }, []);
 
     const checkAuth = useCallback(async () => {
-        if(user) return;
+        if (user) return;
 
-       const token = getAccessToken()
+        const token = getAccessToken();
 
         if (!token) {
             setAuth({ mainUser: null });
@@ -41,14 +41,12 @@ const AuthProvider = ({children}) => {
 
     useEffect(() => {
         checkAuth();
-    }, [checkAuth])
+    }, [checkAuth]);
 
     // console.log(user)
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser }}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={{ user, loading, setUser }}>{children}</AuthContext.Provider>
     );
 };
 
