@@ -2,8 +2,8 @@ import z from "zod";
 import { REGEX } from "../constants.js";
 import { baseMediaValidations } from "../baseValidations.js";
 
-const updateUserValidations = baseMediaValidations
-    .extend({
+const updateUserValidations = z
+    .object({
         fullname: z.string().min(3, "Minimum length should be 3"),
         phoneNumber: z
             .string()

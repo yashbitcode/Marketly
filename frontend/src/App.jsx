@@ -11,6 +11,7 @@ import VerifyEmail from "./components/features/auth/VerifyEmail";
 import MainBaseLayout from "./layouts/MainBaseLayout";
 import { useAuth } from "./hooks";
 import PageLoader from "./components/loadings/PageLoader";
+import Profile from "./components/features/user/Profile";
 
 const App = () => {
     const { loading } = useAuth();
@@ -23,7 +24,7 @@ const App = () => {
             <BrowserRouter>
                 <Routes>
                     <Route element={<MainBaseLayout />}>
-                        <Route index element={<Homepage />} />
+                        <Route index element={<Profile />} />
                         <Route path="/support" element={<Support />} />
                         <Route path="/products" element={<Products />} />
                         <Route element={<Protected authenticate={false} />}>

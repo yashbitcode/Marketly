@@ -14,6 +14,7 @@ const Support = () => {
         register,
         handleSubmit,
         setValue,
+        watch,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(addSupportTicketClient),
@@ -71,6 +72,7 @@ const Support = () => {
                 <Dropdown
                     label="Query Type"
                     placeholder={"Query Type"}
+                    watch={watch}
                     {...register("queryType")}
                     error={errors?.queryType?.message}
                     dropdownList={SUPPORT_QUERY_TYPES}

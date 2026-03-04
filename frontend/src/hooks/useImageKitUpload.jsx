@@ -45,7 +45,6 @@ const useImageKitUpload = () => {
             console.error("Failed to authenticate for upload:", authError);
             return;
         }
-        // const { signature, expire, token, publicKey } = authParams;
 
         try {
             const data = Array.from(fileInput).map(async (file, idx) => {

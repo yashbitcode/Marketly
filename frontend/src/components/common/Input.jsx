@@ -33,11 +33,7 @@ const Input = ({
                 )}
                 {...props}
             />
-            {error && (
-                <span className="text-red-500 text-[0.8rem] -mt-1">
-                    {error}
-                </span>
-            )}
+            {error && <span className="text-red-500 text-[0.8rem] -mt-1">{error}</span>}
         </div>
     );
 };

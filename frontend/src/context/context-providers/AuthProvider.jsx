@@ -9,7 +9,10 @@ const AuthProvider = ({ children }) => {
 
     const setAuth = useCallback(({ mainUser }) => {
         setUser(mainUser);
-        setLoading(false);
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 700);
     }, []);
 
     // const logout = useCallback(() => {
@@ -35,7 +38,7 @@ const AuthProvider = ({ children }) => {
         } finally {
             setTimeout(() => {
                 setLoading(false);
-            }, 2000);
+            }, 700);
         }
     }, [setAuth, user]);
 
