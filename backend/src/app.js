@@ -32,14 +32,10 @@ import orderRouter from "./routes/order.routes.js";
 import vendorStripeRouter from "./routes/vendorStripe.routes.js";
 import vendorPayoutRouter from "./routes/vendorPayout.routes.js";
 import webhookRouter from "./routes/webhook.routes.js";
-import ParentCategory from "./models/parentCategory.models.js";
-import SubCategory from "./models/subCategory.models.js";
-import Product from "./models/product.models.js";
-import Review from "./models/review.models.js";
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     }),
 );
@@ -53,14 +49,11 @@ app.use(cookieParser());
 //     res.sendFile(__dirname + "/index.html");
 // });
 
-app.post("/inn", async (req, res) => {
-    const ab = await Review.insertMany(req.body);
+// app.post("/inn", async (req, res) => {
+//     const ab = await Review.insertMany(req.body);
 
-    res.json(ab);
-});
-import crypto from "crypto";
-
-console.log(crypto.createHmac);
+//     res.json(ab);
+// });
 
 app.use(BASE_ENDPOINT + "/health-check", healthRouter);
 app.use(BASE_ENDPOINT + "/auth", authRouter);

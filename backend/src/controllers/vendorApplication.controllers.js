@@ -1,8 +1,8 @@
 import vendorApplicationService from "../services/vendorApplication.service.js";
 import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
-import { asyncHandler  } from "../utils/asyncHandler.js";
-import { pubClient as redisClient  } from "../config/redis/connection.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { pubClient as redisClient } from "../config/redis/connection.js";
 
 const getAllApplications = asyncHandler(async (req, res) => {
     const { page } = req.params;

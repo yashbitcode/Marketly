@@ -273,7 +273,7 @@ const getProductBasePipeline = () => {
 const getSearchQueryByFileIds = (userId, fileIds) => {
     let str = fileIds.map((el) => `"${el}"`).join();
 
-    str = `"customMetadata.user_id"="${userId}" AND "id" in [${str}]`;
+    str = `"customMetadata.user"="${userId}" AND "id" in [${str}]`;
 
     return str;
 };

@@ -13,18 +13,20 @@ const getAllUserAddresses = asyncHandler(async (req, res) => {
         return res.json(
             new ApiResponse(
                 200,
-                allAddresses,
+                JSON.parse(allAddresses),
                 "All addresses fetched successfully",
             ),
         );
 
     allAddresses = await addressService.getAllAddressesByUserId(_id);
 
-    await redisClient.set(
-        `user:addresses:${_id}`,
-        JSON.stringify(allAddresses),
-    );
-    await redisClient.expire(`user:addresses:${_id}`, 60 * 60 * 24);
+    if (allAddresses) {
+        await redisClient.set(
+            `user:addresses:${_id}`,
+            JSON.stringify(allAddresses),
+        );
+        await redisClient.expire(`user:addresses:${_id}`, 60 * 60 * 24);
+    }
 
     res.json(
         new ApiResponse(

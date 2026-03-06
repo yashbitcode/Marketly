@@ -34,15 +34,22 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     if (currentRole === "vendor") {
         payload = JSON.parse(await redisClient.get(`vendor:${vendorId}`));
 
-        // payload = await userService.getUserWithVendor(
-        //     { _id },
-        //     GENERAL_USER_FIELDS,
-        // );
+        if (!payload) {
+            payload = await userService.getUserWithVendor(
+                { _id },
+                GENERAL_USER_FIELDS,
+            );
+            await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
+        }
         // console.log(payload);
     } else {
         payload = JSON.parse(await redisClient.get(`user:${_id}`));
+        if (!payload) {
+            payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
+            await redisClient.set(`user:${_id}`, JSON.stringify(payload));
 
-        // payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
+            console.log(payload);
+        }
     }
 
     if (!payload || payload.tokenVersion !== tokenVersion) {

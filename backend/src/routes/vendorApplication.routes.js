@@ -13,14 +13,14 @@ import {
 } from "../../../shared/validations/vendorApplication.validations.js";
 const router = Router();
 
-router.get("/:page", authorise("super-admin"), getAllApplications);
-
 router.get(
     "/me",
     isAuthenticated,
     authorise("user"),
     getUserSpecificApplications,
 );
+
+router.get("/:page", authorise("super-admin"), getAllApplications);
 
 router.post(
     "/me",
