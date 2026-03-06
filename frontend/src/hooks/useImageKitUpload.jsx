@@ -28,11 +28,7 @@ const useImageKitUpload = () => {
         }
     };
 
-    const handleUpload = async (fileInput, email) => {
-        if (!email) {
-            alert("Email is required");
-            return;
-        }
+    const handleUpload = async (fileInput, customMetadata, folder) => {
         if (!fileInput || fileInput?.length === 0) {
             alert("Please select a file to upload");
             return;
@@ -56,11 +52,9 @@ const useImageKitUpload = () => {
                 } = await upload({
                     ...authParams[idx],
                     file,
-                    folder: "/support-attachments",
+                    folder,
                     fileName: file.name,
-                    customMetadata: {
-                        email,
-                    },
+                    customMetadata,
                     onProgress: (event) => {
                         setProgress((event.loaded / event.total) * 100);
                     },

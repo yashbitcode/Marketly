@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { AuthApi } from "../../../apis";
 import { Link } from "react-router";
+import { useState } from "react";
+import Loader from "../../loadings/Loader";
 
 const Register = () => {
     const {
@@ -14,6 +16,7 @@ const Register = () => {
     } = useForm({
         resolver: zodResolver(registerValidations),
     });
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data) => {
         try {
@@ -29,6 +32,8 @@ const Register = () => {
             toast.error(err?.response?.data?.message || "Something went wrong", {
                 position: "right-top",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,8 +99,20 @@ const Register = () => {
                     <Link to={"/login"} className="text-sm text-end -mt-2">
                         Already Have An Account?
                     </Link>
-                    <Button className="rounded-[8px] py-2 text-[1.1rem] bg-blue-400" type="submit">
-                        Register
+                    <Button
+                        className="flex justify-center items-center gap-4 rounded-[8px] py-2 text-[1.1rem] bg-blue-400"
+                        type="submit"
+                    >
+                        {loading ? (
+                            <>
+                                <div className="w-fit">
+                                    <Loader />
+                                </div>
+                                Loading...
+                            </>
+                        ) : (
+                            "Register"
+                        )}
                     </Button>
                 </form>
             </div>

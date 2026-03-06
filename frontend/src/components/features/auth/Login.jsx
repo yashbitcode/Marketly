@@ -6,11 +6,14 @@ import { loginValidations } from "../../../../../shared/validations/auth.validat
 import { Link, useLocation, useNavigate } from "react-router";
 import { AUTH_CHOICE } from "../../../utils/constants";
 import { useAuth } from "../../../hooks";
+import { useState } from "react";
+import Loader from "../../loadings/Loader";
 
 const Login = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const { setUser } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const { api: login } = AUTH_CHOICE[pathname.substring(1)];
 
@@ -23,6 +26,7 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
             const res = await login(data);
             console.log(res);
@@ -32,13 +36,15 @@ const Login = () => {
                     position: "right-top",
                 });
 
-                navigate("/dash", { replace: true });
+                navigate("/products", { replace: true });
                 setUser(res.data.data);
             }
         } catch (err) {
             toast.error(err?.response?.data?.message || "Something went wrong", {
                 position: "right-top",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -63,8 +69,20 @@ const Login = () => {
             <Link to={"/forgot-password"} className="text-sm text-end -mt-2">
                 Forgot Password?
             </Link>
-            <Button className="rounded-[8px] py-3 text-[1.1rem] bg-blue-400" type="submit">
-                Login
+            <Button
+                className="rounded-[8px] flex justify-center items-center gap-4 py-3 text-[1.1rem] bg-blue-400"
+                type="submit"
+            >
+                {loading ? (
+                    <>
+                        <div className="w-fit">
+                            <Loader />
+                        </div>
+                        Loading...
+                    </>
+                ) : (
+                    "Login"
+                )}
             </Button>
         </form>
     );

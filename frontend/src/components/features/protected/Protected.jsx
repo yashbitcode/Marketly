@@ -6,7 +6,7 @@ const Protected = ({ authenticate = true }) => {
 
     // if(loading) return <div>Loading...</div>;
 
-    if (user && !authenticate) return <Navigate to={"/dash"} replace />;
+    if (user && !authenticate) return <Navigate to={"/products"} replace />;
     if (!user && authenticate) return <Navigate to={"/login"} replace />;
 
     return <Outlet />;

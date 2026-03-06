@@ -25,9 +25,12 @@ const verifyToken = async (authHeader) => {
 };
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const { _id, vendorId, currentRole, tokenVersion } = await verifyToken(
-        req.get("Authorization"),
-    );
+    const token =
+        req.get("Authorization") ||
+        (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
+
+    const { _id, vendorId, currentRole, tokenVersion } =
+        await verifyToken(token);
 
     let payload;
 
@@ -41,14 +44,12 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
             );
             await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
         }
-        // console.log(payload);
     } else {
         payload = JSON.parse(await redisClient.get(`user:${_id}`));
+
         if (!payload) {
             payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
             await redisClient.set(`user:${_id}`, JSON.stringify(payload));
-
-            console.log(payload);
         }
     }
 

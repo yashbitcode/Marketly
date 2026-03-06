@@ -1,13 +1,33 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button, Container } from ".";
 import { BadgeQuestionMark, Handshake, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "../../hooks/";
+import toast from "react-hot-toast";
+import { AuthApi } from "../../apis";
 
 const BaseHeader = () => {
-    const { user, loading } = useAuth();
-    console.log(user);
+    const { user, setUser } = useAuth();
+    const navigate = useNavigate();
 
-    if (loading) return <div>loading...</div>;
+    const handleLogout = async () => {
+        try {
+            const res = await AuthApi.logout();
+
+            if (res?.data?.success) {
+                toast.success(res.data.message, {
+                    position: "right-top",
+                });
+
+                setUser(null);
+
+                navigate("/login", { replace: true });
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Something went wrong", {
+                position: "right-top",
+            });
+        }
+    };
 
     return (
         <div className="py-4 px-6 shadow-2xs w-full font-inter">
@@ -32,7 +52,7 @@ const BaseHeader = () => {
                         </Link>
                         <Link
                             className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
-                            to={"/"}
+                            to={"/support"}
                         >
                             <BadgeQuestionMark strokeWidth={1.8} />
                         </Link>
@@ -48,7 +68,7 @@ const BaseHeader = () => {
                                     </Button>
                                 </Link>
 
-                                <Link to="register">
+                                <Link to="/register">
                                     <Button
                                         variant="secondary"
                                         className="border-gray-300 text-gray-500 hover:text-white hover:bg-orange hover:border-orange"
@@ -58,12 +78,21 @@ const BaseHeader = () => {
                                 </Link>
                             </>
                         ) : (
-                            <div
-                                className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
-                                to={"/"}
-                            >
-                                <User strokeWidth={1.8} />
-                            </div>
+                            <>
+                                <Link
+                                    className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                    to={"/user"}
+                                >
+                                    <User strokeWidth={1.8} />
+                                </Link>
+                                <Button
+                                    onClick={handleLogout}
+                                    variant="secondary"
+                                    className="border-gray-300 text-gray-500 hover:text-white hover:bg-orange hover:border-orange"
+                                >
+                                    Logout
+                                </Button>
+                            </>
                         )}
                     </div>
                 </div>

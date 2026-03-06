@@ -24,9 +24,9 @@ const App = () => {
             <BrowserRouter>
                 <Routes>
                     <Route element={<MainBaseLayout />}>
-                        <Route index element={<Profile />} />
-                        <Route path="/support" element={<Support />} />
-                        <Route path="/products" element={<Products />} />
+                        <Route index element={<Homepage />} />
+                        <Route path="support" element={<Support />} />
+                        <Route path="products" element={<Products />} />
                         <Route element={<Protected authenticate={false} />}>
                             <Route element={<AuthLayout />}>
                                 <Route path="login" element={<Login />} />
@@ -39,9 +39,9 @@ const App = () => {
                             <Route path="verify-email/:sessionId" element={<VerifyEmail />} />
                         </Route>
 
-                        {/* <Route path="dash" element={<Protected />}>
-                            <Route index element={<ProductsFilter />} />
-                        </Route> */}
+                        <Route element={<Protected />}>
+                            <Route path="user" element={<Profile />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

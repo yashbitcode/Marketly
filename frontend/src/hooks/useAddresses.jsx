@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { CategoryApi } from "../apis";
+import { AddressesApi } from "../apis";
 import toast from "react-hot-toast";
 
-const useCategories = () => {
-    const [categories, setCategories] = useState(null);
+const useAddresses = () => {
+    const [addresses, setAddresses] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const categoriesRes = await CategoryApi.getAllCategories();
-                setCategories(categoriesRes?.data?.data);
+                const res = await AddressesApi.getAll();
+                if (res?.data?.success) setAddresses(res?.data?.data);
             } catch (err) {
                 toast.error(err?.response?.data?.message || "Something went wrong", {
                     position: "right-top",
@@ -20,7 +20,7 @@ const useCategories = () => {
         fetchData();
     }, []);
 
-    return { categories, setCategories };
+    return { addresses, setAddresses };
 };
 
-export default useCategories;
+export default useAddresses;

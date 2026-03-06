@@ -56,11 +56,14 @@ const GENERAL_USER_FIELDS = {
     tokenVersion: 1,
     phoneNumber: 1,
     isEmailVerified: 1,
+    avatar: 1,
 };
 
 const COOKIE_OPTIONS = {
-    // httpOnly: true,
-    // secure: true,
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
 };
 
 const REGEX = {

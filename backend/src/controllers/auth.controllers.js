@@ -78,7 +78,7 @@ const login = asyncHandler(async (req, res) => {
         fullname: user.fullname,
         email: user.email,
         username: user.username,
-        phone: user.phoneNumber,
+        phoneNumber: user.phoneNumber,
         role: user.role,
         avatar: user.avatar,
         isEmailVerified: user.isEmailVerified,
@@ -138,6 +138,8 @@ const logout = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const user = await userService.getUserById(_id);
 
+    console.log(user);
+
     user.refreshToken = "";
 
     await user.save({ validateBeforeSave: false });
@@ -148,8 +150,8 @@ const logout = asyncHandler(async (req, res) => {
             : `user:${_id}`;
     await redisClient.del(redisKey);
 
-    res.clearCookie("accessToken")
-        .clearCookie("refreshToken")
+    res.clearCookie("accessToken", COOKIE_OPTIONS)
+        .clearCookie("refreshToken", COOKIE_OPTIONS)
         .json(new ApiResponse(200, {}, "Logout successful"));
 });
 
@@ -174,7 +176,7 @@ const loginVendor = asyncHandler(async (req, res) => {
         fullname: vendorUser.fullname,
         email: vendorUser.email,
         username: vendorUser.username,
-        phone: vendorUser.phoneNumber,
+        phoneNumber: vendorUser.phoneNumber,
         role: vendorUser.role,
         avatar: vendorUser.avatar,
         isEmailVerified: vendorUser.isEmailVerified,
@@ -221,7 +223,7 @@ const loginSuperAdmin = asyncHandler(async (req, res) => {
         fullname: superAdmin.fullname,
         email: superAdmin.email,
         username: superAdmin.username,
-        phone: superAdmin.phoneNumber,
+        phoneNumber: superAdmin.phoneNumber,
         role: superAdmin.role,
         avatar: superAdmin.avatar,
         isEmailVerified: superAdmin.isEmailVerified,

@@ -15,6 +15,7 @@ const Support = () => {
         handleSubmit,
         setValue,
         watch,
+        reset,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(addSupportTicketClient),
@@ -28,7 +29,11 @@ const Support = () => {
         const { fullname, email, message, queryType, files } = data;
 
         try {
-            const uploadPromises = await handleUpload(files, email);
+            const uploadPromises = await handleUpload(
+                files,
+                { email_id: email },
+                "/support-attachments",
+            );
             const attachmentsData = await Promise.all(uploadPromises);
 
             const res = await SupportApi.createSupportTicket({
@@ -39,10 +44,13 @@ const Support = () => {
                 attachments: attachmentsData,
             });
 
-            if (res.data.success)
+            if (res.data.success) {
                 toast.success(res.data.message || "Support ticket created", {
                     position: "right-top",
                 });
+
+                reset();
+            }
         } catch {
             toast.error("Something went wrong", {
                 position: "right-top",

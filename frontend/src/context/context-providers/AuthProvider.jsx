@@ -23,15 +23,9 @@ const AuthProvider = ({ children }) => {
     const checkAuth = useCallback(async () => {
         if (user) return;
 
-        const token = getAccessToken();
-
-        if (!token) {
-            setAuth({ mainUser: null });
-            return;
-        }
-
         try {
             const res = await UserApi.me();
+            console.log(res);
             setAuth({ mainUser: res.data.data });
         } catch {
             console.log("Error");

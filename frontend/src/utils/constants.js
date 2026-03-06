@@ -25,11 +25,23 @@ export const apiEndpoints = {
         changePassword: "/auth/change-password",
         forgotPasswordLink: "/auth/forgot-password-link",
     },
+    vendorApplication: {
+        createApplication: "/vendor-application/me",
+        getAllUserApplications: "/vendor-application/me",
+    },
     user: {
         me: "/me",
+        updateUser: "/user",
     },
     category: {
         getAll: "/category/all",
+    },
+    addresses: {
+        getAll: "/address",
+        add: "/address",
+        update: "/address",
+        delete: "/address",
+        markDefault: "address/default",
     },
     product: {
         getFiltered: "/product/filter",

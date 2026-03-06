@@ -16,7 +16,7 @@ const createOrderValidations = z.object({
     prefills: z.object({
         name: z
             .string({
-                error: (iss) => !iss.input && "Name is required",
+                error: (iss) => console.log(iss),
             })
             .min(3, "Minimum length should be 3"),
         email: z

@@ -3,6 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button, Dropdown, Textarea } from "../../common";
 import { createVendorApplicationValidations } from "../../../../../shared/validations/vendorApplication.validations";
 import { VENDOR_TYPE } from "../../../../../shared/constants";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { VendorApplicationApi } from "../../../apis";
+import Loader from "../../loadings/Loader";
 
 const ApplyVendorModal = ({ onClose }) => {
     const {
@@ -14,11 +18,27 @@ const ApplyVendorModal = ({ onClose }) => {
     } = useForm({
         resolver: zodResolver(createVendorApplicationValidations),
     });
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log("Vendor Application:", data);
-        // call API here
-        onClose();
+        setLoading(true);
+
+        try {
+            const res = await VendorApplicationApi.createVendorApplication(data);
+            if (res.data.success) {
+                toast.success(res.data.message, {
+                    position: "right-top",
+                });
+
+                onClose();
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Something went wrong", {
+                position: "right-top",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -73,8 +93,21 @@ const ApplyVendorModal = ({ onClose }) => {
                             Cancel
                         </Button>
 
-                        <Button type="submit" disabled={isSubmitting}>
-                            Submit
+                        <Button
+                            type="submit"
+                            className="flex justify-center items-center gap-4"
+                            disabled={isSubmitting}
+                        >
+                            {loading ? (
+                                <>
+                                    <div className="w-fit">
+                                        <Loader />
+                                    </div>
+                                    Loading...
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     </div>
                 </form>

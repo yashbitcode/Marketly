@@ -42,6 +42,7 @@ const useProducts = () => {
 
     return {
         products,
+        setProducts,
         pageError,
         pageHandler,
         setSearchParams,

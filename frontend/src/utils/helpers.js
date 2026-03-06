@@ -11,6 +11,7 @@ export const formatPrice = (price) => {
 
 export const getAccessToken = () => {
     const cookie = document.cookie;
+    console.log(cookie);
     let accessToken;
 
     cookie.split("; ")?.forEach((el) => {

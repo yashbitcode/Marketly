@@ -7,9 +7,11 @@ import {
 } from "./constants.js";
 
 const baseMediaValidations = z.object({
-    fileId: z.string({
-        error: (iss) => !iss.input && "File ID is required",
-    }),
+    fileId: z
+        .string({
+            error: (iss) => !iss.input && "File ID is required",
+        })
+        .min(1, "File ID is required"),
     url: z.url({
         error: (iss) => (!iss.input ? "URL is required" : "Invalid URL"),
     }),
@@ -17,9 +19,11 @@ const baseMediaValidations = z.object({
         error: (iss) =>
             !iss.input ? "Thumbnail URL is required" : "Invalid thumbnail URL",
     }),
-    filename: z.string({
-        error: (iss) => !iss.input && "Filename is required",
-    }),
+    filename: z
+        .string({
+            error: (iss) => !iss.input && "Filename is required",
+        })
+        .min(1, "Filename is required"),
 });
 
 const addressValidations = z.object({
@@ -27,29 +31,41 @@ const addressValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Fullname is required",
         })
+        .min(1, "Fullname is required")
         .min(3, "Minimum length should be 3"),
     phoneNumber: z
         .string({
             error: (iss) => !iss.input && "Phone number is required",
         })
+        .min(1, "Phone number is required")
         .regex(REGEX.phoneNumber, "Invalid phone number"),
-    addressLine1: z.string({
-        error: (iss) => !iss.input && "Address Line is required",
-    }),
+    addressLine1: z
+        .string({
+            error: (iss) => !iss.input && "Address line 1 is required",
+        })
+        .min(1, "Address line 1 is required"),
 
-    addressLine2: z.string().min(10, "Minimum length should be 10").optional(),
-    city: z.string({
-        error: (iss) => !iss.input && "City is required",
-    }),
-    state: z.string({
-        error: (iss) => !iss.input && "State is required",
-    }),
-    postalCode: z.string({
-        error: (iss) => !iss.input && "Postal code is required",
-    }),
-    country: z.string({
-        error: (iss) => !iss.input && "Country is required",
-    }),
+    addressLine2: z.string().optional(),
+    city: z
+        .string({
+            error: (iss) => !iss.input && "City is required",
+        })
+        .min(1, "City is required"),
+    state: z
+        .string({
+            error: (iss) => !iss.input && "State is required",
+        })
+        .min(1, "State is required"),
+    postalCode: z
+        .string({
+            error: (iss) => !iss.input && "Postal code is required",
+        })
+        .min(1, "Postal code is required"),
+    country: z
+        .string({
+            error: (iss) => !iss.input && "Country is required",
+        })
+        .min(1, "Country is required"),
     addressType: z.enum(ADDRESS_TYPE, "Invalid address type").optional(),
 });
 
@@ -58,6 +74,7 @@ const parentCategoryValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Name is required",
         })
+        .min(1, "Name is required")
         .min(3, "Minimum length should be 3"),
 });
 
@@ -66,11 +83,13 @@ const subCategoryValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Name is required",
         })
+        .min(1, "Name is required")
         .min(3, "Minimum length should be 3"),
     parentCategory: z
         .string({
             error: (iss) => !iss.input && "Parent category ID is required",
         })
+        .min(1, "Parent category ID is required")
         .refine((val) => REGEX.objectId.test(val), {
             message: "Invalid parent category ID",
         }),
@@ -92,17 +111,20 @@ const baseVendor = z.object({
         .string({
             error: (iss) => !iss.input && "Store name is required",
         })
+        .min(1, "Store name is required")
         .min(3, "Minimum length should be 3")
         .max(20, "Maximum length can be 20"),
     fullname: z
         .string({
             error: (iss) => !iss.input && "Fullname is required",
         })
+        .min(1, "Fullname is required")
         .min(3, "Minimum length should be 3"),
     phoneNumber: z
         .string({
             error: (iss) => !iss.input && "Phone number is required",
         })
+        .min(1, "Phone number is required")
         .regex(REGEX.phoneNumber, "Invalid phone number"),
 });
 
@@ -163,11 +185,13 @@ const baseProductValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Product name is required",
         })
+        .min(1, "Product name is required")
         .min(3, "Minimum length should be 3"),
     brandName: z
         .string({
             error: (iss) => !iss.input && "Brand name is required",
         })
+        .min(1, "Brand name is required")
         .min(3, "Minimum length should be 3"),
     price: z
         .number({
@@ -185,6 +209,7 @@ const baseProductValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Category ID is required",
         })
+        .min(1, "Category ID is required")
         .refine((val) => REGEX.objectId.test(val), {
             message: "Invalid category ID",
         }),
@@ -199,6 +224,7 @@ const baseProductValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Description is required",
         })
+        .min(1, "Description is required")
         .min(20, "Minimum length should be 20"),
     pros: z
         .array(z.string(), {
