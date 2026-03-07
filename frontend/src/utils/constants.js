@@ -45,6 +45,10 @@ export const apiEndpoints = {
     },
     product: {
         getFiltered: "/product/filter",
+        specific: "/product/slug",
+    },
+    review: {
+        getAll: "/review/product",
     },
     media: {
         getAuthParams: "/media",
@@ -53,6 +57,8 @@ export const apiEndpoints = {
         createTicket: "/support",
     },
 };
+
+export const tabs = ["Description", "Vendor", "Reviews"];
 
 export const loadingMessages = [
     "Preparing amazing deals for you...",

@@ -5,3 +5,4 @@ export { default as useProducts } from "./useProducts";
 export { default as useTokenInput } from "./useTokenInput";
 export { default as useVerifyToken } from "./useVerifyToken";
 export { default as useAddresses } from "./useAddresses";
+export { default as useReviews } from "./useReviews";

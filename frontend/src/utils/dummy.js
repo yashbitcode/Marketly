@@ -195,3 +195,150 @@ export const ALL_SUB_CATEGORIES = [
     "Fiction",
     "Skincare",
 ];
+
+export const product = {
+    _id: "69a426b949f2b13df22f80c1",
+    name: "Wooden Study Table",
+    price: 8999,
+    category: {
+        _id: "69a423ed5b41f3977d760b3c",
+        name: "home decor",
+        parentCategory: {
+            _id: "69a42343e1c0a2123c83d0e2",
+            name: "home & kitchen",
+            slug: "home-and-kitchen",
+            __v: 0,
+            createdAt: "2026-03-01T11:30:11.703Z",
+            updatedAt: "2026-03-01T11:30:11.703Z",
+        },
+        slug: "home-decor",
+        __v: 0,
+        createdAt: "2026-03-01T11:33:01.494Z",
+        updatedAt: "2026-03-01T11:33:01.494Z",
+    },
+    vendor: {
+        _id: "6953cd93456f0bcb6a034329",
+        vendorType: "individual",
+        avatar: "https://reu.com",
+        storeName: "sds",
+        fullname: "dsjds",
+        accountStatus: "active",
+        phoneNumber: "+919999999999",
+        metrics: {
+            avgCustomerRating: 0,
+            totalOrders: 0,
+            fulfilledOrders: 0,
+            rejectedOrders: 0,
+        },
+        createdAt: "2025-12-30T13:03:15.888Z",
+        updatedAt: "2025-12-30T13:03:15.888Z",
+        __v: 0,
+        stripeAccountId: "acct_1SvKqTQTRD3a16mE",
+    },
+    brandName: "Urban Ladder",
+    currency: "₹",
+    approval: {
+        status: "accepted",
+    },
+    description: "Durable wooden study table designed for home office and study purposes.",
+    pros: ["Strong build", "Spacious surface"],
+    cons: ["Assembly required"],
+    keyFeatures: ["Engineered wood", "Modern design"],
+    images: [
+        {
+            fileId: "p33",
+            url: "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp",
+            thumbnailUrl:
+                "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp",
+            filename: "table.webp",
+        },
+    ],
+    stockQuantity: 9,
+    isActive: true,
+    attributes: [
+        {
+            name: "Length",
+            dataType: "number",
+            isVariant: false,
+            value: 120,
+        },
+    ],
+    slug: "wooden-study-table-05imDQ",
+    __v: 0,
+    createdAt: "2026-03-01T11:44:58.006Z",
+    updatedAt: "2026-03-01T12:55:23.945Z",
+    avgRating: 4.4,
+};
+
+export const product2 = {
+    name: "AirFlow Pro X Wireless Headphones",
+    brandName: "SoundForge",
+    price: 4299,
+    originalPrice: 6999,
+    currency: "₹",
+    rating: 4.4,
+    reviewCount: 2318,
+    stockQuantity: 34,
+    category: "Electronics › Audio › Headphones",
+    slug: "airflow-pro-x-wireless-headphones",
+    description:
+        "Experience audio the way it was meant to be heard. The AirFlow Pro X delivers studio-quality sound with 40mm custom-tuned drivers, active noise cancellation rated at -35dB, and a 30-hour battery life that keeps up with your marathon sessions. Built with aerospace-grade aluminum and premium memory foam ear cushions, this headphone is a masterpiece of engineering and acoustics. Whether you're deep in focus mode or vibing to your favorite playlist, the AirFlow Pro X wraps you in a personal soundstage that blocks out the world.",
+    keyFeatures: [
+        "40mm Custom-Tuned Neodymium Drivers",
+        "Active Noise Cancellation — up to -35dB",
+        "30-Hour Battery Life with Fast Charge",
+        "Bluetooth 5.3 with multipoint pairing",
+        "Foldable aerospace-grade aluminum frame",
+        "Hi-Res Audio & LDAC Certified",
+    ],
+    pros: [
+        "Exceptional noise cancellation for the price",
+        "Rich, balanced sound with deep bass",
+        "Comfortable for extended wear sessions",
+        "Premium build quality and materials",
+        "Transparent mode is natural and clear",
+    ],
+    cons: [
+        "Carrying case feels plasticky",
+        "Companion app has limited EQ presets",
+        "Slightly tight clamping force initially",
+    ],
+    attributes: [
+        { name: "Color", isVariant: true, value: ["Midnight Black", "Pearl White", "Navy Blue"] },
+        { name: "Connectivity", isVariant: false, value: "Bluetooth 5.3 + 3.5mm AUX" },
+        { name: "Driver Size", isVariant: false, value: "40mm" },
+        { name: "Frequency Response", isVariant: false, value: "20Hz – 20kHz" },
+        { name: "Weight", isVariant: false, value: "285g" },
+        { name: "Warranty", isVariant: false, value: "2 Years" },
+    ],
+    images: [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+        "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&q=80",
+        "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=600&q=80",
+        "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&q=80",
+    ],
+};
+
+export const reviews = [
+    {
+        user: "Rohan M.",
+        rating: 5,
+        date: "Feb 12, 2025",
+        text: "Absolutely blown away by the ANC. Can't hear a thing on my commute anymore. Best purchase of 2025.",
+        helpful: 84,
+    },
+    {
+        user: "Priya S.",
+        rating: 4,
+        date: "Jan 28, 2025",
+        text: "Sound quality is phenomenal. The bass hits hard without muddying the mids. Only wish the app had more EQ options.",
+        helpful: 61,
+    },
+    {
+        user: "Arjun K.",
+        rating: 4,
+        date: "Jan 15, 2025",
+        text: "Wore these for a 6-hour flight and my ears never hurt. Insanely comfortable. The build quality feels super premium.",
+        helpful: 47,
+    },
+];

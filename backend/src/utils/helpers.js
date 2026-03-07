@@ -255,6 +255,23 @@ const getProductBasePipeline = () => {
                 localField: "_id",
                 foreignField: "product",
                 as: "reviews",
+                // pipeline: [
+                //     {
+                //         $lookup: {
+                //             from: "user",
+                //             localField: "reviews.user",
+                //             foreignField: "_id",
+                //             as: "reviews.user",
+                //         },
+                //     },
+                //     {
+                //         $addFields: {
+                //             user: {
+                //                 $arrayElemAt: ["$reviews.user", 0],
+                //             },
+                //         },
+                //     },
+                // ],
             },
         },
         {
@@ -264,9 +281,9 @@ const getProductBasePipeline = () => {
                 },
             },
         },
-        {
-            $unset: ["reviews"],
-        },
+        // {
+        //     $unset: ["reviews"],
+        // },
     ];
 };
 

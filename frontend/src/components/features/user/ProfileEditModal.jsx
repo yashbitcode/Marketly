@@ -27,14 +27,19 @@ const ProfileEditModal = ({ user, onClose }) => {
 
     const onSubmit = async (data) => {
         const { fullname, phoneNumber, file } = data;
+        const payload = { fullname, phoneNumber };
 
         setLoading(true);
 
         try {
-            const filePromise = await handleUpload(file, { user: user._id }, "/avatars");
-            const fileData = await Promise.all(filePromise);
+            if (file && file?.length !== 0) {
+                const filePromise = await handleUpload(file, { user: user._id }, "/avatars");
+                const fileData = await Promise.all(filePromise);
 
-            const res = await UserApi.updateUser({ fullname, phoneNumber, avatar: fileData[0] });
+                payload.avatar = fileData[0];
+            }
+
+            const res = await UserApi.updateUser(payload);
 
             if (res.data.success) {
                 console.log(res.data.data);

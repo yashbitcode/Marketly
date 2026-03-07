@@ -22,17 +22,26 @@ class ProductService {
         return products;
     }
 
-    async getProduct(filters = {}) {
-        const products = await Product.findOne(filters)
-            .populate("vendor")
-            .populate({
-                path: "vendor",
-                populate: {
-                    path: "parentCategory",
-                },
-            });
+    async getProduct(matchStage = {}) {
+        // const products = await Product.findOne(filters)
+        //     .populate("vendor")
+        //     .populate({
+        //         path: "category",
+        //         populate: {
+        //             path: "parentCategory",
+        //         },
+        //     });
+        const baseProductPipeline = getProductBasePipeline();
+        const [product] = await Product.aggregate([
+            {
+                $match: matchStage,
+            },
+            ...baseProductPipeline,
+        ]);
 
-        return products;
+        console.log(product);
+
+        return product;
     }
 
     async addProduct(vendorId, payload) {

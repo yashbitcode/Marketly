@@ -1,10 +1,15 @@
+import { useNavigate } from "react-router";
 import { formatPrice, trimStr } from "../../../utils/helpers";
 import { Button } from "../../common";
 import RenderStars from "../base-star/RenderStars";
 
-const ProductCard = ({ name, brandName, price, images, avgRating }) => {
+const ProductCard = ({ name, brandName, price, slug, images, avgRating }) => {
+    const navigate = useNavigate();
     return (
-        <div className="p-4 bg-white w-full rounded-[10px] max-w-72 font-inter hover:scale-102 transition-all shadow-base cursor-pointer">
+        <div
+            className="p-4 bg-white w-full rounded-[10px] max-w-72 font-inter hover:scale-102 transition-all shadow-base cursor-pointer"
+            onClick={() => navigate("/product/" + slug)}
+        >
             <div className="w-full max-w-50 mx-auto">
                 <img src={images[0].url} alt={name} className="w-full" />
             </div>

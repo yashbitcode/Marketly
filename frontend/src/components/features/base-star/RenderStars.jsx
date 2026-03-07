@@ -1,6 +1,6 @@
 import Star from "./Star";
 
-const RenderStars = ({ avgRating }) => {
+const RenderStars = ({ avgRating, starSize = 15 }) => {
     let tempRating = avgRating;
 
     return (
@@ -14,7 +14,7 @@ const RenderStars = ({ avgRating }) => {
                     tempRating = 0;
                 }
 
-                return <Star key={idx} size={15} fill={fill} />;
+                return <Star key={idx} size={starSize} fill={fill} />;
             })}
 
             <span className="text-gray-500 ">({avgRating})</span>

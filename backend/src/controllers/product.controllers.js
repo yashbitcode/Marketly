@@ -68,14 +68,18 @@ const getSpecificProduct = asyncHandler(async (req, res) => {
 
     if (!slug) new ApiError(400, "Slug is required");
 
-    let product = await redisClient.get(`product:${slug}`);
+    // let product = await redisClient.get(`product:${slug}`);
 
-    if (product)
-        return res.json(
-            new ApiResponse(200, product, "Product fetched successfully"),
-        );
+    // if (product)
+    //     return res.json(
+    //         new ApiResponse(
+    //             200,
+    //             JSON.parse(product),
+    //             "Product fetched successfully",
+    //         ),
+    //     );
 
-    product = await productService.getProduct({
+    const product = await productService.getProduct({
         slug,
         "approval.status": "accepted",
         isActive: true,

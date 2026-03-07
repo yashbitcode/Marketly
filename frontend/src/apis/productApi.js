@@ -6,6 +6,7 @@ const ProductApi = {
         await axiosClient.get(apiEndpoints.product.getFiltered + `/${page}`, {
             params: filters,
         }),
+    getSpecific: async (slug) => await axiosClient.get(apiEndpoints.product.specific + `/${slug}`),
 };
 
 export default ProductApi;

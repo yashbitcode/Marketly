@@ -4,7 +4,7 @@ import { registerValidations } from "../../../../../shared/validations/auth.vali
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { AuthApi } from "../../../apis";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import Loader from "../../loadings/Loader";
 
@@ -17,16 +17,19 @@ const Register = () => {
         resolver: zodResolver(registerValidations),
     });
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         try {
             const res = await AuthApi.register(data);
             console.log(res);
 
-            if (res.data.success) {
+            if (res?.data?.success) {
                 toast.success(res.data.message, {
                     position: "right-top",
                 });
+
+                navigate(`/verify-email/${res.data.data.sessionId}`, { replace: true });
             }
         } catch (err) {
             toast.error(err?.response?.data?.message || "Something went wrong", {

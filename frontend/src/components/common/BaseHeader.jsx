@@ -32,9 +32,9 @@ const BaseHeader = () => {
     return (
         <div className="py-4 px-6 shadow-2xs w-full font-inter">
             <Container className="flex justify-between mx-auto">
-                <div className="w-full max-w-23">
+                <Link to="/" className="w-full max-w-23 cursor-pointer">
                     <img src="/logo3.jpg" alt="logo" className="w-full object-cover" />
-                </div>
+                </Link>
 
                 <div className="w-full max-w-4xl flex gap-3 items-center justify-end">
                     <div className="flex gap-3 items-center ml-5 text-sm font-semibold">
