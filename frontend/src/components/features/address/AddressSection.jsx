@@ -1,42 +1,40 @@
 import { useState } from "react";
 import AddressCard from "./AddressCard";
-import { useAddresses } from "../../../hooks";
+import { useAddresses, useAuth } from "../../../hooks";
 import AddressModal from "./AddressModal";
 import { Button } from "../../common";
 import { Plus } from "lucide-react";
 import { AddressesApi } from "../../../apis";
-import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
 const AddressSection = () => {
+    const { user } = useAuth();
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const { addresses, setAddresses } = useAddresses();
+    const queryClient = useQueryClient();
     const [updateAddress, setUpdateAddress] = useState(null);
+
+    const mutation = useMutation({
+        mutationFn: (addressId) => AddressesApi.markDefault(addressId),
+        onSuccess: (res, addressId) => {
+            console.log(res);
+            queryClient.setQueryData(["addresses", user._id], (prev) => {
+                const updatedAddresses = prev?.data.map((address) => {
+                    if (address._id === addressId) return { ...address, isDefault: true };
+                    else return { ...address, isDefault: false };
+                });
+                return { ...prev, data: updatedAddresses };
+            });
+            SuccessToast(res.message);
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
 
     const markAddressAsDefault = async (addressId) => {
         if (!confirm("Do you want to mark this address as default?")) return;
 
-        try {
-            const res = await AddressesApi.markDefault(addressId);
-            if (res?.data?.success) {
-                setAddresses((prev) => {
-                    return prev.map((address) => {
-                        if (address._id === addressId) {
-                            return { ...address, isDefault: true };
-                        } else {
-                            return { ...address, isDefault: false };
-                        }
-                    });
-                });
-
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        }
+        mutation.mutate(addressId);
     };
 
     const handleEditAddress = (address) => {
@@ -84,7 +82,6 @@ const AddressSection = () => {
             {isAddressModalOpen && (
                 <AddressModal
                     onClose={() => setIsAddressModalOpen(false)}
-                    setAddresses={setAddresses}
                     updateAddress={updateAddress}
                     setUpdateAddress={setUpdateAddress}
                 />

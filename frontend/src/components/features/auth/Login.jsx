@@ -8,14 +8,29 @@ import { AUTH_CHOICE } from "../../../utils/constants";
 import { useAuth } from "../../../hooks";
 import { useState } from "react";
 import Loader from "../../loadings/Loader";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
 const Login = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const { setUser } = useAuth();
-    const [loading, setLoading] = useState(false);
 
     const { api: login } = AUTH_CHOICE[pathname.substring(1)];
+
+    const mutation = useMutation({
+        mutationFn: (data) => login(data),
+        onSuccess: (res) => {
+            if (res?.success) {
+                SuccessToast(res.message);
+                navigate("/products", { replace: true });
+                setUser(res);
+            }
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Something went wrong");
+        },
+    });
 
     const {
         register,
@@ -25,27 +40,8 @@ const Login = () => {
         resolver: zodResolver(loginValidations),
     });
 
-    const onSubmit = async (data) => {
-        setLoading(true);
-        try {
-            const res = await login(data);
-            console.log(res);
-
-            if (res.data.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-
-                navigate("/products", { replace: true });
-                setUser(res.data.data);
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        } finally {
-            setLoading(false);
-        }
+    const onSubmit = (data) => {
+        mutation.mutate(data);
     };
 
     return (
@@ -73,7 +69,7 @@ const Login = () => {
                 className="rounded-[8px] flex justify-center items-center gap-4 py-3 text-[1.1rem] bg-blue-400"
                 type="submit"
             >
-                {loading ? (
+                {mutation.isPending ? (
                     <>
                         <div className="w-fit">
                             <Loader />

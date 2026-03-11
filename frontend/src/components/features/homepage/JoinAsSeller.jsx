@@ -23,17 +23,10 @@ const JoinAsSeller = () => {
                             key={el.title}
                         >
                             <div className="size-10 flex justify-center items-center rounded-full bg-light-green">
-                                {
-                                    <el.icon
-                                        className="text-green"
-                                        strokeWidth={2.5}
-                                    />
-                                }
+                                {<el.icon className="text-green" strokeWidth={2.5} />}
                             </div>
                             <div>
-                                <h1 className="italic font-medium">
-                                    {el.title}
-                                </h1>
+                                <h1 className="italic font-medium">{el.title}</h1>
                                 <span>{el.desc}</span>
                             </div>
                         </div>

@@ -4,11 +4,13 @@ import { Input, Button, Dropdown } from "../../common";
 import { addAddressValidations } from "../../../../../shared/validations/address.validations";
 import { ADDRESS_TYPE } from "../../../../../shared/constants";
 import { AddressesApi } from "../../../apis";
-import toast from "react-hot-toast";
-import { useState } from "react";
 import Loader from "../../loadings/Loader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../../hooks";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
-const AddressModal = ({ onClose, setAddresses, updateAddress, setUpdateAddress }) => {
+const AddressModal = ({ onClose, updateAddress, setUpdateAddress }) => {
+    const { user } = useAuth();
     const {
         register,
         handleSubmit,
@@ -30,41 +32,35 @@ const AddressModal = ({ onClose, setAddresses, updateAddress, setUpdateAddress }
         },
     });
 
-    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (data) => {
+            if (updateAddress) return AddressesApi.update(updateAddress._id, data);
+            else return AddressesApi.add(data);
+        },
+        onSuccess: (res) => {
+            queryClient.setQueryData(["addresses", user._id], (prev) => {
+                const updatedAddresses = prev?.data.map((addr) =>
+                    addr._id === updateAddress?._id ? res.data : addr,
+                );
+
+                return { ...prev, data: updatedAddresses };
+            });
+
+            setUpdateAddress(null);
+            SuccessToast(res.message);
+            onClose();
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
 
     const onSubmit = async (data) => {
-        setLoading(true);
-
-        console.log("Address Data:", data);
-        try {
-            if (updateAddress) {
-                const res = await AddressesApi.update(updateAddress._id, data);
-                if (res?.data?.success) {
-                    setAddresses((prev) =>
-                        prev.map((addr) => (addr._id === updateAddress._id ? res.data.data : addr)),
-                    );
-                    setUpdateAddress(null);
-                    onClose();
-                }
-            } else {
-                const res = await AddressesApi.add(data);
-
-                if (res?.data?.success) {
-                    setAddresses((prev) => [...prev, res.data.data]);
-                    onClose();
-                }
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        } finally {
-            setLoading(false);
-        }
+        mutation.mutate(data);
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 overflow-y-auto p-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50  h-full p-4">
             <div className="bg-white rounded-base p-6 w-full max-w-lg my-10">
                 <h3 className="text-lg font-semibold mb-6">Add New Address</h3>
 
@@ -146,7 +142,7 @@ const AddressModal = ({ onClose, setAddresses, updateAddress, setUpdateAddress }
                             className="flex justify-center items-center gap-4"
                             disabled={isSubmitting}
                         >
-                            {loading ? (
+                            {mutation.isPending ? (
                                 <>
                                     <div className="w-fit">
                                         <Loader />

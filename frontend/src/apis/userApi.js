@@ -2,9 +2,9 @@ import axiosClient from "../config/axiosClient";
 import { apiEndpoints } from "../utils/constants";
 
 const UserApi = {
-    me: async () => axiosClient.get(apiEndpoints.user.me),
+    me: async () => (await axiosClient.get(apiEndpoints.user.me)).data,
     updateUser: async (payload) =>
-        axiosClient.patch(apiEndpoints.user.updateUser, payload, { withCredentials: true }),
+        (await axiosClient.patch(apiEndpoints.user.updateUser, payload)).data,
 };
 
 export default UserApi;

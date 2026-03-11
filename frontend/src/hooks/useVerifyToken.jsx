@@ -1,28 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 
 const useVerifyToken = (verifyApi, token) => {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
 
-    const verifyToken = useCallback(async () => {
-        try {
-            const res = await verifyApi(token);
-
-            if (res.data.success) setLoading(false);
-            else navigate("/login", { replace: true });
-        } catch {
+    const { isLoading } = useQuery(["verifyToken", token], () => verifyApi(token), {
+        enabled: !!token,
+        onSuccess: (res) => {
+            if (!res.success) {
+                navigate("/login", { replace: true });
+            }
+        },
+        onError: () => {
             navigate("/login", { replace: true });
-        } finally {
-            setLoading(false);
-        }
-    }, [navigate, token, verifyApi]);
+        },
+    });
 
-    useEffect(() => {
-        verifyToken();
-    }, [token, verifyToken]);
-
-    return { loading, navigate };
+    return { loading: isLoading, navigate };
 };
 
 export default useVerifyToken;

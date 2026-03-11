@@ -1,26 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CategoryApi } from "../apis";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { ErrorToast } from "../utils/toasts";
 
 const useCategories = () => {
-    const [categories, setCategories] = useState(null);
+    const { isError, isPending, error, data } = useQuery({
+        queryKey: ["category"],
+        queryFn: CategoryApi.getAllCategories,
+    });
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const categoriesRes = await CategoryApi.getAllCategories();
-                setCategories(categoriesRes?.data?.data);
-            } catch (err) {
-                toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top",
-                });
-            }
-        };
+        if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
+    }, [isError, error]);
 
-        fetchData();
-    }, []);
-
-    return { categories, setCategories };
+    return { categories: data?.data, loading: isPending };
 };
 
 export default useCategories;

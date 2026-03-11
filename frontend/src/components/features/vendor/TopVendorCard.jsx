@@ -6,11 +6,7 @@ const TopVendorCard = ({ storeName, storeImg, avgRating }) => {
     return (
         <div className="shadow-base p-4 rounded-base w-full max-w-60 flex flex-col items-center gap-2">
             <div className="size-15 flex justify-center items-center rounded-full bg-base-white p-4 mx-auto ">
-                <img
-                    src={storeImg}
-                    alt={storeName}
-                    className="w-full max-w-10"
-                />
+                <img src={storeImg} alt={storeName} className="w-full max-w-10" />
             </div>
             <h1 className="text-xl font-medium">{storeName}</h1>
 

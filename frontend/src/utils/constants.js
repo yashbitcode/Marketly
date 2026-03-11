@@ -49,6 +49,7 @@ export const apiEndpoints = {
     },
     review: {
         getAll: "/review/product",
+        add: "/review/product",
     },
     media: {
         getAuthParams: "/media",

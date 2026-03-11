@@ -1,24 +1,28 @@
-import toast from "react-hot-toast";
 import { Button } from "../../common";
 import { AddressesApi } from "../../../apis";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../../../hooks";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
-const AddressCard = ({ address, markAddressAsDefault, handleEditAddress, setAddresses }) => {
+const AddressCard = ({ address, markAddressAsDefault, handleEditAddress }) => {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: (addressId) => AddressesApi.delete(addressId),
+        onSuccess: (res, addressId) => {
+            queryClient.setQueryData(["addresses", user._id], (prev) => {
+                const updatedAddresses = prev?.data.filter((address) => address._id !== addressId);
+                return { ...prev, data: updatedAddresses };
+            });
+
+            SuccessToast(res.message);
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
+
     const handleDeleteAddress = async (addressId) => {
         if (!confirm("Are you sure you want to delete this address?")) return;
-        try {
-            const res = await AddressesApi.delete(addressId);
-
-            if (res?.data?.success) {
-                setAddresses((prev) => prev.filter((addr) => addr._id !== addressId));
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        }
+        mutation.mutate(addressId);
     };
     return (
         <div

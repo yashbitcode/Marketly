@@ -1,49 +1,72 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router";
 import { PAGINATION_LIMIT } from "../../../shared/constants";
-import toast from "react-hot-toast";
 import { ProductApi } from "../apis";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useProducts = () => {
-    const [products, setProducts] = useState(null);
+    // const [products, setProducts] = useState(null);
     const [page, setPage] = useState(1);
-    const [pageError, setPageError] = useState(null);
+    const queryClient = useQueryClient();
+    // const [pageError, setPageError] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const [search, setSearch] = useState(() => searchParams.get("searchQuery") || "");
 
-    const pageHandler = (pageNum) => {
+    const { isPending, isError, error, data } = useQuery({
+        queryKey: ["products", page, Object.fromEntries([...searchParams])],
+        queryFn: async () => {
+            const { data } = await ProductApi.getAllFilteredProducts(
+                Object.fromEntries([...searchParams]),
+                page,
+            );
+
+            if (Math.ceil(data?.totalCount || 1 / PAGINATION_LIMIT) >= page)
+                return data?.data ? data : [];
+            else throw new Error("Invalid Page Number");
+        },
+    });
+
+    const pageHandler = useCallback((pageNum) => {
         setPage(pageNum);
-    };
+    }, []);
 
-    const searchHandler = (e) => setSearch(e.target.value);
+    const searchHandler = useCallback((e) => {
+        setSearch(e.target.value);
+    }, []);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setPageError(null);
+    const setProducts = useCallback(() => {
+        queryClient.invalidateQueries({ queryKey: ["products", page, searchParams] });
+    }, [page, searchParams, queryClient]);
 
-                const { data } = await ProductApi.getAllFilteredProducts(
-                    Object.fromEntries([...searchParams]),
-                    page,
-                );
+    // useEffect(() => {
+    // const fetchProducts = async () => {
+    //     try {
+    //         setPageError(null);
 
-                if (Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page)
-                    setProducts(data?.data || []);
-                else setPageError("Invalid Page Number");
-            } catch (err) {
-                toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top",
-                });
-            }
-        };
+    //         const { data } = await ProductApi.getAllFilteredProducts(
+    //             Object.fromEntries([...searchParams]),
+    //             page,
+    //         );
 
-        fetchProducts();
-    }, [page, searchParams]);
+    //         if (Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page)
+    //             setProducts(data?.data || []);
+    //         else setPageError("Invalid Page Number");
+    //     } catch (err) {
+    //         toast.error(err?.response?.data?.message || "Something went wrong", {
+    //             position: "right-top",
+    //         });
+    //     }
+    // };
+
+    // fetchProducts();
+    // }, [page, searchParams]);
 
     return {
-        products,
+        products: data,
         setProducts,
-        pageError,
+        loading: isPending,
+        isError,
+        error: error?.message,
         pageHandler,
         setSearchParams,
         searchParams,
@@ -51,6 +74,17 @@ const useProducts = () => {
         search,
         searchHandler,
     };
+    // return {
+    //     products,
+    //     setProducts,
+    //     pageError,
+    //     pageHandler,
+    //     setSearchParams,
+    //     searchParams,
+    //     page,
+    //     search,
+    //     searchHandler,
+    // };
 };
 
 export default useProducts;

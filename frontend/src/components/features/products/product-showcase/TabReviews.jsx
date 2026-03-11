@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router";
 import ReviewCard from "../ReviewCard";
 import { Button } from "../../../common";
+import { memo } from "react";
 
 const TabReviews = ({ reviews, slug }) => {
     const navigate = useNavigate();
-    console.log(reviews);
 
     return (
         <div className="w-full">
@@ -26,4 +26,4 @@ const TabReviews = ({ reviews, slug }) => {
     );
 };
 
-export default TabReviews;
+export default memo(TabReviews);

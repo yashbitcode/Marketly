@@ -1,11 +1,12 @@
 import { Button, Input } from "../../common";
-import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPasswordValidations } from "../../../../../shared/validations/auth.validations";
 import { useParams } from "react-router";
-import {AuthApi} from "../../../apis";
+import { AuthApi } from "../../../apis";
 import { useVerifyToken } from "../../../hooks";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
 const ResetPassword = () => {
     const { token } = useParams();
@@ -19,23 +20,23 @@ const ResetPassword = () => {
         resolver: zodResolver(resetPasswordValidations),
     });
 
-    const onSubmit = async (data) => {
-        try {
-            const res = await AuthApi.resetPassword(token, data);
-
-            if (res.data.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
+    const mutation = useMutation({
+        mutationFn: (data) => AuthApi.resetPassword(token, data),
+        onSuccess: (res) => {
+            if (res.success) {
+                SuccessToast(res.message);
                 setTimeout(() => navigate("/login", { replace: true }), 500);
             } else {
-                toast.error(res.data.message);
+                ErrorToast(res.message);
             }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        }
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Something went wrong");
+        },
+    });
+
+    const onSubmit = (data) => {
+        mutation.mutate(data);
     };
 
     if (loading) return <div>loading...</div>;
@@ -58,8 +59,12 @@ const ResetPassword = () => {
                 {...register("confirmPassword")}
                 error={errors?.confirmPassword?.message}
             />
-            <Button className="rounded-[8px] py-3 mt-2 text-[1.1rem] bg-blue-400" type="submit">
-                Reset Password
+            <Button
+                className="rounded-[8px] py-3 mt-2 text-[1.1rem] bg-blue-400"
+                type="submit"
+                disabled={mutation.isPending}
+            >
+                {mutation.isPending ? "Resetting..." : "Reset Password"}
             </Button>
         </form>
     );

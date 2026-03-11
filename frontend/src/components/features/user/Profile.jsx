@@ -10,6 +10,8 @@ import { VendorApplicationApi } from "../../../apis";
 import toast from "react-hot-toast";
 import { getFormatedStr } from "../../../utils/helpers";
 import AddressSection from "../address/AddressSection";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ErrorToast } from "../../../utils/toasts";
 
 const ProfileField = ({ label, value, full }) => (
     <div className={full ? "col-span-2" : ""}>
@@ -23,25 +25,15 @@ const Profile = () => {
 
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const [isApplyVendorOpen, setIsApplyVendorOpen] = useState(false);
-    const [vendorApplications, setVendorApplications] = useState(null);
     const { user } = useAuth();
+    const { isError, error, data } = useQuery({
+        queryKey: ["user-vendor-applications", user._id],
+        queryFn: VendorApplicationApi.getAllUserApplications,
+    });
 
     useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                const res = await VendorApplicationApi.getAllUserApplications();
-
-                if (res?.data?.success) setVendorApplications(res.data.data);
-            } catch (err) {
-                console.log(err);
-                toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top",
-                });
-            }
-        };
-
-        fetchApplications();
-    }, []);
+        if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
+    }, [isError, error]);
 
     return (
         <Container className="max-w-4xl mx-auto p-6 space-y-8 font-inter">
@@ -111,11 +103,11 @@ const Profile = () => {
                 <ChangePasswordModal onClose={() => setIsChangePasswordOpen(false)} />
             )}
 
-            {isApplyVendorOpen && <ApplyVendorModal onClose={() => setIsApplyVendorOpen(false)} />}
-
-            {vendorApplications?.length > 0 && (
-                <VendorApplicationsSection applications={vendorApplications} />
+            {isApplyVendorOpen && (
+                <ApplyVendorModal onClose={() => setIsApplyVendorOpen(false)} userId={user._id} />
             )}
+
+            {data?.data?.length > 0 && <VendorApplicationsSection applications={data.data} />}
 
             {isOpen && <ProfileEditModal user={user} onClose={() => setIsOpen(false)} />}
         </Container>

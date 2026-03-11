@@ -1,49 +1,41 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import AuthContext from "../AuthContext";
-import { getAccessToken } from "../../utils/helpers";
 import { UserApi } from "../../apis";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
 
-    const setAuth = useCallback(({ mainUser }) => {
-        setUser(mainUser);
+    const { isError, isPending, error, data } = useQuery({
+        queryKey: ["user"],
+        queryFn: async () => {
+            console.log("Fetching user data...");
+            return await UserApi.me();
+        },
+    });
 
-        setTimeout(() => {
-            setLoading(false);
-        }, 700);
-    }, []);
+    console.log({ isError, isPending, error, data });
 
-    // const logout = useCallback(() => {
-    //     localStorage.removeItem("accessToken");
-    //     localStorage.removeItem("refreshToken");
-    // }, []);
-
-    const checkAuth = useCallback(async () => {
-        if (user) return;
-
-        try {
-            const res = await UserApi.me();
-            console.log(res);
-            setAuth({ mainUser: res.data.data });
-        } catch {
-            console.log("Error");
-        } finally {
-            setTimeout(() => {
-                setLoading(false);
-            }, 700);
-        }
-    }, [setAuth, user]);
-
-    useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
-
-    // console.log(user)
+    const setUser = useCallback(
+        (mainUser) => {
+            console.log(mainUser);
+            queryClient.setQueryData(["user"], mainUser);
+        },
+        [queryClient],
+    );
 
     return (
-        <AuthContext.Provider value={{ user, loading, setUser }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider
+            value={{
+                user: data?.data,
+                loading: isPending,
+                isError,
+                error: error?.message,
+                setUser,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
     );
 };
 

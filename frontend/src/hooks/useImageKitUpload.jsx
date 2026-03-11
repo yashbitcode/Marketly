@@ -7,26 +7,28 @@ import {
 } from "@imagekit/react";
 import { useState } from "react";
 import { MediaApi } from "../apis";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorToast } from "../utils/toasts";
 
 const useImageKitUpload = () => {
     const [progress, setProgress] = useState(0);
     const abortController = new AbortController();
-
-    const authenticator = async (totalCounts) => {
-        try {
-            const response = await MediaApi.getAuthParams(totalCounts);
-
-            if (!response.data.success) {
-                const errorText = await response.text();
-                throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+    const mutation = useMutation({
+        mutationFn: (totalCounts) => MediaApi.getAuthParams(totalCounts),
+        onSuccess: async (res) => {
+            if (!res.success) {
+                const errorText = await res.text();
+                ErrorToast(errorText);
+                throw new Error(`Request failed with status ${res.status}: ${errorText}`);
             }
 
-            const params = (await response?.data?.data) || [];
-            return params;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    };
+            return res?.data || [];
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Something went wrong");
+            throw new Error(err?.response?.data?.message || "Something went wrong");
+        },
+    });
 
     const handleUpload = async (fileInput, customMetadata, folder) => {
         if (!fileInput || fileInput?.length === 0) {
@@ -36,7 +38,7 @@ const useImageKitUpload = () => {
 
         let authParams;
         try {
-            authParams = await authenticator(fileInput?.length);
+            authParams = await mutation.mutateAsync(fileInput?.length);
         } catch (authError) {
             console.error("Failed to authenticate for upload:", authError);
             return;

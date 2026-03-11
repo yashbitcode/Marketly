@@ -7,8 +7,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { VendorApplicationApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
-const ApplyVendorModal = ({ onClose }) => {
+const ApplyVendorModal = ({ onClose, userId }) => {
     const {
         register,
         handleSubmit,
@@ -18,27 +20,24 @@ const ApplyVendorModal = ({ onClose }) => {
     } = useForm({
         resolver: zodResolver(createVendorApplicationValidations),
     });
-    const [loading, setLoading] = useState(false);
+
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (data) => VendorApplicationApi.createVendorApplication(data),
+        onSuccess: (res) => {
+            SuccessToast(res.message);
+            queryClient.setQueryData(["user-vendor-applications", userId], (prev) => ({
+                ...prev,
+                data: [res.data, ...(prev?.data || [])],
+            }));
+            onClose();
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
 
     const onSubmit = async (data) => {
-        setLoading(true);
-
-        try {
-            const res = await VendorApplicationApi.createVendorApplication(data);
-            if (res.data.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-
-                onClose();
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        } finally {
-            setLoading(false);
-        }
+        mutation.mutate(data);
     };
 
     return (
@@ -98,7 +97,7 @@ const ApplyVendorModal = ({ onClose }) => {
                             className="flex justify-center items-center gap-4"
                             disabled={isSubmitting}
                         >
-                            {loading ? (
+                            {mutation.isPending ? (
                                 <>
                                     <div className="w-fit">
                                         <Loader />

@@ -1,83 +1,77 @@
 import { useForm } from "react-hook-form";
 import { Button, Input } from "../../common";
-import { UserApi } from "../../../apis";
+import { ReviewApi, UserApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
-import { useAuth, useImageKitUpload } from "../../../hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUserClient } from "../../../../../shared/validations/user.validations";
-import { useMutation } from "@tanstack/react-query";
+import { addProductReviewValidations } from "../../../../../shared/validations/review.validations";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
-const ProfileEditModal = ({ user, onClose }) => {
-    const { setUser } = useAuth();
+const AddReviewModal = ({ onClose, slug, page }) => {
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm({
         defaultValues: {
-            fullname: user?.fullname,
-            phoneNumber: user?.phoneNumber,
+            slug,
         },
-        resolver: zodResolver(updateUserClient),
+        resolver: zodResolver(addProductReviewValidations),
     });
+
+    const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: async (data) => {
-            const { fullname, phoneNumber, file } = data;
-            const payload = { fullname, phoneNumber };
-
-            if (file && file?.length !== 0) {
-                const filePromise = await handleUpload(file, { user: user._id }, "/avatars");
-                const fileData = await Promise.all(filePromise);
-
-                payload.avatar = fileData[0];
-            }
-
-            return UserApi.updateUser(payload);
-        },
+        mutationFn: (data) => ReviewApi.addReview(data),
         onSuccess: (res) => {
-            setUser(res);
             SuccessToast(res.message);
+            queryClient.invalidateQueries({ queryKey: ["reviews", slug, page] });
             onClose();
         },
-        onError: (err) => {
-            ErrorToast(err?.response?.data?.message || "Something went wrong");
-        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
     });
 
-    const { handleUpload } = useImageKitUpload();
-
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
         mutation.mutate(data);
     };
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-white rounded-base p-6 w-full max-w-lg space-y-6">
-                <h3 className="text-lg font-semibold">Edit Profile</h3>
+                <h3 className="text-lg font-semibold">Add Review</h3>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <Input
-                        label="Avatar"
-                        type="file"
-                        accept="image/jpeg, image/jpg, image/webp, image/png"
-                        {...register("file")}
-                        error={errors?.file?.message}
+                        label="Slug"
+                        placeholder="Slug"
+                        {...register("slug")}
+                        error={errors?.slug?.message}
+                        disabled
                     />
 
                     <Input
-                        label="Full Name"
-                        placeholder="Full Name"
-                        {...register("fullname")}
-                        error={errors?.fullname?.message}
+                        label="Ratings"
+                        placeholder="Ratings"
+                        {...register("ratings", {
+                            valueAsNumber: true,
+                        })}
+                        type="number"
+                        className="no-spinner"
+                        error={errors?.ratings?.message}
                     />
 
                     <Input
-                        label="Phone Number"
-                        placeholder="Phone Number"
-                        {...register("phoneNumber")}
-                        error={errors?.phoneNumber?.message}
+                        label="Heading"
+                        placeholder="Heading"
+                        {...register("heading")}
+                        error={errors?.heading?.message}
+                    />
+
+                    <Input
+                        label="Comment"
+                        placeholder="Comment"
+                        {...register("comment")}
+                        error={errors?.comment?.message}
                     />
 
                     <div className="flex justify-end gap-3 pt-4">
@@ -113,4 +107,4 @@ const ProfileEditModal = ({ user, onClose }) => {
     );
 };
 
-export default ProfileEditModal;
+export default AddReviewModal;

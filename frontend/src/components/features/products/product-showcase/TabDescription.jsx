@@ -1,5 +1,6 @@
 import { BarChart2, Check, ChevronDown, ChevronUp, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { Button } from "../../../common";
+import { memo } from "react";
 
 const TabDescription = ({
     description,
@@ -8,8 +9,8 @@ const TabDescription = ({
     cons,
     prosOpen,
     consOpen,
-    setConsOpen,
-    setProsOpen,
+    handleSetConsOpen,
+    handleSetProsOpen,
 }) => {
     return (
         <div>
@@ -42,7 +43,7 @@ const TabDescription = ({
             {/* Pros */}
             <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mb-3">
                 <Button
-                    onClick={() => setProsOpen(!prosOpen)}
+                    onClick={handleSetProsOpen}
                     className="w-full flex items-center justify-between bg-transparent border-0 cursor-pointer p-0"
                 >
                     <span className="font-extrabold text-sm text-green-700 flex items-center gap-2">
@@ -71,7 +72,7 @@ const TabDescription = ({
             {/* Cons */}
             <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-7">
                 <Button
-                    onClick={() => setConsOpen(!consOpen)}
+                    onClick={handleSetConsOpen}
                     className="w-full flex items-center justify-between bg-transparent border-0 cursor-pointer p-0"
                 >
                     <span className="font-extrabold text-sm text-orange-800 flex items-center gap-2">
@@ -100,4 +101,4 @@ const TabDescription = ({
     );
 };
 
-export default TabDescription;
+export default memo(TabDescription);

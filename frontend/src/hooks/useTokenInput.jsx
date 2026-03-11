@@ -26,10 +26,7 @@ const useTokenInput = () => {
         const key = e.key;
         const val = e.target.value;
 
-        if (
-            preventNumInp.includes(key) ||
-            (val && !preventKeys.includes(key))
-        ) {
+        if (preventNumInp.includes(key) || (val && !preventKeys.includes(key))) {
             e.preventDefault();
             return;
         }
@@ -54,8 +51,7 @@ const useTokenInput = () => {
                 while (cnt < val.length && currentInp + cnt < TOKEN_LENGTH) {
                     const inpVal = inputRefs.current[currentInp + cnt].value;
 
-                    if (inpVal)
-                        inputRefs.current[currentInp + cnt].value = inpVal[0];
+                    if (inpVal) inputRefs.current[currentInp + cnt].value = inpVal[0];
                     else inputRefs.current[currentInp + cnt].value = val[cnt];
 
                     if (currentInp + cnt < TOKEN_LENGTH - 1) cnt++;

@@ -1,4 +1,4 @@
-import { Homepage, Products, ProductShowcase, Support } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -28,7 +28,8 @@ const App = () => {
                         <Route path="support" element={<Support />} />
                         <Route path="products" element={<Products />} />
                         <Route path="product/:slug" element={<ProductShowcase />} />
-                        {/* <Route path="product/reviews/:slug" element={<ProductShowcase />} /> */}
+                        <Route path="product/reviews/:slug" element={<ProductReviews />} />
+
                         <Route element={<Protected authenticate={false} />}>
                             <Route element={<AuthLayout />}>
                                 <Route path="login" element={<Login />} />

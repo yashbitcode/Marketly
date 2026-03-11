@@ -16,8 +16,8 @@ const Hero = () => {
                     </div>
 
                     <p className="text-gray-500 italic">
-                        Shop electronics, fashion, home & more — all from
-                        verified vendors in one place
+                        Shop electronics, fashion, home & more — all from verified vendors in one
+                        place
                     </p>
 
                     <Link
@@ -54,11 +54,7 @@ const Hero = () => {
                     </Link>
                 </div>
                 <div className="w-80 absolute bottom-0 left-0 max-md-plus:hidden">
-                    <img
-                        src="product.png"
-                        alt="product"
-                        className="w-full max-w-80"
-                    />
+                    <img src="product.png" alt="product" className="w-full max-w-80" />
                 </div>
             </div>
             <div className="rounded-[14px] col-span-2 bg-blue-500/15 p-4 flex items-center max-md:col-span-4">
@@ -90,15 +86,9 @@ const Hero = () => {
             </div>
 
             <div className="rounded-[14px] bg-orange/15 flex justify-center items-center flex-col p-4 max-md-plus:hidden">
-                <h1 className="text-2xl text-orange font-semibold">
-                    Quality Products
-                </h1>
+                <h1 className="text-2xl text-orange font-semibold">Quality Products</h1>
                 <div className="w-full max-w-120">
-                    <img
-                        src="fancy.svg"
-                        alt="product"
-                        className="w-full max-w-80"
-                    />
+                    <img src="fancy.svg" alt="product" className="w-full max-w-80" />
                 </div>
 
                 <Link

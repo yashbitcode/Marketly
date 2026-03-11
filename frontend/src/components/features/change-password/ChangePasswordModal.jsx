@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button } from "../../common";
 import { changePasswordValidations } from "../../../../../shared/validations/auth.validations";
-import toast from "react-hot-toast";
 import { AuthApi } from "../../../apis";
-import { useState } from "react";
 import Loader from "../../loadings/Loader";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
 const ChangePasswordModal = ({ onClose }) => {
     const {
@@ -15,27 +15,20 @@ const ChangePasswordModal = ({ onClose }) => {
     } = useForm({
         resolver: zodResolver(changePasswordValidations),
     });
-    const [loading, setLoading] = useState(false);
 
-    const onSubmit = async (data) => {
-        setLoading(true);
+    const mutation = useMutation({
+        mutationFn: AuthApi.changePassword,
+        onSuccess: (res) => {
+            SuccessToast(res.message);
+            onClose();
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Something went wrong");
+        },
+    });
 
-        try {
-            const res = await AuthApi.changePassword(data);
-            if (res.data.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-
-                onClose();
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        } finally {
-            setLoading(false);
-        }
+    const onSubmit = (data) => {
+        mutation.mutate(data);
     };
 
     return (
@@ -78,7 +71,7 @@ const ChangePasswordModal = ({ onClose }) => {
                             className="flex justify-center items-center gap-4"
                             disabled={isSubmitting}
                         >
-                            {loading ? (
+                            {mutation.isPending ? (
                                 <>
                                     <div className="w-fit">
                                         <Loader />

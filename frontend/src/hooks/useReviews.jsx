@@ -1,27 +1,25 @@
-import { useEffect, useState } from "react";
-import ReviewApi from "../apis/reviewApi";
-import toast from "react-hot-toast";
+import { useCallback, useEffect, useState } from "react";
+import { ReviewApi } from "../apis";
+import { ErrorToast } from "../utils/toasts";
+import { useQuery } from "@tanstack/react-query";
 
 const useReviews = (slug) => {
-    const [reviews, setReviews] = useState(null);
     const [page, setPage] = useState(1);
 
+    const { isPending, isError, error, data } = useQuery({
+        queryKey: ["reviews", slug, page],
+        queryFn: () => ReviewApi.getAll(slug, page),
+    });
+
+    const pageHandler = useCallback((pageNum) => {
+        setPage(pageNum);
+    }, []);
+
     useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const res = await ReviewApi.getAll(slug, page);
+        if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
+    }, [error, isError]);
 
-                if (res?.data?.success) setReviews(res.data.data);
-            } catch (err) {
-                toast.error(err?.response?.data?.message || "Something went wrong", {
-                    position: "right-top",
-                });
-            }
-        };
-        fetchReviews();
-    }, [page, slug]);
-
-    return { reviews, page, setPage };
+    return { reviews: data?.data, page, pageHandler, loading: isPending };
 };
 
 export default useReviews;

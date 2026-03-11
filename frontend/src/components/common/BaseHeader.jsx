@@ -2,31 +2,27 @@ import { Link, useNavigate } from "react-router";
 import { Button, Container } from ".";
 import { BadgeQuestionMark, Handshake, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "../../hooks/";
-import toast from "react-hot-toast";
 import { AuthApi } from "../../apis";
+import { ErrorToast, SuccessToast } from "../../utils/toasts";
+import { useMutation } from "@tanstack/react-query";
 
 const BaseHeader = () => {
     const { user, setUser } = useAuth();
+    console.log(user);
+
+    const mutation = useMutation({
+        mutationFn: AuthApi.logout,
+        onSuccess: (res) => {
+            SuccessToast(res.message);
+            setUser(null);
+            navigate("/login", { replace: true });
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        try {
-            const res = await AuthApi.logout();
-
-            if (res?.data?.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-
-                setUser(null);
-
-                navigate("/login", { replace: true });
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        }
+    const handleLogout = () => {
+        mutation.mutate();
     };
 
     return (

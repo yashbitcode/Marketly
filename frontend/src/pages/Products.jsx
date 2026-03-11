@@ -12,15 +12,20 @@ const Products = () => {
     const { categories } = useCategories();
     const {
         products,
-        pageError,
+        loading,
+        isError,
+        error,
         pageHandler,
+        setSearchParams,
         searchParams,
         page,
-        setSearchParams,
         search,
         searchHandler,
     } = useProducts();
     const [filterMenu, setFilterMenu] = useState(false);
+
+    // console.log(products)
+    // console.log(categories)
 
     return (
         <>
@@ -76,10 +81,10 @@ const Products = () => {
                             menuHandler={() => setFilterMenu(false)}
                         />
                     </div>
-                    {!pageError ? (
+                    {!(isError && error) ? (
                         <div className="mx-auto">
-                            <div className="grid grid-cols-4 max-[1360px]:grid-cols-3 max-[750px]:grid-cols-2 max-[540px]:grid-cols-1 items-center w-fit mr-4 max-[1100px]:mx-4 gap-4">
-                                {products
+                            <div className="grid grid-cols-4 max-[1360px]:grid-cols-3 max-[750px]:grid-cols-2 max-[540px]:grid-cols-1 items-center w-fit mr-4 max-[1100px]:mx-4 gap-3">
+                                {!loading
                                     ? products?.data?.map((el) => (
                                           <ProductCard key={el._id} {...el} />
                                       ))
@@ -97,7 +102,7 @@ const Products = () => {
                         </div>
                     ) : (
                         <div className="px-2 py-1 shadow-base h-full rounded-[7px] text-2xl m-auto -rotate-10">
-                            Invalid page number
+                            {error}
                         </div>
                     )}
                 </div>

@@ -8,6 +8,8 @@ import Loader from "../components/loadings/Loader";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { SupportApi } from "../apis";
+import { ErrorToast, SuccessToast } from "../utils/toasts";
+import { useMutation } from "@tanstack/react-query";
 
 const Support = () => {
     const {
@@ -21,48 +23,41 @@ const Support = () => {
         resolver: zodResolver(addSupportTicketClient),
     });
 
+    const mutation = useMutation({
+        mutationFn: async (data) => {
+            const { fullname, email, message, queryType, files } = data;
+            const payload = { fullname, email, message, queryType };
+
+            if (files && files?.length !== 0) {
+                const uploadPromises = await handleUpload(
+                    files,
+                    { email_id: email },
+                    "/support-attachments",
+                );
+
+                const attachmentsData = await Promise.all(uploadPromises);
+                payload.attachments = attachmentsData;
+            }
+
+            const res = await SupportApi.createSupportTicket(payload);
+
+            return res;
+        },
+        onSuccess: (res) => {
+            SuccessToast(res.message);
+            reset();
+        },
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
+
     const { handleUpload } = useImageKitUpload();
-    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data) => {
-        setLoading(true);
-        const { fullname, email, message, queryType, files } = data;
-
-        try {
-            const uploadPromises = await handleUpload(
-                files,
-                { email_id: email },
-                "/support-attachments",
-            );
-            const attachmentsData = await Promise.all(uploadPromises);
-
-            const res = await SupportApi.createSupportTicket({
-                fullname,
-                email,
-                message,
-                queryType,
-                attachments: attachmentsData,
-            });
-
-            if (res.data.success) {
-                toast.success(res.data.message || "Support ticket created", {
-                    position: "right-top",
-                });
-
-                reset();
-            }
-        } catch {
-            toast.error("Something went wrong", {
-                position: "right-top",
-            });
-        } finally {
-            setLoading(false);
-        }
+        mutation.mutate(data);
     };
 
     return (
         <Container className="font-inter my-10 max-w-xl w-full mx-auto px-3">
-            {/* <button onClick={() => authenticator()}>ccc</button> */}
             <h1 className="text-4xl text-center">Let's Connect</h1>
             <form className="w-full flex flex-col gap-3 mt-8" onSubmit={handleSubmit(onSubmit)}>
                 <Input
@@ -107,7 +102,7 @@ const Support = () => {
                     type="submit"
                     className="mt-2 flex justify-center items-center gap-4 py-2.5 bg-green rounded-[10px]"
                 >
-                    {loading ? (
+                    {mutation.isPending ? (
                         <>
                             <div className="w-fit">
                                 <Loader />

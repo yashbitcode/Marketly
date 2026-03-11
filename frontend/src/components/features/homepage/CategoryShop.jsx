@@ -6,7 +6,7 @@ import { getFormatedStr, trimStr } from "../../../utils/helpers";
 import { Link } from "react-router";
 
 const CategoryShop = () => {
-    const { categories } = useCategories();
+    const { categories, loading } = useCategories();
 
     return (
         <div className="text-center font-inter mb-20">
@@ -18,7 +18,7 @@ const CategoryShop = () => {
             </p>
 
             <Container className="mx-auto gap-4 flex mt-8 px-4 justify-center flex-wrap items-center">
-                {categories
+                {!loading
                     ? Array.from({ length: 5 }).map((_, idx) => (
                           <CategoryCard
                               key={categories.parentCategories[idx]._id}

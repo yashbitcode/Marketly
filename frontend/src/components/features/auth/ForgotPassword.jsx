@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordLinkValidations } from "../../../../../shared/validations/auth.validations";
 import { AuthApi } from "../../../apis";
-import toast from "react-hot-toast";
 import { Link } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
 const ForgotPassword = () => {
     const {
@@ -15,20 +16,18 @@ const ForgotPassword = () => {
         resolver: zodResolver(forgotPasswordLinkValidations),
     });
 
-    const onSubmit = async (data) => {
-        try {
-            const res = await AuthApi.forgotPasswordLink(data);
+    const mutation = useMutation({
+        mutationFn: AuthApi.forgotPasswordLink,
+        onSuccess: (res) => {
+            SuccessToast(res.message);
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Something went wrong");
+        },
+    });
 
-            if (res.data.success) {
-                toast.success(res.data.message, {
-                    position: "right-top",
-                });
-            }
-        } catch (err) {
-            toast.error(err?.response?.data?.message || "Something went wrong", {
-                position: "right-top",
-            });
-        }
+    const onSubmit = (data) => {
+        mutation.mutate(data);
     };
 
     return (
@@ -43,8 +42,12 @@ const ForgotPassword = () => {
             <Link to={"/login"} className="text-sm text-end -mt-2">
                 Back To Login?
             </Link>
-            <Button className="rounded-[8px] py-3 text-[1.1rem] bg-blue-400" type="submit">
-                Forgot Password
+            <Button
+                className="rounded-[8px] py-3 text-[1.1rem] bg-blue-400"
+                type="submit"
+                disabled={mutation.isPending}
+            >
+                {mutation.isPending ? "Sending..." : "Forgot Password"}
             </Button>
         </form>
     );

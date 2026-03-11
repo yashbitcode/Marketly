@@ -4,13 +4,7 @@ import { getFormatedStr } from "../../../utils/helpers";
 import { Tag, Divider, Section, RatingRow } from "./product-filter-misc";
 import { X } from "lucide-react";
 
-const ProductsFilter = ({
-    categories,
-    subCategories,
-    filters,
-    onApply,
-    menuHandler,
-}) => {
+const ProductsFilter = ({ categories, subCategories, filters, onApply, menuHandler }) => {
     const {
         minPrice: minP,
         maxPrice: maxP,
@@ -29,20 +23,12 @@ const ProductsFilter = ({
     const [selectedSubCategories, setSelectedSubCategories] = useState(
         () => baseSubCategories?.split(",") || [],
     );
-    const [brandSearch, setBrandSearch] = useState(() =>
-        brandName ? brandName : "",
-    );
+    const [brandSearch, setBrandSearch] = useState(() => (brandName ? brandName : ""));
     const [rating, setRating] = useState(() => (ratings ? ratings : 0));
-    const [inStockOnly, setInStockOnly] = useState(() =>
-        stockAvailability ? true : false,
-    );
+    const [inStockOnly, setInStockOnly] = useState(() => (stockAvailability ? true : false));
 
     const toggleTag = (value, list, setList) => {
-        setList(
-            list.includes(value)
-                ? list.filter((v) => v !== value)
-                : [...list, value],
-        );
+        setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
     };
 
     const handleReset = () => {
@@ -69,6 +55,8 @@ const ProductsFilter = ({
             ...(rating && { ratings: rating }),
             ...(inStockOnly && { stockAvailability: "1" }),
         });
+
+        menuHandler();
     };
 
     return (
@@ -81,14 +69,9 @@ const ProductsFilter = ({
                     >
                         <X size={20} />
                     </Button>
-                    <h2 className="font-semibold text-sm text-gray-800 tracking-tight">
-                        Filters
-                    </h2>
+                    <h2 className="font-semibold text-sm text-gray-800 tracking-tight">Filters</h2>
                 </div>
-                <Button
-                    onClick={handleReset}
-                    className="p-0 bg-transparent text-dark text-sm"
-                >
+                <Button onClick={handleReset} className="p-0 bg-transparent text-dark text-sm">
                     Reset all
                 </Button>
             </div>
@@ -103,9 +86,7 @@ const ProductsFilter = ({
                             onChange={(e) => setMinPrice(e.target.value)}
                             className="text-sm py-1.5 no-spinner"
                         />
-                        <span className="text-gray-300 font-light text-lg shrink-0">
-                            —
-                        </span>
+                        <span className="text-gray-300 font-light text-lg shrink-0">—</span>
                         <Input
                             type="number"
                             placeholder="Max"
@@ -127,11 +108,7 @@ const ProductsFilter = ({
                                 label={getFormatedStr(cat.name)}
                                 active={selectedCategories.includes(cat.slug)}
                                 onClick={() =>
-                                    toggleTag(
-                                        cat.slug,
-                                        selectedCategories,
-                                        setSelectedCategories,
-                                    )
+                                    toggleTag(cat.slug, selectedCategories, setSelectedCategories)
                                 }
                             />
                         ))}
@@ -147,9 +124,7 @@ const ProductsFilter = ({
                             <Tag
                                 key={sub.slug}
                                 label={getFormatedStr(sub.name)}
-                                active={selectedSubCategories?.includes(
-                                    sub.slug,
-                                )}
+                                active={selectedSubCategories?.includes(sub.slug)}
                                 onClick={() =>
                                     toggleTag(
                                         sub.slug,
@@ -196,10 +171,7 @@ const ProductsFilter = ({
                                     strokeWidth={2.5}
                                     viewBox="0 0 24 24"
                                 >
-                                    <path
-                                        d="M18 6L6 18M6 6l12 12"
-                                        strokeLinecap="round"
-                                    />
+                                    <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                                 </svg>
                             </Button>
                         )}
@@ -216,9 +188,7 @@ const ProductsFilter = ({
                                 key={value}
                                 value={value}
                                 rating={rating}
-                                onClickHandler={() =>
-                                    setRating(rating === value ? 0 : value)
-                                }
+                                onClickHandler={() => setRating(rating === value ? 0 : value)}
                             />
                         ))}
                     </div>
