@@ -1,4 +1,5 @@
 import { Info } from "lucide-react";
+import { getFormatedStr } from "../../../../utils/helpers";
 
 const TabVendor = ({ fullname, storeName, vendorType }) => {
     return (
@@ -11,19 +12,19 @@ const TabVendor = ({ fullname, storeName, vendorType }) => {
                     <span className="w-36 sm:w-44 text-xs font-bold text-slate-400 uppercase tracking-wide shrink-0">
                         Vendor Name
                     </span>
-                    <span className="text-sm text-slate-900 font-semibold">{fullname}</span>
+                    <span className="text-sm text-slate-900 font-semibold">{getFormatedStr(fullname)}</span>
                 </div>
                 <div className={`flex items-center px-5 py-2`}>
                     <span className="w-36 sm:w-44 text-xs font-bold text-slate-400 uppercase tracking-wide shrink-0">
                         Store Name
                     </span>
-                    <span className="text-sm text-slate-900 font-semibold">{storeName}</span>
+                    <span className="text-sm text-slate-900 font-semibold">{getFormatedStr(storeName)}</span>
                 </div>
                 <div className={`flex items-center px-5 py-2`}>
                     <span className="w-36 sm:w-44 text-xs font-bold text-slate-400 uppercase tracking-wide shrink-0">
                         Vendor Type
                     </span>
-                    <span className="text-sm text-slate-900 font-semibold">{vendorType}</span>
+                    <span className="text-sm text-slate-900 font-semibold">{getFormatedStr(vendorType)}</span>
                 </div>
             </div>
         </div>

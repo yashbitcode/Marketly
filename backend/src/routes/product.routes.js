@@ -6,6 +6,7 @@ import {
     updateVendorProduct,
     updateProductStatus,
     getFilteredProducts,
+    getCartProducts,
 } from "../controllers/product.controllers.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 import { authorise, isAuthenticated } from "../middlewares/auth.middlewares.js";
@@ -15,6 +16,7 @@ import {
     updateProductStatusValidations,
     productQueryValidations,
     searchQueryValidations,
+    cartItemsValidations,
 } from "../../../shared/validations/product.validations.js";
 const router = Router();
 
@@ -49,6 +51,14 @@ router.patch(
     authorise("vendor"),
     validate(updateProductValidations),
     updateVendorProduct,
+);
+
+router.post(
+    "/cart",
+    isAuthenticated,
+    authorise("user"),
+    validate(cartItemsValidations),
+    getCartProducts,
 );
 
 router.patch(

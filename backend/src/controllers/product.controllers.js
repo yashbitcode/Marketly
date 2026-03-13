@@ -137,12 +137,18 @@ const updateProductStatus = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, product, "Product updated successfully"));
 });
 
+const getCartProducts = asyncHandler(async (req, res) => {
+    const {products} = req.body;
+
+    const allProducts = await productService.getCartProducts(Object.keys(products));
+
+    res.json(new ApiResponse(200, allProducts, "Products fetched successfully"));
+});
+
 const getFilteredProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
     const filterQueries = req.query;
     const { searchQuery } = filterQueries;
-
-    console.log(filterQueries);
 
     const filteredProducts = await productService.getFilteredProducts(
         { "approval.status": "accepted", isActive: true },
@@ -189,6 +195,7 @@ const getFilteredProducts = asyncHandler(async (req, res) => {
 export {
     getAllProducts,
     getSpecificProduct,
+    getCartProducts,
     // getAllVendorProducts,
     // getAllProductsSuperAdmin,
     addVendorProduct,

@@ -5,6 +5,7 @@ import imageKitService from "../services/imageKit.service.js";
 import notificationService from "../services/notification.service.js";
 import { createInvoice } from "../utils/helpers.js";
 import orderRefundApplicationService from "../services/orderRefundApplication.service.js";
+import mongoose from "mongoose";
 
 const inngest = new Inngest({ id: "my-app" });
 
@@ -29,12 +30,11 @@ const orderFulfillment = inngest.createFunction(
     async ({ event, step }) => {
         const { user, status, products, orderDocId } = event.data;
 
-        if (status !== "paid") return;
+        // console.log("MAINUSER: ", user);
 
-        let order = await step.run(
-            "run-order",
-            async () => await orderService.getOrderById({ orderDocId }),
-        );
+        // need to change the order of the (order & sellerOrder)
+
+        if (status !== "paid") return;
 
         const sellerOrder = await step.run(
             "seller-order-exists",
@@ -55,11 +55,18 @@ const orderFulfillment = inngest.createFunction(
                     ),
             );
 
+        let order = await step.run(
+            "run-order",
+            async () => await orderService.getOrderById({ orderDocId: new mongoose.Types.ObjectId(orderDocId) }),
+        );
+
+        
         if (!order.invoice) {
             const pdfBuffer = await step.run(
                 "create-invoice",
                 async () => await createInvoice(order),
             );
+
             const { fileId, name, url } = await step.run(
                 "upload-invoice",
                 async () => await imageKitService.upload(pdfBuffer),
@@ -100,8 +107,10 @@ const orderFulfillment = inngest.createFunction(
             });
         }
 
+        console.log(order);
+
         const notificationPayload = {
-            receiverId: order.user.toString(),
+            receiverId: order.user._id.toString(),
             docModel: "users",
             notificationType: "ORDER_UPDATE",
             title: "Order Update",
@@ -115,7 +124,7 @@ const orderFulfillment = inngest.createFunction(
             await inngest
                 .send({
                     name: "notification/send-order-update",
-                    data: notificationPayload,
+                    data: {data: notificationPayload, order}
                 })
                 .catch((err) => {});
         });
@@ -151,13 +160,13 @@ const sendOrderUpdate = inngest.createFunction(
     { id: "send-order-update" },
     { event: "notification/send-order-update" },
     async ({ event, step }) => {
-        const { notificationPayload, order } = event.data;
+        const { data, order } = event.data;
 
         const notification = await step.run(
             "create-order-notification",
             async () =>
                 await notificationService.createNotification(
-                    notificationPayload,
+                    data,
                 ),
         );
 

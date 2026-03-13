@@ -4,6 +4,7 @@ import Product from "../models/product.models.js";
 import SellerOrder from "../models/sellerOrder.models.js";
 import { getPaginationBasePipeline  } from "../utils/helpers.js";
 import vendorPayoutService from "./vendorPayout.service.js";
+import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 
 class OrderService {
     async createOrder(payload) {
@@ -189,6 +190,8 @@ class OrderService {
             },
         ]);
 
+        console.log("MAINAIAIN: ", order)
+
         return order;
     }
 
@@ -199,7 +202,7 @@ class OrderService {
     }
 
     async createSellerOrders(orderDocId, user, products) {
-        const productSlugs = Array.from(products.keys());
+        const productSlugs = Object.keys(products);
 
         const groupedProducts = await Product.aggregate([
             {
@@ -276,7 +279,7 @@ class OrderService {
         const order = await Order.findOneAndUpdate(filters, payload, {
             new: true,
             runValidators: true,
-        });
+        }).populate("user", GENERAL_USER_FIELDS);
 
         return order;
     }

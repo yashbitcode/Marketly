@@ -15,6 +15,18 @@ const createHash = (body, secret) => {
     return crypto.createHmac("sha256", secret).update(body).digest("hex");
 };
 
+export const getAccessToken = (cookie) => {
+    if(!cookie) return;
+
+    let accessToken;
+
+    cookie.split("; ")?.forEach((el) => {
+        if (el.startsWith("accessToken")) accessToken = el.split("=")[1];
+    });
+
+    return accessToken;
+};
+
 const generateRandomNumberString = () => {
     let result = "";
     const chars = "0123456789";
@@ -344,8 +356,8 @@ const createInvoice = (invoice) => {
 
         doc.font("Helvetica");
 
-        invoice.sellerOrders.forEach((el, idx) => {
-            el.products.forEach(({ product, quantity }, idx) => {
+        invoice.sellerOrders.forEach((el) => {
+            el.products.forEach(({ product, quantity }) => {
                 if (topMargin + counter++ * 10 > 650) {
                     topMargin = 50;
                     counter = 0;

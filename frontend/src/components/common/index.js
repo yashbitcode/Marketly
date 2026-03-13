@@ -5,3 +5,4 @@ export { default as BaseHeader } from "./BaseHeader";
 export { default as BaseFooter } from "./BaseFooter";
 export { default as Dropdown } from "./Dropdown";
 export { default as Textarea } from "./Textarea";
+export { default as Error } from "./Error";

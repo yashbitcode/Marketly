@@ -5,8 +5,6 @@ import { Button, Container, Dropdown, Input, Textarea } from "../components/comm
 import { SUPPORT_QUERY_TYPES } from "../../../shared/constants";
 import { useImageKitUpload } from "../hooks";
 import Loader from "../components/loadings/Loader";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { SupportApi } from "../apis";
 import { ErrorToast, SuccessToast } from "../utils/toasts";
 import { useMutation } from "@tanstack/react-query";

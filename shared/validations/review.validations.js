@@ -1,20 +1,18 @@
 import z from "zod";
 
 const addProductReviewValidations = z.object({
-    user: z
+    // user: z
+    //     .string({
+    //         error: (iss) => !iss.input && "User ID is required",
+    //     })
+    //     .refine((val) => REGEX.objectId.test(val), {
+    //         message: "Invalid user ID",
+        // }),
+    slug: z
         .string({
-            error: (iss) => !iss.input && "User ID is required",
+            error: (iss) => !iss.input && "Product slug is required",
         })
-        .refine((val) => REGEX.objectId.test(val), {
-            message: "Invalid user ID",
-        }),
-    product: z
-        .string({
-            error: (iss) => !iss.input && "Product ID is required",
-        })
-        .refine((val) => REGEX.objectId.test(val), {
-            message: "Invalid product ID",
-        }),
+        .min(1, "Minimum length should be 1"),
     ratings: z
         .number({
             error: (iss) => !iss.input && "Ratings are required",
@@ -25,7 +23,8 @@ const addProductReviewValidations = z.object({
         .string({
             error: (iss) => !iss.input && "Heading is required",
         })
-        .min(5, "Minimum length should be 5"),
+        .min(5, "Minimum length should be 5")
+        .max(15, "Maximum length should be 15"),
     comment: z
         .string({
             error: (iss) => !iss.input && "Comment is required",

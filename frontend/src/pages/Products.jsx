@@ -101,9 +101,7 @@ const Products = () => {
                             )}
                         </div>
                     ) : (
-                        <div className="px-2 py-1 shadow-base h-full rounded-[7px] text-2xl m-auto -rotate-10">
-                            {error}
-                        </div>
+                       <Error error={error} />
                     )}
                 </div>
             </Container>

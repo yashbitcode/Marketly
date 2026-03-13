@@ -6,6 +6,11 @@ import {
     ATTRIBUTE_DATATYPES,
 } from "./constants.js";
 
+const productRecords = z.record(
+        z.string(),
+        z.number().min(1, "Minimum 1 quantity is required"),
+    );
+
 const baseMediaValidations = z.object({
     fileId: z
         .string({
@@ -32,7 +37,8 @@ const addressValidations = z.object({
             error: (iss) => !iss.input && "Fullname is required",
         })
         .min(1, "Fullname is required")
-        .min(3, "Minimum length should be 3"),
+        .min(3, "Minimum length should be 3")
+        .max(8, "Minimum length should be 8"),
     phoneNumber: z
         .string({
             error: (iss) => !iss.input && "Phone number is required",
@@ -254,4 +260,5 @@ export {
     baseProductValidations,
     baseProductAttributeValidations,
     baseMediaValidations,
+    productRecords
 };

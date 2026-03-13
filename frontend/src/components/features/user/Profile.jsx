@@ -7,11 +7,10 @@ import ApplyVendorModal from "../vendor-application/ApplyVendorModal";
 import ChangePasswordModal from "../change-password/ChangePasswordModal";
 import { useAuth } from "../../../hooks";
 import { VendorApplicationApi } from "../../../apis";
-import toast from "react-hot-toast";
 import { getFormatedStr } from "../../../utils/helpers";
 import AddressSection from "../address/AddressSection";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { ErrorToast } from "../../../utils/toasts";
+import { useQuery } from "@tanstack/react-query";
 
 const ProfileField = ({ label, value, full }) => (
     <div className={full ? "col-span-2" : ""}>

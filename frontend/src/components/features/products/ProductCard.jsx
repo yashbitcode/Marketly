@@ -21,7 +21,7 @@ const ProductCard = ({ name, brandName, price, slug, images, avgRating }) => {
 
                 <RenderStars avgRating={(+avgRating || 0).toFixed(1)} />
             </div>
-            <Button className="mx-auto w-full mt-3 bg-dark/80 text-sm">Add To Cart</Button>
+            <Button className="mx-auto w-full mt-3 bg-dark/80 text-sm">Buy Now</Button>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Share2, ShoppingCart, Zap, Plus, Minus, Tag, Info } from "lucide-react";
-import { Button, Container } from "../components/common";
+import { Button, Container, Error } from "../components/common";
 import { useParams } from "react-router";
 import { ProductApi } from "../apis";
 import Loader from "../components/loadings/Loader";
@@ -20,10 +20,14 @@ export default function ProductPage() {
     const { reviews, loading: reviewLoading } = useReviews(slug);
     const [activeImage, setActiveImage] = useState(0);
     const [attributes, setAttributes] = useState(null);
-    const [qty, setQty] = useState(1);
     const [activeTab, setActiveTab] = useState("Description");
     const [prosOpen, setProsOpen] = useState(true);
     const [consOpen, setConsOpen] = useState(true);
+    const [cart, setCart] = useState(() => {
+        const stored = localStorage.getItem("cart");
+
+        return stored ? JSON.parse(stored) : {};
+    });
 
     const {
         isPending,
@@ -43,6 +47,8 @@ export default function ProductPage() {
         setConsOpen(value);
     }, []);
 
+    const handleLocalStorageCartUpdate = useCallback(() => localStorage.setItem("cart", JSON.stringify(cart)), [cart]);
+
     const handleSetAttributes = useCallback((name, value) => {
         setAttributes((prev) => ({
             ...prev,
@@ -50,21 +56,35 @@ export default function ProductPage() {
         }));
     }, []);
 
+    useEffect(() => handleLocalStorageCartUpdate(), [cart, handleLocalStorageCartUpdate]);
+
     useEffect(() => {
-        const setInitialAttributes = async () => {
-            console.log(product.data.attributes);
+        const setInitials = async () => {
             setAttributes(
                 product.data.attributes.reduce((acc, attr) => {
                     acc[attr.name] = 0;
                     return acc;
                 }, {}),
             );
+
+            const localStorageCart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+            if (localStorageCart[product.data.slug] > product.data.stockQuantity) {
+                localStorageCart[product.data.slug] = product.data.stockQuantity;
+                localStorage.setItem("cart", JSON.stringify(localStorageCart));
+            }
+
+            setCart(localStorageCart);
         };
         if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
-        else if (product) setInitialAttributes();
+        else if (product) setInitials();
     }, [slug, error, isError, product]);
 
+    useEffect(() => {}, [cart]);
+
     if (isPending || reviewLoading) return <Loader />;
+
+    if (isError) return <Error error={error?.response?.data?.message || "Something went wrong"} />;
 
     return (
         <div className="min-h-screen font-inter">
@@ -119,7 +139,7 @@ export default function ProductPage() {
 
                     {/* Rating Row */}
                     <div className="flex flex-wrap items-center max-lg:justify-center gap-3 mb-5 ">
-                        <RenderStars avgRating={product.data.avgRating} size={10} />
+                        <RenderStars avgRating={product.data.avgRating.toFixed(1)} size={10} />
                         <span className="text-green-700 font-semibold bg-green-50 px-2.5 py-1 rounded-full border text-xs mt-1 border-green-200">
                             {product.data.stockQuantity} in stock
                         </span>
@@ -157,19 +177,32 @@ export default function ProductPage() {
                         {/* Qty Stepper */}
                         <div className="flex items-center border border-stone-200 rounded-xl overflow-hidden bg-white">
                             <Button
-                                onClick={() => setQty(Math.max(1, qty - 1))}
+                                onClick={() => {
+                                    const qty = cart[product.data.slug] || 0;
+
+                                    if(cart[product.data.slug] &&  Math.max(0, qty - 1) === 0) {
+                                        const {[product.data.slug]: _, ...rest} = cart;
+                                        setCart(rest);
+                                        return;
+                                    }
+
+                                    setCart((prev) => ({...prev, [product.data.slug]: Math.max(0, qty - 1) }));
+                                }}
                                 className="w-11 h-12 flex items-center justify-center text-slate-600 hover:bg-stone-100 transition-colors border-0 bg-transparent cursor-pointer rounded-none"
+                                disabled={(cart[product.data.slug] || 0) === 0}
                             >
                                 <Minus size={15} />
                             </Button>
                             <span className="w-10 text-center font-bold text-base text-slate-900 select-none">
-                                {qty}
+                                {cart[product.data.slug] || 0}
                             </span>
                             <Button
-                                onClick={() =>
-                                    setQty(Math.min(product.data.stockQuantity, qty + 1))
-                                }
+                                onClick={() =>{
+                                    const qty = cart[product.data.slug] || 0;
+                                    setCart((prev) => ({...prev, [product.data.slug]: Math.min(product.data.stockQuantity, qty + 1) }));
+                                }}
                                 className="w-11 h-12 flex items-center justify-center text-slate-600 hover:bg-stone-100 transition-colors border-0 bg-transparent cursor-pointer rounded-none"
+                                disabled={(cart[product.data.slug] || 0) === product.data.stockQuantity}
                             >
                                 <Plus size={15} />
                             </Button>

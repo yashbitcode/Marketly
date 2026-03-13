@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -29,6 +29,8 @@ const App = () => {
                         <Route path="products" element={<Products />} />
                         <Route path="product/:slug" element={<ProductShowcase />} />
                         <Route path="product/reviews/:slug" element={<ProductReviews />} />
+                        <Route path="payment-success/:orderId" element={<PaymentSuccess />} />
+                        <Route path="payment-failed/:orderId" element={<PaymentFailed />} />
 
                         <Route element={<Protected authenticate={false} />}>
                             <Route element={<AuthLayout />}>
@@ -44,6 +46,7 @@ const App = () => {
 
                         <Route element={<Protected />}>
                             <Route path="user" element={<Profile />} />
+                            <Route path="checkout" element={<Checkout />} />
                         </Route>
                     </Route>
                 </Routes>

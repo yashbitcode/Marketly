@@ -35,7 +35,7 @@ const AddressCard = ({ address, markAddressAsDefault, handleEditAddress }) => {
                     <p className="text-sm text-gray-600">{address.phoneNumber}</p>
                 </div>
 
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center flex-wrap">
                     {address.isDefault && (
                         <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
                             Default

@@ -1,9 +1,11 @@
 import mailGenerator from "../config/mailgen/index.js";
 import transporter from "../config/nodemailer/index.js";
+import ApiError from "./api-error.js";
 
 const sendMail = async (options) => {
     const { from, to, subject, emailContent } = options;
 
+    console.log(options)
     const emailHtml = mailGenerator.generate(emailContent);
     const emailText = mailGenerator.generatePlaintext(emailContent);
 
@@ -19,6 +21,7 @@ const sendMail = async (options) => {
         const info = await transporter.sendMail(mail);
         return info;
     } catch (e) {
+        console.log(e)
         throw new ApiError();
     }
 };

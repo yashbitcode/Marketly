@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { Button, Input } from "../../common";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,7 +5,6 @@ import { loginValidations } from "../../../../../shared/validations/auth.validat
 import { Link, useLocation, useNavigate } from "react-router";
 import { AUTH_CHOICE } from "../../../utils/constants";
 import { useAuth } from "../../../hooks";
-import { useState } from "react";
 import Loader from "../../loadings/Loader";
 import { useMutation } from "@tanstack/react-query";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";

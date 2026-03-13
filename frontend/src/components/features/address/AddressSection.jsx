@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddressCard from "./AddressCard";
 import { useAddresses, useAuth } from "../../../hooks";
 import AddressModal from "./AddressModal";
@@ -8,7 +8,7 @@ import { AddressesApi } from "../../../apis";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 
-const AddressSection = () => {
+const AddressSection = ({ sideEffect }) => {
     const { user } = useAuth();
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const { addresses, setAddresses } = useAddresses();
@@ -42,6 +42,10 @@ const AddressSection = () => {
         setIsAddressModalOpen(true);
     };
 
+    useEffect(() => {
+        sideEffect?.(addresses);
+    }, [addresses, sideEffect]);
+
     return (
         <>
             <div className="bg-white shadow-base rounded-base p-4 space-y-4">
@@ -58,7 +62,7 @@ const AddressSection = () => {
                 </div>
 
                 {!addresses || addresses?.length === 0 ? (
-                    <div className="border border-dashed rounded-base p-6 text-center bg-neutral-50">
+                    <div className="border border-dashed rounded-base p-4  text-center bg-neutral-50">
                         <p className="text-gray-600 font-medium">No addresses added yet.</p>
                         <p className="text-sm text-gray-500 mt-1">
                             Add an address to speed up your checkout process.

@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { Button, Container } from ".";
-import { BadgeQuestionMark, Handshake, ShoppingBag, User } from "lucide-react";
+import { BadgeQuestionMark, Bell, Handshake, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "../../hooks/";
 import { AuthApi } from "../../apis";
 import { ErrorToast, SuccessToast } from "../../utils/toasts";
 import { useMutation } from "@tanstack/react-query";
+import NotificationBar from "../features/notification/NotificationBar";
 
 const BaseHeader = () => {
     const { user, setUser } = useAuth();
@@ -40,12 +41,9 @@ const BaseHeader = () => {
                         >
                             <ShoppingBag strokeWidth={1.8} />
                         </Link>
-                        <Link
-                            className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange justify-center items-center p-2 rounded-full"
-                            to={"/"}
-                        >
-                            <Handshake strokeWidth={1.8} />
-                        </Link>
+                        {user && (
+                            <NotificationBar />
+                        )}
                         <Link
                             className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
                             to={"/support"}

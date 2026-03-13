@@ -22,6 +22,7 @@ class NotificationService {
 
     async sendChatUpdateNotification(chatReq, notification) {
         const io = await initEmitter();
+        io.nsp = "/notification"
 
         io.of("/notification")
             .to("notification:" + chatReq.user)
@@ -31,13 +32,17 @@ class NotificationService {
     async sendOrderUpdateNotification(order, notification) {
         const io = await initEmitter();
 
-        io.of("/notification")
-            .to("notification:" + order.user)
+        io.nsp = "/notification"
+
+        const ab = io.of("/notification")
+            .to("notification:" + order.user._id)
             .emit("order-place-update", notification);
+
     }
 
     async sendOrderDeliveryUpdateNotification(orders) {
         const io = await initEmitter();
+                io.nsp = "/order"
 
         orders.forEach((order) =>
             io

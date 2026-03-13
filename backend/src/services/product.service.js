@@ -113,24 +113,21 @@ class ProductService {
         return searchedProducts;
     }
 
-    // async getFilteredProducts(filterQueries, page) {
-    //     const basePagination = getPaginationBasePipeline(+page);
-    //     const baseFilterPipeline = getProductFilterationPipeline(filterQueries);
-    //     const baseProductPipeline = getProductBasePipeline();
+    async getCartProducts(productSlugsArray) {
+        const products= await Product.find({
+            slug: {
+                $in: productSlugsArray
+            }
+        });
 
-    //     const [filteredProducts] = await Product.aggregate([
-    //         {
-    //             $match: {
+        return products;
+    }
 
-    //             }
-    //         },
-    //         ...baseProductPipeline,
-    //         ...baseFilterPipeline,
-    //         ...basePagination,
-    //     ]);
+    async getProductBySlug(slug) {
+        const product = await Product.findOne({slug});
 
-    //     return filteredProducts;
-    // }
+        return product;
+    }
 }
 
 export default new ProductService();

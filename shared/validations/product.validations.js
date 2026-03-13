@@ -2,6 +2,7 @@ import z from "zod";
 import {
     baseProductValidations,
     baseProductAttributeValidations,
+    productRecords,
 } from "../baseValidations.js";
 import { PRODUCT_APPROVAL_STATUS } from "../constants.js";
 
@@ -93,10 +94,15 @@ const productQueryValidations = z
             });
     });
 
+const cartItemsValidations = z.object({
+    products: productRecords
+})
+
 export {
     addProductValidations,
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
     searchQueryValidations,
+    cartItemsValidations
 };

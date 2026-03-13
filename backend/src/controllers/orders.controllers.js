@@ -35,12 +35,16 @@ const createOrder = asyncHandler(async (req, res) => {
         },
     });
 
-    if (allProducts.length !== Object.keys(products).length)
+    console.log(allProducts)
+
+    if (allProducts?.totalCount !== Object.keys(products).length)
         throw new ApiError(404, "Some products not found");
 
-    let totalAmount = 0;
+    let totalAmount = allProducts.data.reduce((acc, curr) => {
+        return acc + (curr.price * products[curr.slug])
+    }, 0);
 
-    allProducts.forEach((el) => (totalAmount += el.price * products[el.slug]));
+    console.log(totalAmount);
 
     const payload = {
         amount: totalAmount * 100,
@@ -55,9 +59,8 @@ const createOrder = asyncHandler(async (req, res) => {
 
     const dbPayload = {
         user: _id,
-        // user: "695260f3fd88aeed840374de",
-        orderId: order.id || "sassas",
-        amount: order.amount || 1200,
+        orderId: order.id,
+        amount: order.amount,
         currency: order.currency || "INR",
         shippingAddress: shippingAddressId,
         name: "Marketly",
@@ -70,7 +73,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const dbOrder = await orderService.createOrder(dbPayload);
     // console.log(dbOrder)
 
-    res.json(new ApiResponse(201, dbOrder, "Order created successfully"));
+    res.json(new ApiResponse(201, {dbOrder, rzpId: process.env.RAZORPAY_KEY_ID}, "Order created successfully"));
 });
 
 const getOrderByOrderId = asyncHandler(async (req, res) => {

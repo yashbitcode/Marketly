@@ -3,8 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button, Dropdown, Textarea } from "../../common";
 import { createVendorApplicationValidations } from "../../../../../shared/validations/vendorApplication.validations";
 import { VENDOR_TYPE } from "../../../../../shared/constants";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { VendorApplicationApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

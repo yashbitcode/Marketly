@@ -3,8 +3,6 @@ import { createMessageValidations } from "../../../../shared/validations/chat.va
 import chatService from "../../services/chat.service.js";
 
 const setupSocketIO = (io) => {
-    io.use(isSocketAuthenticated);
-
     // io.on("connection", (socket) => {
     //     socket.join("/main");
     //     console.log("conn");
@@ -14,6 +12,10 @@ const setupSocketIO = (io) => {
     const orderNamespace = io.of("/order");
     const notificationNamespace = io.of("/notification");
 
+    chatNamespace.use(isSocketAuthenticated);
+    orderNamespace.use(isSocketAuthenticated);
+    notificationNamespace.use(isSocketAuthenticated);
+    
     chatNamespace.on("connection", (socket) => {
         socket.on("join", (chatId) => {
             socket.join("chat:" + chatId);

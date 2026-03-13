@@ -51,7 +51,7 @@ class ImageKitService {
 
     async upload(buffer) {
         return await this.client.files.upload({
-            file: await toFile(buffer),
+            file: await toFile(Buffer.from(buffer)),
             fileName: "invoice",
             folder: "/order-invoices",
         });

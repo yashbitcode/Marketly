@@ -46,10 +46,14 @@ export const apiEndpoints = {
     product: {
         getFiltered: "/product/filter",
         specific: "/product/slug",
+        cart: "/product/cart",
     },
     review: {
         getAll: "/review/product",
         add: "/review/product",
+    },
+    order: {
+        create: "/order/create-order"
     },
     media: {
         getAuthParams: "/media",

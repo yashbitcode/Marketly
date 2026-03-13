@@ -1,5 +1,6 @@
 import z from "zod";
 import { ORDER_DELIVERY_STATUS, REGEX } from "../constants.js";
+import { productRecords } from "../baseValidations.js";
 
 const updateOrderDeliveryStatusValidations = z.object({
     sellerOrderId: z.string({
@@ -9,10 +10,7 @@ const updateOrderDeliveryStatusValidations = z.object({
 });
 
 const createOrderValidations = z.object({
-    products: z.record(
-        z.string(),
-        z.number().min(1, "Minimum 1 quantity is required"),
-    ),
+    products: productRecords,
     prefills: z.object({
         name: z
             .string({
@@ -32,9 +30,16 @@ const createOrderValidations = z.object({
             })
             .regex(REGEX.phoneNumber, "Invalid phone number"),
     }),
+    shippingAddressId: z
+        .string({
+            error: (iss) => !iss.input && "Shipping address ID is required",
+        })
+        .refine((val) => REGEX.objectId.test(val), {
+            message: "Invalid shipping address ID",
+        }),
     notes: z
         .object({
-            description: z.string().min(10, "Minimum length should be 10"),
+            description: z.string(),
         })
         .optional(),
 });

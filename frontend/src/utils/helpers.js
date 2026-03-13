@@ -9,18 +9,6 @@ export const formatPrice = (price) => {
     }).format(price);
 };
 
-export const getAccessToken = () => {
-    const cookie = document.cookie;
-    console.log(cookie);
-    let accessToken;
-
-    cookie.split("; ")?.forEach((el) => {
-        if (el.startsWith("accessToken")) accessToken = el.split("=")[1];
-    });
-
-    return accessToken;
-};
-
 export const getFormatedStr = (str) => {
     if (!str) return "";
 

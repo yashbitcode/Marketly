@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import userService from "../services/user.service.js";
 import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 import { pubClient as redisClient } from "../config/redis/connection.js";
+import { getAccessToken } from "../utils/helpers.js";
 
 const verifyToken = async (authHeader) => {
     const token = authHeader?.split(" ")?.[1];
@@ -87,10 +88,12 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
 });
 
 const isSocketAuthenticated = async (socket, next) => {
-    let token = socket.handshake?.auth.token;
+    // console.log(socket)
+    let token = getAccessToken(socket.handshake?.headers?.cookie);
+    console.log(token);
 
     try {
-        const decoded = await verifyToken(token);
+        const decoded = await verifyToken(token ? "Bearer " + token : "");
 
         const user = await userService.getUserById(
             decoded._id,
@@ -100,6 +103,7 @@ const isSocketAuthenticated = async (socket, next) => {
         if (user.role !== "super-admin") socket.user = user;
         next();
     } catch (error) {
+        console.log(error)
         next(new ApiError(error.statusCode), error.message);
     }
 
