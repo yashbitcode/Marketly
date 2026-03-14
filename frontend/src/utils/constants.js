@@ -53,7 +53,9 @@ export const apiEndpoints = {
         add: "/review/product",
     },
     order: {
-        create: "/order/create-order"
+        create: "/order/create-order",
+        getAll: "/order",
+        specific: "/order/specific",
     },
     media: {
         getAuthParams: "/media",
@@ -61,6 +63,20 @@ export const apiEndpoints = {
     support: {
         createTicket: "/support",
     },
+};
+
+export const STATUS_STEPS = [
+    { key: "placed", label: "Order Placed" },
+    // { key: "confirmed", label: "Confirmed" },
+    { key: "shipped", label: "Shipped" },
+    { key: "out_for_delivery", label: "Out for Delivery" },
+    { key: "delivered", label: "Delivered" },
+];
+
+export const STATUS_STYLE = {
+    paid: { label: "Paid", bg: "bg-green-100", text: "text-green-700" },
+    pending: { label: "Pending", bg: "bg-yellow-100", text: "text-yellow-700" },
+    failed: { label: "Failed", bg: "bg-red-100", text: "text-red-600" },
 };
 
 export const tabs = ["Description", "Vendor", "Reviews"];

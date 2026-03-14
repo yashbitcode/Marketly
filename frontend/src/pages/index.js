@@ -6,3 +6,5 @@ export { default as ProductReviews } from "./ProductReviews";
 export { default as Checkout } from "./Checkout";
 export { default as PaymentSuccess } from "./PaymentSuccess";
 export { default as PaymentFailed } from "./PaymentFailed";
+export { default as Order } from "./Order";
+export { default as OrderDetails } from "./OrderDetails";

@@ -1,5 +1,5 @@
 const BASE_ENDPOINT = "/api/v1";
-const FRONTEND_URL = "*";
+const FRONTEND_URL = "http://localhost:5173";
 const TOKEN_LENGTH = 6;
 const PAGINATION_LIMIT = 10;
 const COMMISSION_RATE = 10;
@@ -19,6 +19,7 @@ const ALLOWED_FILETYPES = [
     "image/png",
     "image/webp",
 ];
+
 // const ALLOWED_FILETYPES = ["image/jpeg", "image/png"];
 const ATTRIBUTE_DATATYPES = ["text", "number"];
 const REFUND_APPLICATION_STATUS = ["under-process", "refunded"];

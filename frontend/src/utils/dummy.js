@@ -342,3 +342,271 @@ export const reviews = [
         helpful: 47,
     },
 ];
+
+
+export const sampleOrders = [
+    {
+        _id: "69b2fd0fadf399bff6161e83",
+        user: "69a864a2268057c21e42acc4",
+        orderId: "order_SQP2tu2rPDzPWf",
+        name: "Marketly",
+        description: "Pay Now And Get The Products",
+        amount: 89900,
+        currency: "INR",
+        prefills: { name: "Arjun Sharma", email: "arjun@gmail.com", phoneNumber: "+919876543210" },
+        status: "paid",
+        paymentId: "pay_SQP39NrTsZbr5d",
+        createdAt: "2026-03-12T17:51:11.030Z",
+        updatedAt: "2026-03-12T18:31:10.430Z",
+        invoice: {
+            fileId: "69b3066d5c7cd75eb886289b",
+            url: "https://ik.imagekit.io/sample/invoice_abc123",
+            thumbnailUrl: "https://ik.imagekit.io/sample/invoice_abc123",
+            filename: "invoice_abc123.pdf",
+        },
+        shippingAddress: {
+            street: "42 MG Road",
+            city: "Bengaluru",
+            state: "Karnataka",
+            pincode: "560001",
+        },
+        sellerOrders: [
+            {
+                _id: "69b2ff548b69ee1afc7ff033",
+                vendor: "6953cd93456f0bcb6a034329",
+                deliveryStatus: "shipped",
+                products: [
+                    {
+                        quantity: 1,
+                        product: {
+                            _id: "69a425d849f2b13df22f80ab",
+                            name: "iPhone 14 Pro 128GB",
+                            brandName: "Apple",
+                            price: 119999,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/smartphones/iphone-14-pro/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+            {
+                _id: "69b2ff548b69ee1afc7ff034",
+                vendor: "6953cd93456f0bcb6a034330",
+                deliveryStatus: "placed",
+                products: [
+                    {
+                        quantity: 2,
+                        product: {
+                            _id: "69a425d849f2b13df22f80ac",
+                            name: "Sony WH-1000XM5 Headphones",
+                            brandName: "Sony",
+                            price: 29990,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/headphones/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+
+    {
+        _id: "69b2fd0fadf399bff6161e84",
+        user: "69a864a2268057c21e42acc4",
+        orderId: "order_RQM7ab8cXz1pLk",
+        name: "Marketly",
+        description: "Pay Now And Get The Products",
+        amount: 249900,
+        currency: "INR",
+        prefills: { name: "Arjun Sharma", email: "arjun@gmail.com", phoneNumber: "+919876543210" },
+        status: "paid",
+        paymentId: "pay_RQM8zzNrTsZbr6e",
+        createdAt: "2026-03-08T10:22:00.000Z",
+        updatedAt: "2026-03-10T14:00:00.000Z",
+        invoice: {
+            fileId: "69b3066d5c7cd75eb886290c",
+            url: "https://ik.imagekit.io/sample/invoice_xyz456",
+            thumbnailUrl: "https://ik.imagekit.io/sample/invoice_xyz456",
+            filename: "invoice_xyz456.pdf",
+        },
+        shippingAddress: {
+            street: "7 Linking Road, Bandra West",
+            city: "Mumbai",
+            state: "Maharashtra",
+            pincode: "400050",
+        },
+        sellerOrders: [
+            {
+                _id: "69b2ff548b69ee1afc7ff035",
+                vendor: "6953cd93456f0bcb6a034331",
+                deliveryStatus: "delivered",
+                products: [
+                    {
+                        quantity: 1,
+                        product: {
+                            _id: "69a425d849f2b13df22f80ad",
+                            name: 'Samsung 65" QLED 4K TV',
+                            brandName: "Samsung",
+                            price: 89999,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/tvs/samsung-65-qled-4k/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        quantity: 1,
+                        product: {
+                            _id: "69a425d849f2b13df22f80ae",
+                            name: "Fire TV Stick 4K",
+                            brandName: "Amazon",
+                            price: 5999,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/electronics/firetv/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        quantity: 3,
+                        product: {
+                            _id: "69a425d849f2b13df22f80af",
+                            name: "HDMI 2.1 Cable 2m",
+                            brandName: "Belkin",
+                            price: 1299,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/accessories/hdmi/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        quantity: 1,
+                        product: {
+                            _id: "69a425d849f2b13df22f80b0",
+                            name: "TV Wall Mount Bracket",
+                            brandName: "Duronic",
+                            price: 2499,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/accessories/mount/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+
+    {
+        _id: "69b2fd0fadf399bff6161e85",
+        user: "69a864a2268057c21e42acc4",
+        orderId: "order_TKL3mn9yQp4rWx",
+        name: "Marketly",
+        description: "Pay Now And Get The Products",
+        amount: 19900,
+        currency: "INR",
+        prefills: { name: "Arjun Sharma", email: "arjun@gmail.com", phoneNumber: "+919876543210" },
+        status: "pending",
+        createdAt: "2026-03-13T09:05:00.000Z",
+        updatedAt: "2026-03-13T09:05:00.000Z",
+        shippingAddress: {
+            street: "12 Civil Lines",
+            city: "Jaipur",
+            state: "Rajasthan",
+            pincode: "302006",
+        },
+        sellerOrders: [
+            {
+                _id: "69b2ff548b69ee1afc7ff036",
+                vendor: "6953cd93456f0bcb6a034332",
+                deliveryStatus: "placed",
+                products: [
+                    {
+                        quantity: 2,
+                        product: {
+                            _id: "69a425d849f2b13df22f80b1",
+                            name: "Levi's 511 Slim Fit Jeans",
+                            brandName: "Levi's",
+                            price: 3999,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/clothing/levis-511/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+
+    {
+        _id: "69b2fd0fadf399bff6161e86",
+        user: "69a864a2268057c21e42acc4",
+        orderId: "order_FVN5op2zRs8qYm",
+        name: "Marketly",
+        description: "Pay Now And Get The Products",
+        amount: 54900,
+        currency: "INR",
+        prefills: { name: "Arjun Sharma", email: "arjun@gmail.com", phoneNumber: "+919876543210" },
+        status: "failed",
+        createdAt: "2026-03-01T15:30:00.000Z",
+        updatedAt: "2026-03-01T15:35:00.000Z",
+        shippingAddress: {
+            street: "9 Sector 17",
+            city: "Chandigarh",
+            state: "Punjab",
+            pincode: "160017",
+        },
+        sellerOrders: [
+            {
+                _id: "69b2ff548b69ee1afc7ff037",
+                vendor: "6953cd93456f0bcb6a034333",
+                deliveryStatus: "placed",
+                products: [
+                    {
+                        quantity: 1,
+                        product: {
+                            _id: "69a425d849f2b13df22f80b2",
+                            name: "Wooden Study Table",
+                            brandName: "Nilkamal",
+                            price: 8999,
+                            currency: "₹",
+                            images: [
+                                {
+                                    thumbnailUrl:
+                                        "https://cdn.dummyjson.com/product-images/furniture/wooden-table/1.webp",
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+];

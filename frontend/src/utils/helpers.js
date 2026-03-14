@@ -4,7 +4,7 @@ export const trimStr = (str = "", length = 10) => {
 
 export const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
-        minimumFractionDigits: 2,
+        minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     }).format(price);
 };
@@ -17,3 +17,11 @@ export const getFormatedStr = (str) => {
         .map((el) => el[0].toUpperCase() + el.substring(1))
         ?.join(" ");
 };
+
+export const formatDate = (date, timeSpecific = true) => {
+    if(!date) return;
+    
+    return new Date(date).toLocaleDateString("en-IN", {
+    day: "2-digit", month: "long", year: "numeric", ...(timeSpecific && {hour: "2-digit", minute: "2-digit"})
+  })
+}

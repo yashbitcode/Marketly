@@ -12,6 +12,8 @@ import MainBaseLayout from "./layouts/MainBaseLayout";
 import { useAuth } from "./hooks";
 import PageLoader from "./components/loadings/PageLoader";
 import Profile from "./components/features/user/Profile";
+import OrdersPage from "./pages/Order";
+import OrderDetailPage from "./pages/OrderDetails";
 
 const App = () => {
     const { loading } = useAuth();
@@ -47,6 +49,8 @@ const App = () => {
                         <Route element={<Protected />}>
                             <Route path="user" element={<Profile />} />
                             <Route path="checkout" element={<Checkout />} />
+                            <Route path="orders" element={<OrdersPage />} />
+                            <Route path="orders/:id" element={<OrderDetailPage />} />
                         </Route>
                     </Route>
                 </Routes>

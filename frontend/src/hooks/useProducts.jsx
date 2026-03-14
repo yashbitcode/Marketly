@@ -38,29 +38,6 @@ const useProducts = () => {
         queryClient.invalidateQueries({ queryKey: ["products", page, searchParams] });
     }, [page, searchParams, queryClient]);
 
-    // useEffect(() => {
-    // const fetchProducts = async () => {
-    //     try {
-    //         setPageError(null);
-
-    //         const { data } = await ProductApi.getAllFilteredProducts(
-    //             Object.fromEntries([...searchParams]),
-    //             page,
-    //         );
-
-    //         if (Math.ceil(data?.data.totalCount || 1 / PAGINATION_LIMIT) >= page)
-    //             setProducts(data?.data || []);
-    //         else setPageError("Invalid Page Number");
-    //     } catch (err) {
-    //         toast.error(err?.response?.data?.message || "Something went wrong", {
-    //             position: "right-top",
-    //         });
-    //     }
-    // };
-
-    // fetchProducts();
-    // }, [page, searchParams]);
-
     return {
         products: data,
         setProducts,

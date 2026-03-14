@@ -42,6 +42,8 @@ class OrderService {
     async getAll(matchStage = {}, page = 1) {
         const basePagination = getPaginationBasePipeline(+page);
 
+        console.log(matchStage)
+
         const [allOrders] = await SellerOrder.aggregate([
             {
                 $match: matchStage,

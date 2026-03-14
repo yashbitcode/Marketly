@@ -83,12 +83,12 @@ const getOrderByOrderId = asyncHandler(async (req, res) => {
         orderDocId: new mongoose.Types.ObjectId(orderId),
     };
 
-    if (req.user.currentRole === "user") matchStage.user = req.user._id;
+    if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
     if (req.user.currentRole === "vendor")
-        matchStage.vendor = req.user.vendorId._id;
+        matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
 
     const order = await orderService.getOrderById(matchStage);
-
+    
     if (!order) throw new ApiError(404, "Order not found");
 
     res.json(new ApiResponse(200, order, "Order fetched successfully"));
@@ -98,9 +98,11 @@ const getAllOrders = asyncHandler(async (req, res) => {
     const { page } = req.params;
     let matchStage = {};
 
-    if (req.user.currentRole === "user") matchStage.user = req.user._id;
+    console.log(req.user)
+
+    if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
     if (req.user.currentRole === "vendor")
-        matchStage.vendor = req.user.vendorId._id;
+        matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
 
     const allOrders = await orderService.getAll(matchStage, page);
 
