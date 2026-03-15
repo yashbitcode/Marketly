@@ -118,6 +118,9 @@ const orderFulfillment = inngest.createFunction(
                 order.status === "paid"
                     ? `Your Order Is Placed: ${order.orderId}`
                     : `Your Order Placing Failed: ${order.orderId}`,
+            data: {
+                orderDocId: order._id
+            }
         };
 
         await step.run("send-order-notification", async () => {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Container } from "../components/common";
-import useBaseOrders from "../hooks/useBaseOrders";
+import {useBaseOrders} from "../hooks";
 import { ShoppingBag } from "lucide-react";
 import OrdersLoading from "../components/loadings/OrdersLoading";
 import OrderCard from "../components/features/order/OrderCard";

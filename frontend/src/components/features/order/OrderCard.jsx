@@ -1,16 +1,9 @@
 import { ChevronRight, Clock } from "lucide-react";
 import { STATUS_STYLE } from "../../../utils/constants";
-import { formatPrice } from "../../../utils/helpers";
+import { formatDate, formatPrice } from "../../../utils/helpers";
 
 const OrderCard = ({ order, onClick }) => {
     const payStatus = STATUS_STYLE[order.status] || STATUS_STYLE.pending;
-
-    const formattedDate = new Date().toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    });
-
 
     return (
         <div
@@ -20,7 +13,7 @@ const OrderCard = ({ order, onClick }) => {
             <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                     <p className="text-xs text-gray-400 font-medium">{order.orderId}</p>
-                    <p className="text-sm font-bold text-gray-800 mt-1">₹{formatPrice((order.amount / 100).toFixed(1))}</p>
+                    <p className="text-xl font-bold text-gray-800 mt-1">₹{formatPrice((order.amount / 100).toFixed(1))}</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <span
@@ -37,7 +30,7 @@ const OrderCard = ({ order, onClick }) => {
 
             <div className="ml-auto text-right">
                 <p className="text-xs text-gray-400 flex items-center gap-1 justify-end">
-                    <Clock size={10} /> {formattedDate}
+                    <Clock size={10} /> {formatDate(order.createdAt, false)}
                 </p>
             </div>
         </div>

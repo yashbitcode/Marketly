@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Package, MapPin, FileText, Truck } from "lucide-react";
 import { formatDate, formatPrice } from "../utils/helpers";
-import useOrderDetails from "../hooks/useOrderDetails";
+import {useOrderDetails} from "../hooks";
 import { Button } from "../components/common";
 import { ErrorToast } from "../utils/toasts";
 import ProductRow from "../components/features/order/ProductRow";
@@ -13,8 +13,6 @@ const OrderDetails = () => {
     const navigate = useNavigate();
 
     const { loading, isError, error, order } = useOrderDetails(id);
-
-    console.log(order);
 
     if (loading) {
         return (
@@ -41,7 +39,7 @@ const OrderDetails = () => {
         <div className="min-h-screen font-inter">
             <div className="max-w-2xl mx-auto px-4 py-8">
                 <Button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/orders")}
                     className="flex bg-transparent p-0 items-center gap-2 text-sm text-gray-500 hover:text-orange transition-colors mb-5"
                 >
                     <ArrowLeft size={16} /> Back to Orders

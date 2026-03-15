@@ -12,6 +12,10 @@ export const preventNumInp = ["e", "-", ".", "E"];
 export const preventKeys = ["ArrowRight", "ArrowLeft", "Backspace"];
 
 export const apiEndpoints = {
+    notification: {
+        getAll: "/notification",
+        markAsRead: "/notification",
+    },
     auth: {
         login: "/auth/login",
         vendorLogin: "/auth/vendor-login",

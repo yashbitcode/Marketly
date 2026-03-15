@@ -1,8 +1,9 @@
 import { Bell } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
-import { useAuth } from "../../../hooks";
+import { useAuth, useNotifications } from "../../../hooks";
 import { Button } from "../../common";
+import { useNavigate } from "react-router";
 
 const typeConfig = {
     ORDER_UPDATE: {
@@ -17,54 +18,43 @@ const typeConfig = {
 const NotificationBar = () => {
     const { user } = useAuth();
     const ioRef = useRef();
-    const [notifications, setNotifications] = useState([]);
+    const navigate = useNavigate();
+    const { loading, notifications, setNewNotification, setNotificationAsRead } =
+        useNotifications();
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if (!ioRef.current) {
-            const ioInst = io(import.meta.env.VITE_BACKEND_URL + "/notification", { withCredentials: true });
+            const ioInst = io(import.meta.env.VITE_BACKEND_URL + "/notification", {
+                withCredentials: true,
+            });
             ioRef.current = ioInst;
             ioInst.emit("join", user._id);
 
-            ioInst.on("order-place-update", (notification) => {
-                setNotifications((prev) => [notification, ...prev]);
-            });
+            ioInst.on("order-place-update", (notification) => setNewNotification?.(notification));
         }
-    }, [user]);
+    }, [user, setNewNotification]);
 
-    const unreadCount = notifications.filter((n) => !n.isRead).length;
-
-    const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    console.log(notifications);
 
     return (
-        <div className="relative">
-            {/* Bell Button */}
+        <div className="relative font-inter">
             <Button
                 onClick={() => setOpen((o) => !o)}
-                className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange justify-center items-center p-2 rounded-full"
+                className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange justify-center items-center p-2 rounded-full relative group"
             >
                 <Bell strokeWidth={1.8} />
-                {unreadCount > 0 && (
-                    <span className="absolute top-0.5 right-0.5 bg-orange-500 text-white text-[10px] font-bold min-w-4 h-4 flex items-center justify-center rounded-full px-1">
-                        {unreadCount}
-                    </span>
+                {!loading && notifications?.length > 0 && (
+                    <div className="size-2 group-hover:border top-1.5 right-3 rounded-full absolute bg-orange" />
                 )}
             </Button>
 
             {/* Dropdown Panel */}
             {open && (
-                <div className="absolute -right-10 top-13 w-80 max-h-70 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 flex flex-col overflow-hidden">
+                <div className="absolute -right-10 top-13 w-80 max-h-70 bg-white rounded-lg shadow-base z-50 flex flex-col overflow-hidden">
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                         <span className="font-bold text-sm text-gray-900">Notifications</span>
-                        {unreadCount > 0 && (
-                            <button
-                                onClick={markAllRead}
-                                className="text-xs text-orange-500 font-semibold hover:text-orange-600 transition-colors"
-                            >
-                                Mark all read
-                            </button>
-                        )}
                     </div>
 
                     {/* List */}
@@ -83,6 +73,11 @@ const NotificationBar = () => {
                                         className={`flex gap-3 px-4 py-3 border-b border-gray-50 transition-colors ${
                                             n.isRead ? "bg-white" : config.card
                                         }`}
+                                        onClick={() => {
+                                            navigate("/orders/" + n.data.orderDocId);
+                                            setNotificationAsRead(n._id);
+                                            setOpen(false);
+                                        }}
                                     >
                                         {/* Icon */}
                                         <div className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center text-base shrink-0">
@@ -105,13 +100,6 @@ const NotificationBar = () => {
                                                 {n.message}
                                             </p>
                                         </div>
-
-                                        {/* Unread dot */}
-                                        {!n.isRead && (
-                                            <div
-                                                className={`w-2 h-2 rounded-full shrink-0 mt-1 ${config.dot}`}
-                                            />
-                                        )}
                                     </div>
                                 );
                             })

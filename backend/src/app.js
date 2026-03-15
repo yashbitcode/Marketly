@@ -32,6 +32,7 @@ import orderRouter from "./routes/order.routes.js";
 import vendorStripeRouter from "./routes/vendorStripe.routes.js";
 import vendorPayoutRouter from "./routes/vendorPayout.routes.js";
 import webhookRouter from "./routes/webhook.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
 
 app.use(
     cors({
@@ -71,6 +72,7 @@ app.use(BASE_ENDPOINT + "/chat", chatRouter);
 app.use(BASE_ENDPOINT + "/order", orderRouter);
 app.use(BASE_ENDPOINT + "/vendor-stripe", vendorStripeRouter);
 app.use(BASE_ENDPOINT + "/vendor-payout", vendorPayoutRouter);
+app.use(BASE_ENDPOINT + "/notification", notificationRouter);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 app.use(handleError);

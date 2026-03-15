@@ -20,6 +20,19 @@ class NotificationService {
         return notification;
     }
 
+    async getAllNotification(filters = {}) {
+        filters.isRead = false;
+
+        const allNotifications = await Notification.find(filters);
+
+        return allNotifications;
+    }
+
+    async markNotificationAsRead(notificationId) {
+        const notification = await Notification.findByIdAndUpdate(notificationId, { isRead: true }, { new: true });
+        return notification;
+    }
+
     async sendChatUpdateNotification(chatReq, notification) {
         const io = await initEmitter();
         io.nsp = "/notification"
