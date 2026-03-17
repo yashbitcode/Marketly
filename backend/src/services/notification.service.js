@@ -47,7 +47,7 @@ class NotificationService {
 
         io.nsp = "/notification"
 
-        const ab = io.of("/notification")
+        io.of("/notification")
             .to("notification:" + order.user._id)
             .emit("order-place-update", notification);
 

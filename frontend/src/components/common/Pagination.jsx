@@ -7,23 +7,29 @@ const Pagination = ({ page = 1, totalCount = 1, pageHandler }) => {
     page = totalPages < page ? totalPages : page;
 
     return (
-        <div className="mt-8 mx-auto w-fit flex items-center gap-4 ">
+        <div className="flex items-center justify-center gap-6 mt-8">
             <Button
-                className="bg-transparent shadow-base text-[1.1rem] text-dark rounded-[7px]"
+                className={`p-2 rounded-xl border border-gray-200 bg-white transition-all duration-200 
+                    ${page <= 1 ? "opacity-50 cursor-not-allowed text-gray-400" : "text-gray-700 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm"}`}
                 disabled={page <= 1}
                 onClick={() => pageHandler(page - 1)}
             >
-                <ChevronLeft />
+                <ChevronLeft size={20} />
             </Button>
-            <span className={"text-xl"}>
-                {page} of {totalPages}
-            </span>
+            
+            <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">
+                    Page <span className="font-semibold text-gray-900">{page}</span> of <span className="font-semibold text-gray-900">{totalPages}</span>
+                </span>
+            </div>
+
             <Button
-                className="bg-transparent shadow-base text-[1.1rem] text-dark rounded-[7px]"
+                className={`p-2 rounded-xl border border-gray-200 bg-white transition-all duration-200 
+                    ${page === totalPages ? "opacity-50 cursor-not-allowed text-gray-400" : "text-gray-700 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm"}`}
                 disabled={page === totalPages}
                 onClick={() => pageHandler(page + 1)}
             >
-                <ChevronRight />
+                <ChevronRight size={20} />
             </Button>
         </div>
     );

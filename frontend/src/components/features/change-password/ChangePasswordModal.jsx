@@ -32,9 +32,9 @@ const ChangePasswordModal = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed h-full inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-base p-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold mb-6">Change Password</h3>
+        <div className="fixed h-full backdrop-blur-sm px-4 inset-0 bg-black/50 flex flex-col items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 w-full max-w-md">
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight pb-4 mb-6 border-b border-gray-100">Change Password</h3>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <Input
@@ -62,13 +62,18 @@ const ChangePasswordModal = ({ onClose }) => {
                     />
 
                     <div className="flex justify-end gap-3 pt-4">
-                        <Button type="button" variant="outline" onClick={onClose}>
+                        <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={onClose}
+                            className="px-5 py-2.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium border-gray-200"
+                        >
                             Cancel
                         </Button>
 
                         <Button
                             type="submit"
-                            className="flex justify-center items-center gap-4"
+                            className="px-5 py-2.5 rounded-xl flex justify-center items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 transition-colors shadow-sm font-medium"
                             disabled={isSubmitting}
                         >
                             {mutation.isPending ? (

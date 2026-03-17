@@ -10,10 +10,10 @@ const OrderCard = ({ order, onClick }) => {
             onClick={onClick}
             className="bg-white shadow-base rounded-lg p-4 cursor-pointer transition-all hover:scale-102 font-inter"
         >
-            <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex items-start justify-between gap-3 mb-1">
                 <div>
                     <p className="text-xs text-gray-400 font-medium">{order.orderId}</p>
-                    <p className="text-xl font-bold text-gray-800 mt-1">₹{formatPrice((order.amount / 100).toFixed(1))}</p>
+                    <p className="text-xl font-bold text-gray-800 mt-2">₹{formatPrice((order.amount / 100).toFixed(1))}</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <span

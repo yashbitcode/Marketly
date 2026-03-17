@@ -132,9 +132,9 @@ const CheckoutPage = () => {
                     </div>
 
                     <div className="bg-white rounded-xl border border-gray-200 p-4">
-                        <h2 className="text-xl font-semibold mb-3">Cart Items</h2>
-                        <div className="space-y-3">
-                            {productsCart?.map((product) => {
+                        <h2 className="text-xl font-semibold">Cart Items</h2>
+                        {productsCart && productsCart?.length > 0 && (<div className="space-y-3 mt-3">
+                            {productsCart.map((product) => {
                                 const quantity = products?.[product.slug] || 0;
                                 if (!quantity) return null;
 
@@ -207,7 +207,7 @@ const CheckoutPage = () => {
                                     </div>
                                 );
                             })}
-                        </div>
+                        </div>)}
                     </div>
 
                     {/* notes */}

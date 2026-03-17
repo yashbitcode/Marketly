@@ -3,7 +3,6 @@ import productService from "../services/product.service.js";
 import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
 import { pubClient as redisClient } from "../config/redis/connection.js";
-import { createHash } from "../utils/helpers.js";
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;

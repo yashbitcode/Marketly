@@ -14,10 +14,10 @@ const TrendyProducts = () => {
 
             <Container className="mx-auto mt-10">
                 <div className="grid grid-cols-4 max-[1080px]:grid-cols-2 max-[570px]:grid-cols-1  items-center w-fit mx-auto gap-4">
-                    {!loading
+                    {!loading || products?.data
                         ? Array.from({ length: 8 }).map((_, idx) => (
                               <ProductCard key={products?.data[idx]._id} {...products?.data[idx]} />
-                          ))
+                          )) 
                         : Array.from({ length: 8 }).map((_, idx) => (
                               <ProductCardSkeleton key={idx} />
                           ))}

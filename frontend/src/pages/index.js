@@ -8,3 +8,4 @@ export { default as PaymentSuccess } from "./PaymentSuccess";
 export { default as PaymentFailed } from "./PaymentFailed";
 export { default as Order } from "./Order";
 export { default as OrderDetails } from "./OrderDetails";
+export { default as VendorProducts } from "./VendorProducts";

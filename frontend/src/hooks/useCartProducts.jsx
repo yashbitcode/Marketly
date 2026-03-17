@@ -4,9 +4,12 @@ import { ProductApi } from "../apis";
 
 const useCartProducts = () => {
     const {user} = useAuth();
+    const cartKeys = Object.keys(JSON.parse(localStorage.getItem("cart") || "{}"));
+    
     const {isPending, isError, data, error} = useQuery({
-        queryKey: ["cartProducts", user._id],
-        queryFn: () => ProductApi.getCartProducts(JSON.parse(localStorage.getItem("cart") || "{}"))
+        queryKey: ["cartProducts", user._id, cartKeys],
+        queryFn: () => ProductApi.getCartProducts(JSON.parse(localStorage.getItem("cart") || "{}")),
+        enabled: cartKeys.length > 0
     });
 
     return {

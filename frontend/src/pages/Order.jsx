@@ -16,6 +16,8 @@ const OrdersPage = () => {
         page,
     } = useBaseOrders();
 
+    console.log(orders);
+
     return (
         <div className="min-h-screen font-inter">
             <Container className="max-w-2xl mx-auto px-4 py-8">
@@ -42,7 +44,7 @@ const OrdersPage = () => {
                         {orders?.data.map((order) => (
                             <OrderCard
                                 key={order._id}
-                                order={order.order}
+                                order={order}
                                 onClick={() => navigate(`/orders/${order._id}`)}
                             />
                         ))}

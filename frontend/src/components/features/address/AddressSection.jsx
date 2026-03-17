@@ -48,16 +48,16 @@ const AddressSection = ({ sideEffect }) => {
 
     return (
         <>
-            <div className="bg-white shadow-base rounded-base p-4 space-y-4">
+            <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">My Addresses</h2>
+                    <h2 className="text-xl font-bold text-gray-900 tracking-tight"></h2>
 
                     <Button
                         onClick={() => setIsAddressModalOpen(true)}
-                        className="bg-black text-white p-1"
+                        className="bg-gray-900 text-white p-2 rounded-xl hover:bg-gray-800 transition-colors"
                         title="Add Addresses"
                     >
-                        <Plus />
+                        <Plus size={18} />
                     </Button>
                 </div>
 

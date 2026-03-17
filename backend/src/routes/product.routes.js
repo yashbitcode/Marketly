@@ -15,7 +15,6 @@ import {
     updateProductValidations,
     updateProductStatusValidations,
     productQueryValidations,
-    searchQueryValidations,
     cartItemsValidations,
 } from "../../../shared/validations/product.validations.js";
 const router = Router();

@@ -79,15 +79,13 @@ const createOrder = asyncHandler(async (req, res) => {
 const getOrderByOrderId = asyncHandler(async (req, res) => {
     const { orderId } = req.params;
 
-    const matchStage = {
-        orderDocId: new mongoose.Types.ObjectId(orderId),
-    };
+    const matchStage = {};
 
     if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
     if (req.user.currentRole === "vendor")
         matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
 
-    const order = await orderService.getOrderById(matchStage);
+    const order = await orderService.getOrderById(orderId, matchStage);
     
     if (!order) throw new ApiError(404, "Order not found");
 
@@ -214,20 +212,7 @@ const webhook = asyncHandler(async (req, res, next) => {
                 updateData,
             );
 
-            if (event === "payment.failed") throw new ApiError();
-
-            //     await orderQueue.add(
-            //     "order-fulfillment",
-            //     {
-            //         orderDocId: order._id,
-            //         products: order.products,
-            //         status: order.status,
-            //         user: order.user,
-            //     },
-            //     { removeOnComplete: true, removeOnFail: true, attempts: 3 },
-            // );
-
-            await inngest
+            if (event !== "payment.failed")  await inngest
                 .send({
                     name: "order/order-fulfillment",
                     data: {
@@ -238,6 +223,7 @@ const webhook = asyncHandler(async (req, res, next) => {
                     },
                 })
                 .catch((err) => {});
+           
         } else if (event === "refund.processed") {
             const {
                 refund: { entity },

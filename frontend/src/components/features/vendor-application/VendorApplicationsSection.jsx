@@ -13,15 +13,13 @@ const VendorApplicationsSection = ({ applications }) => {
     const [selectedApp, setSelectedApp] = useState(null);
 
     return (
-        <div className="bg-white shadow-base rounded-base p-4">
-            <h2 className="text-xl font-semibold mb-6">Vendor Applications</h2>
-
+        <div className="space-y-4">
             {/* Scroll Container */}
             <div className="max-h-80 overflow-y-scroll scrollbar-thin-custom space-y-3 p-1 scrollbar-thin-custom">
                 {applications.map((app) => (
                     <div
                         key={app._id}
-                        className="shadow-base rounded-base p-4 flex items-center justify-between hover:bg-gray-50 transition max-[500px]:flex-col max-[500px]:items-start gap-5"
+                        className="border border-gray-100 rounded-xl bg-gray-50/30 hover:bg-gray-50/80 p-5 flex items-center justify-between transition max-[500px]:flex-col max-[500px]:items-start gap-4"
                     >
                         {/* Left Side */}
                         <div className="flex items-start max-[500px]:flex-col gap-2">
@@ -39,7 +37,7 @@ const VendorApplicationsSection = ({ applications }) => {
                         {/* Right Side */}
                         <Button
                             onClick={() => setSelectedApp(app)}
-                            className="text-sm px-4 py-2 bg-black text-white rounded-[10px] hover:opacity-90"
+                            className="text-sm px-5 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors shadow-sm"
                         >
                             View
                         </Button>

@@ -53,9 +53,9 @@ const ProfileEditModal = ({ user, onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-base p-6 w-full max-w-lg space-y-6">
-                <h3 className="text-lg font-semibold">Edit Profile</h3>
+        <div className="fixed inset-0 bg-black/50 px-4 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 w-full max-w-lg space-y-6 border border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight pb-4 border-b border-gray-100">Edit Profile</h3>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <Input
@@ -85,14 +85,14 @@ const ProfileEditModal = ({ user, onClose }) => {
                             type="button"
                             variant="secondary"
                             onClick={onClose}
-                            className="px-4 py-2 rounded-base"
+                            className="px-5 py-2.5 rounded-xl text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors font-medium border-none"
                         >
                             Cancel
                         </Button>
 
                         <Button
                             type="submit"
-                            className="px-4 py-2 flex justify-center items-center gap-4 bg-black text-white rounded-base"
+                            className="px-5 py-2.5 flex justify-center items-center gap-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium shadow-sm"
                             disabled={isSubmitting}
                         >
                             {mutation.isPending ? (

@@ -33,7 +33,7 @@ const OrderDetails = () => {
         );
     }
 
-    const { order: baseOrder, sellerOrders } = order;
+    const { baseOrder, sellerOrders } = order;
 
     return (
         <div className="min-h-screen font-inter">
@@ -51,14 +51,14 @@ const OrderDetails = () => {
                         <div>
                             <p className="text-xs text-gray-400 font-medium">{baseOrder.orderId}</p>
                             <p className="text-2xl font-black text-gray-900 mt-1.5">
-                                ₹{formatPrice(baseOrder.amount)}
+                                ₹{formatPrice(baseOrder.amount / 100)}
                             </p>
                         </div>
                         <span
                             className={`text-xs font-bold px-3 py-1 rounded-full ${
                                 baseOrder.status === "paid"
                                     ? "bg-green-100 text-green-700"
-                                    : order.status === "failed"
+                                    : baseOrder.status === "failed"
                                       ? "bg-red-100 text-red-600"
                                       : "bg-yellow-100 text-yellow-700"
                             }`}
@@ -111,7 +111,7 @@ const OrderDetails = () => {
                 <div className="bg-white rounded-lg p-5 shadow-base mb-4">
                     <p className="text-sm font-bold text-gray-800 mb-3">Order Summary</p>
                     <InfoRow label="Order ID" value={baseOrder.orderId} />
-                    <InfoRow label="Total Amount" value={`₹${formatPrice(baseOrder.amount)}`} />
+                    <InfoRow label="Total Amount" value={`₹${formatPrice(baseOrder.amount / 100)}`} />
                     <InfoRow label="Currency" value={baseOrder.currency} />
                     <InfoRow label="Placed on" value={formatDate(baseOrder.createdAt)} />
                 </div>

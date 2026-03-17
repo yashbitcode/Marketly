@@ -60,9 +60,9 @@ const AddressModal = ({ onClose, updateAddress, setUpdateAddress }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50  h-full p-4">
-            <div className="bg-white rounded-base p-6 w-full max-w-lg my-10">
-                <h3 className="text-lg font-semibold mb-6">Add New Address</h3>
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex flex-col items-center justify-center z-50 overflow-y-auto p-4">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8 w-full max-w-lg my-10">
+                <h3 className="text-xl font-bold text-gray-900 tracking-tight pb-4 mb-6 border-b border-gray-100">Add New Address</h3>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-4 max-h-100 pb-3 scrollbar-thin-custom overflow-y-auto">
@@ -132,14 +132,19 @@ const AddressModal = ({ onClose, updateAddress, setUpdateAddress }) => {
                         />
                     </div>
 
-                    <div className="col-span-2 flex justify-end gap-3 pt-4">
-                        <Button type="button" variant="outline" onClick={onClose}>
+                    <div className="col-span-2 flex justify-end gap-3 pt-6 mt-4 border-t border-gray-100">
+                        <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={onClose}
+                            className="px-5 py-2.5 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium border-gray-200"
+                        >
                             Cancel
                         </Button>
 
                         <Button
                             type="submit"
-                            className="flex justify-center items-center gap-4"
+                            className="px-5 py-2.5 rounded-xl flex justify-center items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 transition-colors shadow-sm font-medium"
                             disabled={isSubmitting}
                         >
                             {mutation.isPending ? (
@@ -150,7 +155,7 @@ const AddressModal = ({ onClose, updateAddress, setUpdateAddress }) => {
                                     Loading...
                                 </>
                             ) : (
-                                "Save Address"
+                                "Submit"
                             )}
                         </Button>
                     </div>

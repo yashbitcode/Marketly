@@ -26,43 +26,45 @@ const AddressCard = ({ address, markAddressAsDefault, handleEditAddress }) => {
     };
     return (
         <div
-            className=" rounded-base p-4 shadow-base transition cursor-pointer"
+            className="border border-gray-100 rounded-xl bg-gray-50/30 hover:bg-gray-50/80 p-5 transition-all cursor-pointer group"
             onClick={() => markAddressAsDefault(address._id)}
         >
-            <div className="flex justify-between max-[450px]:flex-col-reverse gap-3  items-start">
+            <div className="flex justify-between max-[450px]:flex-col-reverse gap-4 items-start">
                 <div>
-                    <h3 className="font-medium">{address.fullname}</h3>
-                    <p className="text-sm text-gray-600">{address.phoneNumber}</p>
+                    <h3 className="font-semibold text-gray-900">{address.fullname}</h3>
+                    <p className="text-sm text-gray-500 mt-0.5 font-medium">{address.phoneNumber}</p>
                 </div>
 
-                <div className="flex gap-3 items-center flex-wrap">
+                <div className="flex gap-2 items-center flex-wrap">
                     {address.isDefault && (
-                        <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md">
                             Default
                         </span>
                     )}
 
-                    <span className="text-xs bg-neutral-100 px-2 py-1 rounded-full">
+                    <span className="text-[10px] uppercase tracking-wider font-bold bg-white border border-gray-200 text-gray-600 px-2 py-1 rounded-md">
                         {address.addressType}
                     </span>
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditAddress(address);
-                        }}
-                        className="text-xs text-black bg-neutral-100 px-2 py-1 rounded-full"
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteAddress(address._id);
-                        }}
-                        className="text-xs text-black bg-neutral-100 px-2 py-1 rounded-full"
-                    >
-                        Delete
-                    </Button>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+                        <Button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditAddress(address);
+                            }}
+                            className="text-xs bg-white border border-gray-200 text-gray-600 hover:text-gray-900 px-3 py-1 rounded-lg transition-colors shadow-sm"
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteAddress(address._id);
+                            }}
+                            className="text-xs bg-white border border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 px-3 py-1 rounded-lg transition-colors shadow-sm"
+                        >
+                            Delete
+                        </Button>
+                    </div>
                 </div>
             </div>
 

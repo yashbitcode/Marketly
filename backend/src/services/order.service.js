@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Order from "../models/order.models.js";
 import Product from "../models/product.models.js";
 import SellerOrder from "../models/sellerOrder.models.js";
-import { getPaginationBasePipeline  } from "../utils/helpers.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 import vendorPayoutService from "./vendorPayout.service.js";
 import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 
@@ -42,32 +42,39 @@ class OrderService {
     async getAll(matchStage = {}, page = 1) {
         const basePagination = getPaginationBasePipeline(+page);
 
-        console.log(matchStage)
+        console.log(matchStage);
 
-        const [allOrders] = await SellerOrder.aggregate([
+        // const [allOrders] = await SellerOrder.aggregate([
+        //     {
+        //         $match: matchStage,
+        //     },
+        //     {
+        //         $group: {
+        //             _id: "$orderDocId",
+        //             sellerOrders: {
+        //                 $push: "$$ROOT",
+        //             },
+        //         },
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: "orders",
+        //             localField: "_id",
+        //             foreignField: "_id",
+        //             as: "order",
+        //         },
+        //     },
+        //     {
+        //         $addFields: {
+        //             order: { $arrayElemAt: ["$order", 0] },
+        //         },
+        //     },
+        //     ...basePagination,
+        // ]);
+
+        const [allOrders] = await Order.aggregate([
             {
                 $match: matchStage,
-            },
-            {
-                $group: {
-                    _id: "$orderDocId",
-                    sellerOrders: {
-                        $push: "$$ROOT",
-                    },
-                },
-            },
-            {
-                $lookup: {
-                    from: "orders",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "order",
-                },
-            },
-            {
-                $addFields: {
-                    order: { $arrayElemAt: ["$order", 0] },
-                },
             },
             ...basePagination,
         ]);
@@ -75,126 +82,156 @@ class OrderService {
         return allOrders;
     }
 
-    async getOrderById(matchStage = {}) {
-        const [order] = await SellerOrder.aggregate([
+    async getOrderById(baseOrderId, filters = {}) {
+        let baseOrder = await Order.findOne({
+            ...filters,
+            _id: baseOrderId,
+        }).populate("shippingAddress");
+
+        if (!baseOrder) return;
+
+        if (baseOrder.status === "created") {
+            const baseDate = new Date(baseOrder.createdAt).getTime();
+
+            const diff =
+                (baseDate - (baseDate - (1000 * 60 * 15))) /
+                (1000 * 60);
+
+                console.log(diff);
+                
+            if (diff >= 15)
+                baseOrder = await Order.findByIdAndUpdate(
+                    { _id: baseOrderId },
+                    { status: "failed" },
+                    { new: true },
+                );
+        }
+
+        if(baseOrder.status === "failed") return { baseOrder};
+
+        const sellerOrders = await SellerOrder.aggregate([
             {
-                $match: matchStage,
-            },
-            {
-                $group: {
-                    _id: "$orderDocId",
-                    sellerOrders: {
-                        $push: "$$ROOT",
-                    },
+                $match: {
+                    orderDocId: new mongoose.Types.ObjectId(baseOrderId),
                 },
             },
-            {
-                $lookup: {
-                    from: "orders",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "order",
-                    pipeline: [
-                        {
-                            $lookup: {
-                                from: "addresses",
-                                localField: "shippingAddress",
-                                foreignField: "_id",
-                                as: "shippingAddress",
-                            },
-                        },
-                        {
-                            $unwind: "$shippingAddress",
-                        },
-                    ],
-                },
-            },
-            {
-                $unwind: "$order",
-            },
-            {
-                $unwind: "$sellerOrders",
-            },
+            // {
+            //     $group: {
+            //         _id: "$orderDocId",
+            //         sellerOrders: {
+            //             $push: "$$ROOT",
+            //         },
+            //     },
+            // },
+            // {
+            //     $lookup: {
+            //         from: "orders",
+            //         localField: "_id",
+            //         foreignField: "_id",
+            //         as: "order",
+            //         pipeline: [
+            //             {
+            //                 $lookup: {
+            //                     from: "addresses",
+            //                     localField: "shippingAddress",
+            //                     foreignField: "_id",
+            //                     as: "shippingAddress",
+            //                 },
+            //             },
+            //             {
+            //                 $unwind: "$shippingAddress",
+            //             },
+            //         ],
+            //     },
+            // },
+            // {
+            //     $unwind: "$order",
+            // },
+            // {
+            //     $unwind: "$sellerOrders",
+            // },
             {
                 $lookup: {
                     from: "vendors",
-                    localField: "sellerOrders.vendor",
+                    localField: "vendor",
                     foreignField: "_id",
-                    as: "sellerOrders.vendor",
+                    as: "vendor",
                 },
             },
             {
-                $unwind: "$sellerOrders.vendor",
+                $unwind: "$vendor",
             },
             {
-                $unwind: "$sellerOrders.products",
+                $unwind: "$products",
             },
             {
                 $lookup: {
                     from: "products",
-                    localField: "sellerOrders.products.product",
+                    localField: "products.product",
                     foreignField: "_id",
-                    as: "sellerOrders.products.product",
+                    as: "products.product",
                 },
             },
             {
-                $unwind: "$sellerOrders.products.product",
+                $unwind: "$products.product",
             },
 
             {
                 $lookup: {
                     from: "sub-categories",
-                    localField: "sellerOrders.products.product.category",
+                    localField: "products.product.category",
                     foreignField: "_id",
-                    as: "sellerOrders.products.product.category",
+                    as: "products.product.category",
                 },
             },
             {
-                $unwind: "$sellerOrders.products.product.category",
+                $unwind: "$products.product.category",
             },
             {
                 $lookup: {
                     from: "parent-categories",
-                    localField:
-                        "sellerOrders.products.product.category.parentCategory",
+                    localField: "products.product.category.parentCategory",
                     foreignField: "_id",
-                    as: "sellerOrders.products.product.category.parentCategory",
+                    as: "products.product.category.parentCategory",
                 },
             },
             {
-                $unwind:
-                    "$sellerOrders.products.product.category.parentCategory",
+                $unwind: "$products.product.category.parentCategory",
             },
             {
                 $group: {
-                    _id: {
-                        orderId: "$_id",
-                        sellerId: "$sellerOrders._id",
-                    },
-                    order: { $first: "$order" },
+                    _id: "$_id",
+                    doc: { $first: "$$ROOT" },
                     products: {
-                        $push: "$sellerOrders.products",
+                        $push: "$products",
                     },
-                    sellerOrders: { $first: "$sellerOrders" },
                 },
             },
             {
                 $addFields: {
-                    "sellerOrders.products": "$products",
+                    "doc.products": "$products",
                 },
             },
             {
-                $group: {
-                    _id: "$_id.orderId",
-                    order: { $first: "$order" },
-                    sellerOrders: { $push: "$sellerOrders" },
+                $replaceRoot: {
+                    newRoot: "$doc",
                 },
             },
+            // {
+            //     $addFields: {
+            //         "products": "$products",
+            //     },
+            // },
+            // {
+            //     $group: {
+            //         _id: "$_id.orderId",
+            //         order: { $first: "$order" },
+            //         sellerOrders: { $push: "$sellerOrders" },
+            //     },
+            // },
         ]);
 
-        console.log("MAINAIAIN: ", order)
-
-        return order;
+        return { baseOrder, sellerOrders };
     }
 
     async getBaseOrder(filters = {}) {

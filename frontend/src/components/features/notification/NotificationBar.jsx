@@ -31,11 +31,13 @@ const NotificationBar = () => {
             ioRef.current = ioInst;
             ioInst.emit("join", user._id);
 
-            ioInst.on("order-place-update", (notification) => setNewNotification?.(notification));
+            ioInst.on("order-place-update", (notification) => {
+                setNewNotification?.(notification)
+            });
         }
     }, [user, setNewNotification]);
 
-    console.log(notifications);
+    // console.log(notifications);
 
     return (
         <div className="relative font-inter">
