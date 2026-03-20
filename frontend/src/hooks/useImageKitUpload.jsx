@@ -43,7 +43,7 @@ const useImageKitUpload = () => {
             console.error("Failed to authenticate for upload:", authError);
             return;
         }
-
+        console.log(authParams.data)
         try {
             const data = Array.from(fileInput).map(async (file, idx) => {
                 const {
@@ -52,7 +52,7 @@ const useImageKitUpload = () => {
                     thumbnailUrl,
                     url,
                 } = await upload({
-                    ...authParams[idx],
+                    ...authParams?.data[idx],
                     file,
                     folder,
                     fileName: file.name,
@@ -62,6 +62,13 @@ const useImageKitUpload = () => {
                     },
                     abortSignal: abortController.signal,
                 });
+
+                console.log({
+                    name: filename,
+                    fileId,
+                    thumbnailUrl,
+                    url,
+                })
 
                 return {
                     filename,

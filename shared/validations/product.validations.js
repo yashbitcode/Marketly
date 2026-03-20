@@ -3,6 +3,8 @@ import {
     baseProductValidations,
     baseProductAttributeValidations,
     productRecords,
+    clientSideAttributesValidations,
+    clientSideFileValidations,
 } from "../baseValidations.js";
 import { PRODUCT_APPROVAL_STATUS } from "../constants.js";
 
@@ -13,6 +15,14 @@ const addProductValidations = baseProductValidations
             .optional(),
     })
     .strict();
+
+const addProductClient = baseProductValidations.extend({
+    attributes: z.array(clientSideAttributesValidations).optional(),
+    files: clientSideFileValidations(4, true),
+    category: z.string().min(1, "Category is required")
+}).omit({
+    images: true,
+});
 
 const updateProductValidations = baseProductValidations
     .extend({
@@ -104,5 +114,6 @@ export {
     updateProductStatusValidations,
     productQueryValidations,
     searchQueryValidations,
-    cartItemsValidations
+    cartItemsValidations,
+    addProductClient
 };

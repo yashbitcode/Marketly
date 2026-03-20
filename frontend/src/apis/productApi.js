@@ -12,6 +12,8 @@ const ProductApi = {
         (await axiosClient.get(apiEndpoints.product.specific + `/${slug}`)).data,
     getCartProducts: async (payload) =>
         (await axiosClient.post(apiEndpoints.product.cart, {products: payload})).data,
+    addProduct: async (payload) =>
+        (await axiosClient.post(apiEndpoints.product.create, payload)).data,
 };
 
 export default ProductApi;

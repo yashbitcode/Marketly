@@ -4,6 +4,7 @@ import {
     ADDRESS_TYPE,
     VENDOR_TYPE,
     ATTRIBUTE_DATATYPES,
+    ALLOWED_FILETYPES,
 } from "./constants.js";
 
 const productRecords = z.record(
@@ -219,13 +220,6 @@ const baseProductValidations = z.object({
         .refine((val) => REGEX.objectId.test(val), {
             message: "Invalid category ID",
         }),
-    // vendor: z
-    //     .string({
-    //         error: (iss) => !iss.input && "Vendor ID is required",
-    //     })
-    //     .refine((val) => REGEX.objectId.test(val), {
-    //         message: "Invalid vendor ID",
-    //     }),
     description: z
         .string({
             error: (iss) => !iss.input && "Description is required",
@@ -233,17 +227,17 @@ const baseProductValidations = z.object({
         .min(1, "Description is required")
         .min(20, "Minimum length should be 20"),
     pros: z
-        .array(z.string(), {
+        .array(z.string().min(1, "Pro is required"), {
             error: (iss) => !iss.input && "Pros are required",
         })
         .min(1, "Atleast 1 pros should be there"),
     cons: z
-        .array(z.string(), {
+        .array(z.string().min(1, "Con is required"), {
             error: (iss) => !iss.input && "Cons are required",
         })
         .min(1, "Atleast 1 cons should be there"),
     keyFeatures: z
-        .array(z.string(), {
+        .array(z.string().min(1, "Key feature is required"), {
             error: (iss) => !iss.input && "Key features are required",
         })
         .min(1, "Atleast 1 key feature should be there"),
@@ -251,6 +245,86 @@ const baseProductValidations = z.object({
         .array(baseMediaValidations)
         .min(1, "Atleast 1 image should be there"),
 });
+
+const clientSideAttributesValidations = z
+  .object({
+    name: z.string({
+      error: (iss) => !iss.input && "Attribute name is required",
+    }).min(1, "Product name is required"),
+
+    dataType: z.enum(ATTRIBUTE_DATATYPES, {
+      message: "Invalid attribute datatype",
+    }),
+
+    isVariant: z.boolean({
+      error: (iss) => !iss.input && "Variant flag is required",
+    }),
+
+    value: z.string().min(1, "Value is required")
+  })
+  .superRefine((data, ctx) => {
+    const val = data.value || "";
+
+    const arr = val
+      .split(",")
+      .map(v => v.trim())
+      .filter(Boolean);
+
+    if (data.isVariant && arr.length === 0) {
+      ctx.addIssue({
+        path: ["value"],
+        message: "Value cannot be empty",
+      });
+      return;
+    }
+
+    if (data.dataType === "text") {
+      if (!arr.every(el => el.length > 0)) {
+        ctx.addIssue({
+          path: ["value"],
+          message: "Invalid text values",
+        });
+      }
+    }
+
+    if (data.dataType === "number") {
+      if (!arr.every(el => !isNaN(+el))) {
+        ctx.addIssue({
+          path: ["value"],
+          message: "Invalid number values",
+        });
+      }
+    }
+  });
+
+const clientSideFileValidations = (fileLength, required = false) => {
+    return z
+            .custom((val) => {
+                if (typeof window === "undefined") return true;
+                if (!val) return true;
+    
+                return val instanceof FileList;
+            }, "Invalid file type")
+            .refine((files) => {
+                if(!required) return true;
+                return files.length > 0
+            }, {
+                message: "Atleast 1 file is required"
+            })
+            .refine((files) => files.length <= fileLength, {
+                message: `At max ${fileLength} attachments can be there`,
+            })
+            .refine(
+                (files) =>
+                    Array.from(files).every((file) =>
+                        ALLOWED_FILETYPES.includes(file.type),
+                    ),
+                {
+                    message:
+                        "Invalid file type. Only JPG, JPEG, PNG & WEBP are accepted.",
+                },
+            )
+}
 
 export {
     addressValidations,
@@ -260,5 +334,7 @@ export {
     baseProductValidations,
     baseProductAttributeValidations,
     baseMediaValidations,
-    productRecords
+    productRecords,
+    clientSideFileValidations,
+    clientSideAttributesValidations
 };

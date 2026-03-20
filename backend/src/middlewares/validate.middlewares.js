@@ -10,12 +10,15 @@ const validate = (validationSchema, isQuery = false) => {
             (isQuery ? req.query : req.body) || {},
         );
 
-        if (!validation.success)
+        if (!validation.success) {
+            console.log(z.flattenError(validation.error))
+        
             throw new ApiError(
                 400,
                 "Validation error",
                 z.flattenError(validation.error),
             );
+        }
         if (!isQuery) req.body = validation.data;
 
         next();

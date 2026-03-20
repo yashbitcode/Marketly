@@ -51,6 +51,7 @@ export const apiEndpoints = {
         getFiltered: "/product/filter",
         specific: "/product/slug",
         cart: "/product/cart",
+        create: "/product/vendor"
     },
     review: {
         getAll: "/review/product",

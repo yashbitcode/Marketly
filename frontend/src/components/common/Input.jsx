@@ -6,6 +6,7 @@ const Input = ({
     className = "",
     name = "",
     defaultId,
+    labelClassName="",
     error,
     label,
     ref,
@@ -20,7 +21,7 @@ const Input = ({
 
     return (
         <div className="w-full flex flex-col gap-1.5">
-            {label && <label htmlFor={defaultId || id}>{label}</label>}
+            {label && <label className={labelClassName} htmlFor={defaultId || id}>{label}</label>}
             <input
                 type={type}
                 ref={ref}

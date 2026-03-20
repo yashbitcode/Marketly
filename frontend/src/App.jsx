@@ -14,6 +14,7 @@ import PageLoader from "./components/loadings/PageLoader";
 import Profile from "./components/features/user/Profile";
 import OrdersPage from "./pages/Order";
 import OrderDetailPage from "./pages/OrderDetails";
+import ProductCU from "./components/features/vendor/ProductCU";
 
 const App = () => {
     const { loading } = useAuth();
@@ -55,6 +56,7 @@ const App = () => {
 
                         <Route path="vendor" element={<Protected allowedRoles={["vendor"]} />}>
                             <Route path="products" element={<VendorProducts />} />
+                            <Route path="products/add" element={<ProductCU />} />
                         </Route>
                     </Route>
                 </Routes>

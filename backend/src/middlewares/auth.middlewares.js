@@ -32,7 +32,9 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
 
     const { _id, vendorId, currentRole, tokenVersion } =
         await verifyToken(token);
-
+    const i =
+        await verifyToken(token);
+console.log(i)
     let payload;
 
     if (currentRole === "vendor") {
@@ -129,6 +131,7 @@ const isSocketAuthenticated = async (socket, next) => {
 
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
+        console.log(req.user)
         if (!allowedRoles.includes(req.user.currentRole))
             throw new ApiError(403, "Forbidden: insufficient permissions");
 
