@@ -45,7 +45,7 @@ const useNotifications = () => {
 
     return {
         loading: isPending,
-        error: error?.message,
+        error: error?.response?.data?.message,
         isError,
         notifications: data?.data || [],
         setNewNotification,

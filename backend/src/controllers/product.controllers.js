@@ -3,6 +3,7 @@ import productService from "../services/product.service.js";
 import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
 import { pubClient as redisClient } from "../config/redis/connection.js";
+import mongoose from "mongoose";
 
 const getAllProducts = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -10,32 +11,40 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
     let redisKey = "";
 
-    if (!req?.user?.currentRole || req.user.currentRole === "user") {
-        matchStage = {
-            "approval.status": "accepted",
-            isActive: true,
-        };
+    // console.log("USER: ", req.user)
 
-        redisKey += "user:products:";
-    } else if (req.user.currentRole === "vendor") {
-        matchStage.vendor = req.user.vendorId._id;
+    // if (!req?.user?.currentRole || req.user.currentRole === "user") {
+    //     matchStage = {
+    //         "approval.status": "accepted",
+    //         isActive: true,
+    //     };
+
+    //     redisKey += "user:products:";
+    // }
+
+    if (req.user.currentRole === "vendor") {
+        matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
 
         redisKey += "vendor:products:";
     } else redisKey += "admin:products:";
 
-    redisKey += page ? page : "1";
+    // redisKey += page ? page : "1";
+    // let allProducts = await redisClient.get(redisKey);
+    let allProducts;
 
-    let allProducts = await redisClient.get(redisKey);
-
-    if (allProducts)
-        return res.json(
-            new ApiResponse(200, allProducts, "Products fetched successfully"),
-        );
+    // if (allProducts)
+    //     return res.json(
+    //         new ApiResponse(
+    //             200,
+    //             JSON.parse(allProducts),
+    //             "Products fetched successfully",
+    //         ),
+    //     );
 
     allProducts = await productService.getAll(matchStage, page);
 
-    await redisClient.set(redisKey, JSON.stringify(allProducts));
-    await redisClient.expire(redisKey, 60 * 5);
+    // await redisClient.set(redisKey, JSON.stringify(allProducts));
+    // await redisClient.expire(redisKey, 60 * 5);
 
     res.json(
         new ApiResponse(200, allProducts, "Products fetched successfully"),
@@ -62,32 +71,46 @@ const getAllProducts = asyncHandler(async (req, res) => {
 //     );
 // });
 
+/* a */
+
 const getSpecificProduct = asyncHandler(async (req, res) => {
     const { slug } = req.params;
 
     if (!slug) new ApiError(400, "Slug is required");
 
-    // let product = await redisClient.get(`product:${slug}`);
+    let key;
+    const matchStage = {slug};
 
-    // if (product)
-    //     return res.json(
-    //         new ApiResponse(
-    //             200,
-    //             JSON.parse(product),
-    //             "Product fetched successfully",
-    //         ),
-    //     );
+    // console.log("USER->>>: ", req.user)
+    if (req.user) {
+        if (req.user.currentRole === "vendor") {
+            key = `vendor:product:${slug}`;
+            matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
+        }
+        else key = `admin:product:${slug}`;
+    } else {
+        key = `product:${slug}`;
+        matchStage["approval.status"] = "accepted";
+        matchStage.isActive = true;
+    }
 
-    const product = await productService.getProduct({
-        slug,
-        "approval.status": "accepted",
-        isActive: true,
-    });
+    let product = await redisClient.get(key);
+    // console.log(product)
+    if (product) 
+        return res.json(
+            new ApiResponse(
+                200,
+                JSON.parse(product),
+                "Product fetched successfully",
+            ),
+        );
+
+    product = await productService.getProduct(matchStage);
 
     if (!product) throw new ApiError(404, "Product not found");
 
-    await redisClient.set(`product:${slug}`, JSON.stringify(product));
-    await redisClient.expire(`product:${slug}`, 60 * 5);
+    await redisClient.set(key, JSON.stringify(product));
+    await redisClient.expire(key, 60 * 5);
 
     res.json(new ApiResponse(200, product, "Product fetched successfully"));
 });
@@ -117,9 +140,9 @@ const updateVendorProduct = asyncHandler(async (req, res) => {
 
     if (!product) throw new ApiError(404, "Product not found");
 
-    await redisClient.del(`product:${slug}`);
+    await redisClient.del(`vendor:product:${slug}`);
 
-    res.json(new ApiResponse(200, product, "Product "));
+    res.json(new ApiResponse(200, product, "Product updated successfully"));
 });
 
 const updateProductStatus = asyncHandler(async (req, res) => {
@@ -137,11 +160,15 @@ const updateProductStatus = asyncHandler(async (req, res) => {
 });
 
 const getCartProducts = asyncHandler(async (req, res) => {
-    const {products} = req.body;
+    const { products } = req.body;
 
-    const allProducts = await productService.getCartProducts(Object.keys(products));
+    const allProducts = await productService.getCartProducts(
+        Object.keys(products),
+    );
 
-    res.json(new ApiResponse(200, allProducts, "Products fetched successfully"));
+    res.json(
+        new ApiResponse(200, allProducts, "Products fetched successfully"),
+    );
 });
 
 const getFilteredProducts = asyncHandler(async (req, res) => {

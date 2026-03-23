@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
         },
     });
 
-    console.log({ isError, isPending, error, data });
+    // console.log({ isError, isPending, error, data });
 
     const setUser = useCallback(
         (mainUser) => {
@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
                 user: data?.data,
                 loading: isPending,
                 isError,
-                error: error?.message,
+                error: error?.response?.data?.message,
                 setUser,
             }}
         >

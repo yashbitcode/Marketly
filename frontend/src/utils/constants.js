@@ -51,7 +51,9 @@ export const apiEndpoints = {
         getFiltered: "/product/filter",
         specific: "/product/slug",
         cart: "/product/cart",
-        create: "/product/vendor"
+        create: "/product/vendor",
+        getAll: "/product",
+        update: "/product/vendor"
     },
     review: {
         getAll: "/review/product",
@@ -64,6 +66,7 @@ export const apiEndpoints = {
     },
     media: {
         getAuthParams: "/media",
+        delete: "/media/files"
     },
     support: {
         createTicket: "/support",

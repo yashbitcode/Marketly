@@ -9,7 +9,7 @@ import {
     getCartProducts,
 } from "../controllers/product.controllers.js";
 import { validate } from "../middlewares/validate.middlewares.js";
-import { authorise, isAuthenticated } from "../middlewares/auth.middlewares.js";
+import { authorise, isAuthenticated, isAuthenticatedErrorHandler } from "../middlewares/auth.middlewares.js";
 import {
     addProductValidations,
     updateProductValidations,
@@ -25,7 +25,7 @@ router.get(
     getFilteredProducts,
 );
 
-router.get("/:page", getAllProducts);
+router.get("/:page",  isAuthenticated,authorise("super-admin", "vendor"), getAllProducts);
 
 // router.get("/search/:searchQuery/:page", searchProduct);
 
@@ -68,6 +68,6 @@ router.patch(
     updateProductStatus,
 );
 
-router.get("/slug/:slug", getSpecificProduct);
+router.get("/slug/:slug", isAuthenticatedErrorHandler, getSpecificProduct);
 
 export default router;

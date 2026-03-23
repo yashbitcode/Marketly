@@ -53,20 +53,12 @@ const BaseHeader = () => {
 
                         <div className="hidden min-[750px]:flex gap-3 items-center">
                             {(!user || isUser) && (
-                                <>
-                                    <Link
-                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
-                                        to={"/support"}
-                                    >
-                                        <BadgeQuestionMark strokeWidth={1.8} />
-                                    </Link>
-                                    <Link
-                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
-                                        to={"/checkout"}
-                                    >
-                                        <ShoppingCart strokeWidth={1.8} />
-                                    </Link>
-                                </>
+                                <Link
+                                    className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                    to={"/support"}
+                                >
+                                    <BadgeQuestionMark strokeWidth={1.8} />
+                                </Link>
                             )}
 
                             {!user && (
@@ -104,6 +96,12 @@ const BaseHeader = () => {
                                         to={"/user"}
                                     >
                                         <User strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/checkout"}
+                                    >
+                                        <ShoppingCart strokeWidth={1.8} />
                                     </Link>
                                     <Button
                                         onClick={handleLogout}

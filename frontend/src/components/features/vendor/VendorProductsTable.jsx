@@ -1,11 +1,12 @@
 import { Edit, Trash2 } from "lucide-react";
 import { formatPrice, getFormatedStr } from "../../../utils/helpers";
 import { Button } from "../../common";
+import { Link } from "react-router";
 
 const VendorProductsTable = ({ products }) => {
     return (
         <div className="overflow-x-auto w-full">
-            <table className="w-full min-w-[900px] text-left font-inter border-collapse">
+            <table className="w-full min-w-[1000px] text-left font-inter border-collapse">
                 <thead>
                     <tr className="border-b border-gray-200 text-gray-500 text-sm uppercase bg-gray-50/50">
                         <th className="p-4 font-medium">Product</th>
@@ -90,18 +91,20 @@ const VendorProductsTable = ({ products }) => {
                                 </td>
                                 <td className="p-4 text-right">
                                     <div className="flex items-center justify-end gap-2">
-                                        <Button
+                                        <Link
+                                            to={`/vendor/products/update/${product.slug}`}
                                             title="Edit Product"
                                             className="p-1.5 bg-transparent shadow-none text-gray-400 hover:text-orange hover:bg-orange-50 rounded-md transition-colors"
                                         >
                                             <Edit size={16} />
-                                        </Button>
-                                        <Button
+                                        </Link>
+                                        <Link
+                                            to={`/vendor/products/${product.slug}/delete`}
                                             title="Delete Product"
                                             className="p-1.5 bg-transparent shadow-none text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                                         >
                                             <Trash2 size={16} />
-                                        </Button>
+                                        </Link>
                                     </div>
                                 </td>
                             </tr>

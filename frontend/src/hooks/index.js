@@ -10,3 +10,6 @@ export { default as useCartProducts } from "./useCartProducts";
 export { default as useBaseOrders } from "./useBaseOrders";
 export { default as useOrderDetails } from "./useOrderDetails";
 export { default as useNotifications } from "./useNotifications";
+export { default as useBaseProducts } from "./useBaseProducts";
+export { default as useProduct } from "./useProduct";
+export { default as useProductMutations } from "./useProductMutations";

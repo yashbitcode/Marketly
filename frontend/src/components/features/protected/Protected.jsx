@@ -4,7 +4,7 @@ import Loader from "../../loadings/Loader";
 
 const Protected = ({ authenticate = true, allowedRoles = ["user"] }) => {
     const { user, loading } = useAuth();
-    console.log(user);
+    // console.log(user);
 
     if (loading) return <Loader />;
 

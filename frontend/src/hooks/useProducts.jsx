@@ -43,7 +43,7 @@ const useProducts = () => {
         setProducts,
         loading: isPending,
         isError,
-        error: error?.message,
+        error: error?.response?.data?.message,
         pageHandler,
         setSearchParams,
         searchParams,

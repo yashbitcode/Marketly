@@ -1,133 +1,79 @@
-import { useCallback } from "react";
-import { Container, Input, Button } from "../../common";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Container, Input, Button, Error } from "../../common";
 import { X, UploadCloud, Image as ImageIcon, ChevronRight, Package } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductClient } from "../../../../../shared/validations/product.validations";
+import {
+    addProductClient,
+    updateProductClient,
+} from "../../../../../shared/validations/product.validations";
 import ProductEssentials from "../products/vendor-product/ProductEssentials";
 import BasicInfo from "../products/vendor-product/BasicInfo";
 import PricingInfo from "../products/vendor-product/PricingInfo";
 import ProductAttributes from "../products/vendor-product/ProductAttributes";
 import { Link } from "react-router";
 import { useForm, useWatch } from "react-hook-form";
-import { useAuth, useCategories } from "../../../hooks";
+import { useCategories, useProduct, useProductMutations } from "../../../hooks";
 import Loader from "../../loadings/Loader";
-import { useMutation } from "@tanstack/react-query";
-import { useImageKitUpload } from "../../../hooks";
-import { ErrorToast, SuccessToast } from "../../../utils/toasts";
-import { ProductApi } from "../../../apis";
+import { ErrorToast } from "../../../utils/toasts";
+import { useParams } from "react-router";
 
 const ProductCU = () => {
+    const { slug } = useParams();
     const { categories, loading } = useCategories();
-    const { handleUpload } = useImageKitUpload();
-    const {user} = useAuth();
-
+    const [deleteImages, setDeleteImages] = useState([]);
     const {
         register,
         handleSubmit,
         setValue,
         watch,
         control,
+        reset,
+        setError,
         formState: { errors },
     } = useForm({
-        
-        resolver: zodResolver(addProductClient),
-    });
-
-    const mutation = useMutation({
-        mutationFn: async (data) => {
-            const {
-                name,
-                brandName,
-                price,
-                stockQuantity,
-                category,
-                keyFeatures,
-                description,
-                attributes,
-                files,
-                pros,
-                cons,
-            } = data;
-
-            console.log("DSSDSD: ", {
-                name,
-                brandName,
-                price,
-                keyFeatures,
-                stockQuantity,
-                category: categories?.subCategories?.find((el) => el.name === category)?._id,
-                description,
-                pros,
-                files,
-                cons,
-                attributes: attributes?.map((el) => {
-                    let { name, value, dataType, isVariant } = el;
-
-                    if (isVariant)
-                        value = value.split(",").map((el) => {
-                            if (dataType === "number") return Number(el);
-                            return el.trim();
-                        });
-                    else if (dataType === "number") value = Number(value);
-
-                    return { name, value, dataType, isVariant };
-                }),
-            })
-
-             const payload = {
-                name,
-                brandName,
-                price,
-                keyFeatures,
-                stockQuantity,
-                category: categories?.subCategories?.find((el) => el.name === category)?._id,
-                description,
-                pros,
-                cons,
-                attributes: attributes?.map((el) => {
-                    let { name, value, dataType, isVariant } = el;
-
-                    if (isVariant)
-                        value = value.split(",").map((el) => {
-                            if (dataType === "number") return Number(el);
-                            return el.trim();
-                        });
-                    else if (dataType === "number") value = Number(value);
-
-                    return { name, value, dataType, isVariant };
-                }),
-            };
-
-            console.log("FILES: ", files);
-            console.log(payload)
-
-            if (files && files?.length !== 0) {
-                const uploadPromises = await handleUpload(
-                    files,
-                    { user: user._id },
-                    "/products",
-                );
-
-                const attachmentsData = await Promise.all(uploadPromises);
-                payload.images = attachmentsData;
-            }
-
-            const res = await ProductApi.addProduct(payload);
-            
-            return res;
-        },
-        onSuccess: (res) => {
-            SuccessToast(res?.message);
-        },
-        onError: (e) => {
-            ErrorToast(e.response.data.message)
-        }
+        resolver: zodResolver(slug ? updateProductClient : addProductClient),
     });
 
     const files = useWatch({
         control,
         name: "files",
     });
+
+    const {
+        product: { data: product } = {},
+        loading: productLoading,
+        isError,
+        error,
+    } = useProduct(slug);
+
+    const existingImages = useMemo(() => product?.images ?? null, [product]);
+
+    useEffect(() => {
+        if (!product) return;
+
+        reset({
+            name: product.name,
+            brandName: product.brandName,
+            price: product.price,
+            stockQuantity: product.stockQuantity,
+            category: product.category?.name,
+            keyFeatures: product.keyFeatures,
+            description: product.description,
+            attributes:
+                product.attributes?.length > 0
+                    ? product.attributes.map((el) => ({ ...el, value: el.value?.join(",") }))
+                    : [],
+            pros: product.pros,
+            cons: product.cons,
+        });
+    }, [product, reset, setError]);
+
+    const allImages = [
+        ...Array.from(files || []),
+        ...(existingImages ? existingImages.filter((el) => !deleteImages.includes(el.fileId)) : []),
+    ];
+
+    const {addProductMutation, updateProductMutation} = useProductMutations(categories, setDeleteImages, slug, setError, product, existingImages, deleteImages, allImages);
 
     const handleRemoveImg = useCallback(
         (idx) => {
@@ -144,13 +90,16 @@ const ProductCU = () => {
     );
 
     const onSubmit = (data) => {
-        // console.log(data);
-        mutation.mutate(data)
+        if (slug) updateProductMutation.mutate(data);
+        else addProductMutation.mutate(data);
     };
 
-    // console.log(errors);
+    useEffect(() => {
+        if (isError) ErrorToast(error);
+    }, [isError, error]);
 
-    if (loading) return <Loader />;
+    if (loading || (slug && productLoading)) return <Loader />;
+    if (isError || error) return <Error error={error} />;
 
     return (
         <div className="min-h-screen bg-slate-50 font-inter w-full py-8 px-4 sm:px-6 lg:px-8">
@@ -230,20 +179,33 @@ const ProductCU = () => {
 
                             {/* Dummy Image Preview Area */}
                             <div className="mt-4 grid grid-cols-3 gap-3">
-                                {Array.from(files || [])?.map((imgFile, idx) => (
+                                {allImages?.map((imgFile, idx) => (
                                     <div
-                                        key={imgFile.name}
+                                        key={imgFile.fileId || imgFile.name}
                                         className="aspect-square bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center relative overflow-hidden group max-w-100"
                                     >
                                         <div className="w-full">
                                             <img
-                                                src={URL.createObjectURL(imgFile)}
-                                                alt={imgFile.name}
+                                                src={
+                                                    imgFile.fileId
+                                                        ? imgFile.url
+                                                        : URL.createObjectURL(imgFile)
+                                                }
+                                                alt={
+                                                    imgFile.fileId ? imgFile.filename : imgFile.name
+                                                }
                                             />
                                         </div>
                                         <Button
                                             type="button"
-                                            onClick={() => handleRemoveImg(idx)}
+                                            onClick={() =>
+                                                imgFile.fileId
+                                                    ? setDeleteImages((prev) => [
+                                                          ...prev,
+                                                          imgFile.fileId,
+                                                      ])
+                                                    : handleRemoveImg(idx)
+                                            }
                                             className="absolute rounded-none inset-0 bg-black/40 hidden group-hover:flex items-center justify-center p-0  transition-all opacity-0 group-hover:opacity-100"
                                             title="Remove image"
                                         >

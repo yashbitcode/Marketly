@@ -29,11 +29,11 @@ const ProductEssentials = ({ register, control, errors }) => {
         name: "cons",
     });
 
-    useEffect(() => {
-        if (keyFeatures.length === 0) appendKF("");
-        if (cons.length === 0) appendCon("");
-        if (pros.length === 0) appendPro("");
-    }, [appendCon, appendKF, appendPro, keyFeatures.length, cons.length, pros.length]);
+    // useEffect(() => {
+    //     if (keyFeatures.length === 0) appendKF("");
+    //     if (cons.length === 0) appendCon("");
+    //     if (pros.length === 0) appendPro("");
+    // }, [appendCon, appendKF, appendPro, keyFeatures.length, cons.length, pros.length]);
 
     return (
         <div className="bg-white rounded-lg w-full p-6 shadow-sm border border-slate-200">

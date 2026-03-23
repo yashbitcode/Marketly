@@ -9,11 +9,10 @@ import { tabs } from "../utils/constants";
 import { getFormatedStr } from "../utils/helpers";
 import ProductAttributes from "../components/features/products/product-showcase/ProductAttributes";
 import TabVendor from "../components/features/products/product-showcase/TabVendor";
-import { useReviews } from "../hooks";
+import { useProduct, useReviews } from "../hooks";
 import TabReviews from "../components/features/products/product-showcase/TabReviews";
 import TabDescription from "../components/features/products/product-showcase/TabDescription";
-import { useQuery } from "@tanstack/react-query";
-import { ErrorToast, SuccessToast } from "../utils/toasts";
+import { ErrorToast } from "../utils/toasts";
 
 export default function ProductPage() {
     const { slug } = useParams();
@@ -29,15 +28,17 @@ export default function ProductPage() {
         return stored ? JSON.parse(stored) : {};
     });
 
-    const {
-        isPending,
-        isError,
-        error,
-        data: product,
-    } = useQuery({
-        queryKey: ["specific-product", slug],
-        queryFn: () => ProductApi.getSpecific(slug),
-    });
+    // const {
+    //     isPending,
+    //     isError,
+    //     error,
+    //     data: product,
+    // } = useQuery({
+    //     queryKey: ["specific-product", slug],
+    //     queryFn: () => ProductApi.getSpecific(slug),
+    // });
+
+    const {product, loading, isError, error} = useProduct(slug);
 
     const handleSetProsOpen = useCallback((value) => {
         setProsOpen(value);
@@ -76,13 +77,13 @@ export default function ProductPage() {
 
             setCart(localStorageCart);
         };
-        if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
+        if (isError) ErrorToast(error || "Something went wrong");
         else if (product) setInitials();
     }, [slug, error, isError, product]);
 
     useEffect(() => {}, [cart]);
 
-    if (isPending || reviewLoading) return <Loader />;
+    if (loading || reviewLoading) return <Loader />;
 
     if (isError) return <Error error={error?.response?.data?.message || "Something went wrong"} />;
 

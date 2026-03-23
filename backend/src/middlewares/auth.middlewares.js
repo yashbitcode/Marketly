@@ -30,11 +30,13 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         req.get("Authorization") ||
         (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
 
+    console.log("TOKEN: ", token);
+
     const { _id, vendorId, currentRole, tokenVersion } =
         await verifyToken(token);
-    const i =
-        await verifyToken(token);
-console.log(i)
+
+        console.log("DEC: ", { _id, vendorId, currentRole, tokenVersion })
+
     let payload;
 
     if (currentRole === "vendor") {
@@ -89,10 +91,16 @@ console.log(i)
     next();
 });
 
+const isAuthenticatedErrorHandler = async (req, res, next) => {
+    try {
+        await isAuthenticated(req, res, next);
+    } catch {
+        next();
+    }
+};
+
 const isSocketAuthenticated = async (socket, next) => {
-    // console.log(socket)
     let token = getAccessToken(socket.handshake?.headers?.cookie);
-    console.log(token);
 
     try {
         const decoded = await verifyToken(token ? "Bearer " + token : "");
@@ -108,30 +116,10 @@ const isSocketAuthenticated = async (socket, next) => {
         console.log(error)
         next(new ApiError(error.statusCode), error.message);
     }
-
-    // token = token?.split(" ")?.[1];
-
-    // if (!token) return next(new ApiError(400, "Token is required"));
-
-    // let decoded;
-
-    // try {
-    //     decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    //     const user = await userService.getUserById(
-    //         decoded._id,
-    //         GENERAL_USER_FIELDS,
-    //     );
-
-    //     if (user.role !== "super-admin") socket.user = user;
-    //     next();
-    // } catch (error) {
-    //     next(new ApiError(400, "Invalid token"));
-    // }
 };
 
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
-        console.log(req.user)
         if (!allowedRoles.includes(req.user.currentRole))
             throw new ApiError(403, "Forbidden: insufficient permissions");
 
@@ -139,4 +127,4 @@ const authorise = (...allowedRoles) => {
     });
 };
 
-export { isAuthenticated, isSocketAuthenticated, authorise };
+export { isAuthenticated, isAuthenticatedErrorHandler,isSocketAuthenticated, authorise };

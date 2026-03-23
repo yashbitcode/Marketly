@@ -1,39 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useState } from "react"
-import OrderApi from "../apis/orderApi";
+import { useCallback, useState } from "react";
 import { PAGINATION_LIMIT } from "../../../shared/constants";
+import { ProductApi } from "../apis";
+import { useQuery } from "@tanstack/react-query";
 import useAuth from "./useAuth";
 
-const useBaseOrders = () => {
-    const {user} = useAuth();
+const useBaseProducts = () => {
+    const { user } = useAuth();
     const [page, setPage] = useState(1);
+    console.log(user)
 
     const { isPending, isError, error, data } = useQuery({
-        queryKey: ["orders", user._id, page],
+        queryKey: ["all-products", user.vendorId?._id, page],
         queryFn: async () => {
-            const { data } = await OrderApi.getAll(
-                page,
-            );
+            const { data } = await ProductApi.getAll(page);
 
             if (Math.ceil(data?.totalCount || 1 / PAGINATION_LIMIT) >= page)
                 return data?.data ? data : [];
             else throw new Error("Invalid Page Number");
         },
+        staleTime: 0
     });
 
     const pageHandler = useCallback((pageNum) => {
         setPage(pageNum);
     }, []);
 
-
     return {
-        orders: data,
+        products: data,
         loading: isPending,
         isError,
         error: error?.response?.data?.message,
         pageHandler,
         page,
     };
-}
+};
 
-export default useBaseOrders;
+export default useBaseProducts;

@@ -12,7 +12,7 @@ const useOrderDetails = (orderId) => {
     return {
         loading: isPending,
         isError,
-        error: error?.message,
+        error: error?.response?.data?.message,
         order: data?.data
     }
 };

@@ -57,6 +57,7 @@ const App = () => {
                         <Route path="vendor" element={<Protected allowedRoles={["vendor"]} />}>
                             <Route path="products" element={<VendorProducts />} />
                             <Route path="products/add" element={<ProductCU />} />
+                            <Route path="products/update/:slug" element={<ProductCU />} />
                         </Route>
                     </Route>
                 </Routes>

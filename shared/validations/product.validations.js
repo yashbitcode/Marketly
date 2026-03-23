@@ -24,6 +24,10 @@ const addProductClient = baseProductValidations.extend({
     images: true,
 });
 
+const updateProductClient = addProductClient.extend({
+    files: clientSideFileValidations(4),
+}).partial();
+
 const updateProductValidations = baseProductValidations
     .extend({
         attributes: baseProductAttributeValidations.min(
@@ -115,5 +119,6 @@ export {
     productQueryValidations,
     searchQueryValidations,
     cartItemsValidations,
-    addProductClient
+    addProductClient,
+    updateProductClient
 };

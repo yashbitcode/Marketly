@@ -12,7 +12,7 @@ import { validate } from "../middlewares/validate.middlewares.js";
 
 router.post("/", validate(getImageKitTokensValidations), getAuthParams);
 // router.post("/", isAuthenticated, authorise("user", "vendor"), getAuthParams);
-router.delete(
+router.post(
     "/files",
     isAuthenticated,
     authorise("user", "vendor"),

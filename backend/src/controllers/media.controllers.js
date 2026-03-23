@@ -33,7 +33,7 @@ const deleteFiles = asyncHandler(async (req, res) => {
     if (filteredFileIds.length === 0)
         throw new ApiError(400, "Invalid file IDs or path");
 
-    imageKitService.deleteImages(filteredFileIds);
+    await imageKitService.deleteImages(filteredFileIds);
 
     res.json(new ApiResponse(200, {}, "Files deleted successfully"));
 });

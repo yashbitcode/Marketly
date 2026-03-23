@@ -17,7 +17,7 @@ const useAddresses = () => {
     };
 
     useEffect(() => {
-        if (isError) ErrorToast(error?.message || "Something went wrong");
+        if (isError) ErrorToast(error?.response?.data?.message || "Something went wrong");
     }, [error, isError]);
 
     return {
@@ -25,7 +25,7 @@ const useAddresses = () => {
         invalidateAddresses,
         loading: isPending,
         isError,
-        error: error?.message,
+        error: error?.response?.data?.message,
     };
 };
 
