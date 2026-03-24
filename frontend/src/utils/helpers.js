@@ -1,3 +1,5 @@
+import { deliveryStatusStyles } from "./constants";
+
 export const trimStr = (str = "", length = 10) => {
     return str.length > length ? str.substring(0, length) + "..." : str;
 };
@@ -9,6 +11,11 @@ export const formatPrice = (price) => {
     }).format(price);
 };
 
+export const getTotalQuantity = (products) => {
+    if (!products || products.length === 0) return 0;
+    return products.reduce((sum, p) => sum + (p.quantity || 1), 0);
+};
+
 export const getFormatedStr = (str) => {
     if (!str) return "";
 
@@ -17,6 +24,16 @@ export const getFormatedStr = (str) => {
         .map((el) => el[0].toUpperCase() + el.substring(1))
         ?.join(" ");
 };
+
+export const getDeliveryStatusStyle = (status) => {
+    return deliveryStatusStyles[status?.toLowerCase()] || "bg-gray-100 text-gray-700";
+};
+
+export const getFormattedStatus = (status) => {
+    if (!status) return "Unknown";
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+};
+
 
 export const formatDate = (date, timeSpecific = true) => {
     if(!date) return;

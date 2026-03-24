@@ -12,6 +12,18 @@ import addressService from "../services/address.service.js";
 // import notificationQueue from "../queues/notification.queue";
 import { inngest } from "../inngest/index.js";
 
+const getAllVendorOrders = asyncHandler(async (req, res) => {
+    const { _id } = req.user.vendorId;
+    const { page } = req.params;
+    let matchStage = {};
+
+    matchStage.vendor = new mongoose.Types.ObjectId(_id);
+
+    const allOrders = await orderService.getVendorOrders(matchStage, page);
+
+    res.json(new ApiResponse(200, allOrders, "Orders fetched successfully"));
+});
+
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const { products, prefills, notes, shippingAddressId } = req.body;
@@ -99,8 +111,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
     console.log(req.user)
 
     if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
-    if (req.user.currentRole === "vendor")
-        matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
+    // if (req.user.currentRole === "vendor")
+    //     matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
 
     const allOrders = await orderService.getAll(matchStage, page);
 
@@ -136,34 +148,6 @@ const updateOrderDeliveryStatus = asyncHandler(async (req, res, next) => {
         .catch((err) => next(err));
 
     res.json(new ApiResponse(200, order, "Order updated successfully"));
-});
-
-const gg = asyncHandler(async (req, res) => {
-    // const notificationPayload = {
-    //     receiverId: "695260f3fd88aeed840374de",
-    //     docModel: "users",
-    //     notificationType: "CHAT_REQUEST_UPDATE",
-    //     title: "Chat Request Update",
-    //     message: `Your Recent Chat Request Is: accepted`,
-    // };
-
-    // await notificationQueue.add(
-    //     "chat-update",
-    //     {
-    //         notificationPayload,
-    //         chatReq: {
-    //             _id: "695b6de3cb37696a4d45088d",
-    //             user: "695260f3fd88aeed840374de",
-    //             vendor: "695260f3fd88aeed840374dc",
-    //             status: "pending",
-    //         },
-    //     },
-    //     {
-    //         removeOnComplete: true,
-    //         removeOnFail: true,
-    //     },
-    // );
-    res.json({});
 });
 
 const verifyOrderPayment = asyncHandler(async (req, res) => {
@@ -253,5 +237,5 @@ export {
     getAllOrders,
     webhook,
     updateOrderDeliveryStatus,
-    gg,
+    getAllVendorOrders
 };

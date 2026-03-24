@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import useImageKitUpload from "./useImageKitUpload";
-import { useAuth } from "../contexts/AuthContext";
-import { ProductApi } from "../api/product.api";
-import { SuccessToast, ErrorToast } from "../utils/toast";
+import { ProductApi } from "../apis";
 import { MediaApi } from "../apis";
+import useAuth from "./useAuth";
+import { ErrorToast, SuccessToast } from "../utils/toasts";
 
 const useProductMutations = (categories, setDeleteImages, slug, setError, product, existingImages, deleteImages, allImages) => {
     const navigate = useNavigate();
      const { handleUpload } = useImageKitUpload();
-    const { user } = useAuth();
+     const {user} = useAuth();
 
     const addProductMutation = useMutation({
         mutationFn: async (data) => {

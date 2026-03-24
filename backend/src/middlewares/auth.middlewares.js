@@ -30,12 +30,12 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         req.get("Authorization") ||
         (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
 
-    console.log("TOKEN: ", token);
+    // console.log("TOKEN: ", token);
 
     const { _id, vendorId, currentRole, tokenVersion } =
         await verifyToken(token);
 
-        console.log("DEC: ", { _id, vendorId, currentRole, tokenVersion })
+        // console.log("DEC: ", { _id, vendorId, currentRole, tokenVersion })
 
     let payload;
 

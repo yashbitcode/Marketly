@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -58,6 +58,7 @@ const App = () => {
                             <Route path="products" element={<VendorProducts />} />
                             <Route path="products/add" element={<ProductCU />} />
                             <Route path="products/update/:slug" element={<ProductCU />} />
+                            <Route path="orders" element={<VendorOrders />} />
                         </Route>
                     </Route>
                 </Routes>

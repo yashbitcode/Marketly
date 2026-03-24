@@ -63,6 +63,7 @@ export const apiEndpoints = {
         create: "/order/create-order",
         getAll: "/order",
         specific: "/order/specific",
+        getAllVendorOrders: "/order/vendor"
     },
     media: {
         getAuthParams: "/media",
@@ -71,6 +72,16 @@ export const apiEndpoints = {
     support: {
         createTicket: "/support",
     },
+};
+
+export const deliveryStatusStyles = {
+    placed: "bg-blue-100 text-blue-700",
+    confirmed: "bg-indigo-100 text-indigo-700",
+    processing: "bg-yellow-100 text-yellow-700",
+    shipped: "bg-purple-100 text-purple-700",
+    delivered: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-700",
+    returned: "bg-orange-100 text-orange-700",
 };
 
 export const STATUS_STEPS = [

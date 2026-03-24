@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Share2, ShoppingCart, Zap, Plus, Minus, Tag, Info } from "lucide-react";
 import { Button, Container, Error } from "../components/common";
 import { useParams } from "react-router";
-import { ProductApi } from "../apis";
 import Loader from "../components/loadings/Loader";
 import RenderStars from "../components/features/base-star/RenderStars";
 import { tabs } from "../utils/constants";

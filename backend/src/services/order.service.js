@@ -44,40 +44,63 @@ class OrderService {
 
         console.log(matchStage);
 
-        // const [allOrders] = await SellerOrder.aggregate([
-        //     {
-        //         $match: matchStage,
-        //     },
-        //     {
-        //         $group: {
-        //             _id: "$orderDocId",
-        //             sellerOrders: {
-        //                 $push: "$$ROOT",
-        //             },
-        //         },
-        //     },
-        //     {
-        //         $lookup: {
-        //             from: "orders",
-        //             localField: "_id",
-        //             foreignField: "_id",
-        //             as: "order",
-        //         },
-        //     },
-        //     {
-        //         $addFields: {
-        //             order: { $arrayElemAt: ["$order", 0] },
-        //         },
-        //     },
-        //     ...basePagination,
-        // ]);
-
+        
         const [allOrders] = await Order.aggregate([
             {
                 $match: matchStage,
             },
             ...basePagination,
         ]);
+
+        return allOrders;
+    }
+
+    async getVendorOrders(matchStage = {}, page = 1) {
+        const basePagination = getPaginationBasePipeline(+page);
+
+        console.log(matchStage);
+
+        
+        const [allOrders] = await SellerOrder.aggregate([
+            {
+                $match: matchStage,
+            },
+            {
+                $group: {
+                    _id: "$orderDocId",
+                    sellerOrders: {
+                        $push: "$$ROOT",
+                    },
+                },
+            },
+            {
+                $lookup: {
+                    from: "orders",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "order",
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                user: 1,
+                                orderId: 1,
+                                name: 1,
+                                description: 1,
+                                prefills: 1
+                            }
+                        }
+                    ]
+                },
+            },
+            {
+                $addFields: {
+                    order: { $arrayElemAt: ["$order", 0] },
+                },
+            },
+            ...basePagination,
+        ]);
+
 
         return allOrders;
     }

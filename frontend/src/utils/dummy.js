@@ -725,3 +725,66 @@ export const sampleOrders = [
         ],
     },
 ];
+
+export const sampleVendorOrders = [
+      {
+        "_id": "69b4300dbb8a513f0d9f8006",
+        "sellerOrders": [
+          {
+            "_id": "69b4035dc04ca56ffc2509b0",
+            "vendor": "6953cf49456f0bcb6a03432f",
+            "user": "69a864a2268057c21e42acc4",
+            "orderDocId": "69b4300dbb8a513f0d9f8006",
+            "products": [
+              { "product": "69a426b949f2b13df22f80c1", "quantity": 1 }
+            ],
+            "deliveryStatus": "placed",
+            "__v": 0,
+            "createdAt": "2026-03-13T12:30:21.260Z",
+            "updatedAt": "2026-03-13T12:30:21.260Z"
+          }
+        ],
+        "order": {
+          "_id": "69b4300dbb8a513f0d9f8006",
+          "user": "69a864a2268057c21e42acc4",
+          "orderId": "order_SQlMYapNYn3o2U",
+          "name": "Marketly",
+          "description": "Pay Now And Get The Products",
+          "prefills": {
+            "name": "dso",
+            "email": "dsij@gmail.com",
+            "phoneNumber": "+912902109129"
+          }
+        }
+      },
+      {
+        "_id": "69b40304c04ca56ffc25099a",
+        "sellerOrders": [
+          {
+            "_id": "69b4301dbb8a513f0d9f800c",
+            "vendor": "6953cf49456f0bcb6a03432f",
+            "user": "69a864a2268057c21e42acc4",
+            "orderDocId": "69b40304c04ca56ffc25099a",
+            "products": [
+              { "product": "69a426b949f2b13df22f80c1", "quantity": 1 }
+            ],
+            "deliveryStatus": "placed",
+            "__v": 0,
+            "createdAt": "2026-03-13T15:41:17.410Z",
+            "updatedAt": "2026-03-13T15:41:17.410Z"
+          }
+        ],
+        "order": {
+          "_id": "69b40304c04ca56ffc25099a",
+          "user": "69a864a2268057c21e42acc4",
+          "orderId": "order_SQi5YxVeFCPC1k",
+          "name": "Marketly",
+          "description": "Pay Now And Get The Products",
+          "prefills": {
+            "name": "dsdsokd",
+            "email": "dsij@gmail.com",
+            "phoneNumber": "+9112902109129"
+          }
+        }
+      }
+    ]

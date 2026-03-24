@@ -7,7 +7,7 @@ import {
     updateOrderDeliveryStatus,
     getOrderByOrderId,
     getAllOrders,
-    gg,
+    getAllVendorOrders,
 } from "../controllers/orders.controllers.js";
 import {
     verifyPaymentValidations,
@@ -18,7 +18,6 @@ import { validate } from "../middlewares/validate.middlewares.js";
 import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
-router.get("/gg", gg);
 router.get(
     "/specific/:orderId",
     isAuthenticated,
@@ -27,9 +26,16 @@ router.get(
 );
 
 router.get(
+    "/vendor/:page",
+    isAuthenticated,
+    authorise("vendor"),
+    getAllVendorOrders,
+);
+
+router.get(
     "/:page",
     isAuthenticated,
-    authorise("user", "vendor", "super-admin"),
+    authorise("user", "super-admin"),
     getAllOrders,
 );
 

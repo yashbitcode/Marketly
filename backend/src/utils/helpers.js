@@ -307,6 +307,7 @@ const getSearchQueryByFileIds = (userId, fileIds) => {
     return str;
 };
 
+
 const validateSchema = (validationSchema, payload) => {
     const validation = validationSchema.safeParse(payload);
 
