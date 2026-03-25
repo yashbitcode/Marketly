@@ -67,6 +67,8 @@ const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await userService.getUserByEmail(email);
 
+    console.log(user)
+
     if (!user) throw new ApiError(400, "Invalid credentials");
 
     const isPasswordCorrect = await user.verifyPassword(password);
@@ -83,6 +85,7 @@ const login = asyncHandler(async (req, res) => {
         avatar: user.avatar,
         isEmailVerified: user.isEmailVerified,
         tokenVersion: user.tokenVersion,
+        currentRole: "user"
     };
 
     if (!user.isEmailVerified) {
@@ -159,7 +162,7 @@ const loginVendor = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const vendorUser = await userService.getUserWithVendor({ email });
 
-    if (!vendorUser) throw new ApiError(400, "Invalid credentials");
+    if (!vendorUser || !vendorUser?.vendorId?._id) throw new ApiError(400, "Invalid credentials");
 
     const isPasswordCorrect = await vendorUser.verifyPassword(password);
 
@@ -182,6 +185,7 @@ const loginVendor = asyncHandler(async (req, res) => {
         isEmailVerified: vendorUser.isEmailVerified,
         tokenVersion: vendorUser.tokenVersion,
         vendorId: vendorUser.vendorId,
+        currentRole: "vendor"
     };
 
     await redisClient.set(
@@ -228,6 +232,7 @@ const loginSuperAdmin = asyncHandler(async (req, res) => {
         avatar: superAdmin.avatar,
         isEmailVerified: superAdmin.isEmailVerified,
         tokenVersion: superAdmin.tokenVersion,
+        currentRole: "super-admin"
     };
 
     const { accessToken, refreshToken } =

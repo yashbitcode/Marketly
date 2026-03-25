@@ -63,7 +63,8 @@ export const apiEndpoints = {
         create: "/order/create-order",
         getAll: "/order",
         specific: "/order/specific",
-        getAllVendorOrders: "/order/vendor"
+        getAllVendorOrders: "/order/vendor",
+        updateStatus: "/order/delivery-status"
     },
     media: {
         getAuthParams: "/media",
@@ -88,7 +89,7 @@ export const STATUS_STEPS = [
     { key: "placed", label: "Order Placed" },
     // { key: "confirmed", label: "Confirmed" },
     { key: "shipped", label: "Shipped" },
-    { key: "out_for_delivery", label: "Out for Delivery" },
+    { key: "out of delivery", label: "Out Of Delivery" },
     { key: "delivered", label: "Delivered" },
 ];
 

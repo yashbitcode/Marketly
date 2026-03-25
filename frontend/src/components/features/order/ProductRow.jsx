@@ -3,7 +3,7 @@ const ProductRow = ({ product, quantity }) => {
     const price = product?.price ?? 0;
     const currency = product?.currency || "₹";
     return (
-        <div className="flex items-center gap-3 pt-3 border-b border-gray-50 last:border-0">
+        <div className="flex items-center gap-3 pt-3 pb-3 last:pb-0 border-b border-gray-100 last:border-0">
             <div className="size-14 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden shrink-0">
                 <img src={image} alt={product?.name} className="w-full h-full object-cover" />
             </div>

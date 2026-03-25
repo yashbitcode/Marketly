@@ -76,8 +76,8 @@ const Profile = () => {
                                 {getFormatedStr(user.fullname)}
                             </h1>
                             <p className="text-gray-500 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
-                                {user.role === "vendor" ? <Pen size={14} className="text-orange" /> : <UserIcon size={14} />}
-                                {getFormatedStr(user.role)} Account
+                                {user.currentRole === "vendor" ? <Pen size={14} className="text-orange" /> : <UserIcon size={14} />}
+                                {getFormatedStr(user.currentRole)} Account
                             </p>
                         </div>
 
@@ -90,7 +90,7 @@ const Profile = () => {
                                 <span className="hidden sm:inline">Password</span>
                             </Button>
                             
-                            {user.role !== "vendor" && (
+                            {user?.currentRole !== "vendor" && (
                                 <Button
                                     onClick={() => setIsApplyVendorOpen(true)}
                                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-orange text-white hover:bg-orange/90 px-4 py-2.5 rounded-xl transition-all font-medium shadow-sm hover:shadow"

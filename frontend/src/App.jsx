@@ -59,6 +59,7 @@ const App = () => {
                             <Route path="products/add" element={<ProductCU />} />
                             <Route path="products/update/:slug" element={<ProductCU />} />
                             <Route path="orders" element={<VendorOrders />} />
+                            <Route path="orders/:id" element={<OrderDetailPage />} />
                         </Route>
                     </Route>
                 </Routes>

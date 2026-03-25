@@ -8,8 +8,6 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js"
 
 import mongoose from "mongoose";
 import addressService from "../services/address.service.js";
-// import orderQueue from "../queues/order.queue.js";
-// import notificationQueue from "../queues/notification.queue";
 import { inngest } from "../inngest/index.js";
 
 const getAllVendorOrders = asyncHandler(async (req, res) => {
@@ -91,13 +89,16 @@ const createOrder = asyncHandler(async (req, res) => {
 const getOrderByOrderId = asyncHandler(async (req, res) => {
     const { orderId } = req.params;
 
+    const filters = {};
     const matchStage = {};
 
-    if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
-    if (req.user.currentRole === "vendor")
+    if (req.user.currentRole === "user") {
+        filters.user = new mongoose.Types.ObjectId(req.user._id);
+    } else if (req.user.currentRole === "vendor") {
         matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId._id);
+    }
 
-    const order = await orderService.getOrderById(orderId, matchStage);
+    const order = await orderService.getOrderById(orderId, filters, matchStage);
     
     if (!order) throw new ApiError(404, "Order not found");
 
@@ -130,22 +131,13 @@ const updateOrderDeliveryStatus = asyncHandler(async (req, res, next) => {
 
     if (!order) throw new ApiError(404, "Order not found");
 
-    // await notificationQueue.add(
-    //     "order-delivery-update",
-    //     { orders: [order] },
-    //     {
-    //         removeOnComplete: true,
-    //         removeOnFail: true,
-    //         attempts: 3,
-    //     },
-    // );
-
-    await inngest
+   try {
+     await inngest
         .send({
             name: "notification/send-order-delivery-update",
             data: { orders: [order] },
         })
-        .catch((err) => next(err));
+   } catch {}
 
     res.json(new ApiResponse(200, order, "Order updated successfully"));
 });

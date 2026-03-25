@@ -1,20 +1,31 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "./useAuth";
 import OrderApi from "../apis/orderApi";
 
 const useOrderDetails = (orderId) => {
-    const {user} = useAuth();
-    const {isPending, isError, error, data} = useQuery({
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    const { isPending, isError, error, data } = useQuery({
         queryKey: ["specific-order", user._id, orderId],
-        queryFn: () => OrderApi.getSpecific(orderId)
+        queryFn: () => OrderApi.getSpecific(orderId),
+    });
+
+    const updateStatusMutation = useMutation({
+        mutationFn: (payload) => OrderApi.updateStatus(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["specific-order", user._id, orderId]);
+        },
     });
 
     return {
         loading: isPending,
         isError,
         error: error?.response?.data?.message,
-        order: data?.data
-    }
+        order: data?.data,
+        statusUpdateLoading: updateStatusMutation.isPending,
+        handleUpdateStatus: updateStatusMutation.mutateAsync,
+    };
 };
 
 export default useOrderDetails;

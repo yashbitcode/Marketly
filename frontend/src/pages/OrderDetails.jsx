@@ -1,29 +1,23 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Package, MapPin, FileText, Truck } from "lucide-react";
 import { formatDate, formatPrice } from "../utils/helpers";
-import {useOrderDetails} from "../hooks";
+import { useOrderDetails } from "../hooks";
 import { Button } from "../components/common";
-import { ErrorToast } from "../utils/toasts";
+import { ErrorToast, SuccessToast } from "../utils/toasts";
 import ProductRow from "../components/features/order/ProductRow";
 import DeliveryProgressBar from "../components/features/order/DeliveryProgressBar";
 import InfoRow from "../components/features/order/InfoRow";
+import { useAuth } from "../hooks";
+import { STATUS_STEPS } from "../utils/constants";
 
-const OrderDetails = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+const Loading = () => (
+    <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-orange border-t-transparent rounded-full" />
+    </div>
+);
 
-    const { loading, isError, error, order } = useOrderDetails(id);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin w-8 h-8 border-2 border-orange border-t-transparent rounded-full" />
-            </div>
-        );
-    }
-
-    if (isError || !order) {
-        if (isError) ErrorToast(error);
+const Error = ({isError, error}) => {
+if (isError) ErrorToast(error);
 
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-400">
@@ -31,9 +25,43 @@ const OrderDetails = () => {
                 <p>Order not found</p>
             </div>
         );
-    }
+}
+
+const OrderDetails = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const {user} = useAuth();
+
+    const { loading, isError, error, order, statusUpdateLoading, handleUpdateStatus } = useOrderDetails(id);
+
+    const onStatusChange = async (sellerOrderId, newStatus) => {
+        if (statusUpdateLoading) return;
+
+        const isConfirmed = window.confirm(
+            `Are you sure you want to change the delivery status to ${newStatus.replace(/_/g, " ")}?`,
+        );
+
+        if (!isConfirmed) return;
+
+        try {
+            await handleUpdateStatus({ sellerOrderId, deliveryStatus: newStatus });
+            SuccessToast("Status updated successfully");
+        } catch (err) {
+            ErrorToast(err?.response?.data?.message || "Failed to update status");
+        }
+    };
+
+    if (loading) return <Loading />;
+
+    if (isError || !order) return <Error isError={isError} error={error} />
 
     const { baseOrder, sellerOrders } = order;
+
+    const vendorAmount = sellerOrders?.length > 0 ? sellerOrders[0].products.reduce((acc, product) => {
+        const price = product?.product?.price || 0;
+        const quantity = product?.quantity || 0;
+        return acc + (price * quantity);
+    }, 0) : 0;
 
     return (
         <div className="min-h-screen font-inter">
@@ -51,7 +79,7 @@ const OrderDetails = () => {
                         <div>
                             <p className="text-xs text-gray-400 font-medium">{baseOrder.orderId}</p>
                             <p className="text-2xl font-black text-gray-900 mt-1.5">
-                                ₹{formatPrice(baseOrder.amount / 100)}
+                                ₹{user?.currentRole === "vendor" ? (formatPrice(vendorAmount)) : formatPrice(baseOrder.amount / 100)}
                             </p>
                         </div>
                         <span
@@ -90,9 +118,25 @@ const OrderDetails = () => {
                         <div className="flex items-center gap-2 mb-1">
                             <Truck size={14} className="text-orange" />
                             <p className="text-sm font-bold text-gray-800">Shipment {i + 1}</p>
-                            <span className="ml-auto text-xs bg-orange-50 text-orange font-semibold px-2 py-0.5 rounded-full capitalize">
-                                {so.deliveryStatus?.replace(/_/g, " ")}
-                            </span>
+                            {user?.currentRole === "vendor" ? (
+                                <select
+                                    disabled={statusUpdateLoading}
+                                    value={so.deliveryStatus}
+                                    onChange={(e) => onStatusChange(so._id, e.target.value)}
+                                    className="ml-auto text-xs bg-orange-50 text-orange font-semibold px-2 py-1 rounded-lg border-none outline-none cursor-pointer focus:ring-1 focus:ring-orange/50 transition-all disabled:opacity-50"
+                                >
+                                    {STATUS_STEPS.map((step) => (
+                                        <option key={step.key} value={step.key}>
+                                            {step.label}
+                                        </option>
+                                    ))}
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            ) : (
+                                <span className="ml-auto text-xs bg-orange-50 text-orange font-semibold px-2 py-0.5 rounded-full capitalize">
+                                    {so.deliveryStatus?.replace(/_/g, " ")}
+                                </span>
+                            )}
                         </div>
 
                         {/* Progress bar */}
@@ -111,7 +155,7 @@ const OrderDetails = () => {
                 <div className="bg-white rounded-lg p-5 shadow-base mb-4">
                     <p className="text-sm font-bold text-gray-800 mb-3">Order Summary</p>
                     <InfoRow label="Order ID" value={baseOrder.orderId} />
-                    <InfoRow label="Total Amount" value={`₹${formatPrice(baseOrder.amount / 100)}`} />
+                    <InfoRow label="Total Amount" value={`₹${user?.currentRole === "vendor" ? (formatPrice(vendorAmount)) : formatPrice(baseOrder.amount / 100)}`} />
                     <InfoRow label="Currency" value={baseOrder.currency} />
                     <InfoRow label="Placed on" value={formatDate(baseOrder.createdAt)} />
                 </div>
@@ -131,7 +175,7 @@ const OrderDetails = () => {
                     </div>
                 )}
 
-                {baseOrder.invoice && (
+                {user?.currentRole !== "vendor" && baseOrder.invoice && (
                     <Link
                         to={baseOrder.invoice.url}
                         target="_blank"

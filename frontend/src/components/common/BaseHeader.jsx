@@ -36,9 +36,9 @@ const BaseHeader = () => {
         mutation.mutate();
     };
 
-    const isUser = user?.role === "user" || (user && !user.role);
-    const isVendor = user?.role === "vendor";
-    const isAdmin = user?.role === "admin";
+    const isUser = user?.currentRole === "user" || (user && !user.currentRole);
+    const isVendor = user?.currentRole === "vendor";
+    const isAdmin = user?.currentRole === "admin";
 
     return (
         <div className="py-4 px-6 shadow-2xs w-full font-inter">

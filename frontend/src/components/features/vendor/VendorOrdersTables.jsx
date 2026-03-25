@@ -75,7 +75,7 @@ const VendorOrdersTable = ({ orders }) => {
                                     <td className="p-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <Link
-                                                to={`/vendor/orders/${sellerOrder?._id}`}
+                                                to={`/vendor/orders/${order?._id}`}
                                                 title="View Order"
                                                 className="p-1.5 bg-transparent shadow-none text-gray-400 hover:text-orange hover:bg-orange-50 rounded-md transition-colors"
                                             >

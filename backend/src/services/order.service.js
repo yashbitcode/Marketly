@@ -105,7 +105,7 @@ class OrderService {
         return allOrders;
     }
 
-    async getOrderById(baseOrderId, filters = {}) {
+    async getOrderById(baseOrderId, filters = {}, matchStage = {}) {
         let baseOrder = await Order.findOne({
             ...filters,
             _id: baseOrderId,
@@ -135,6 +135,7 @@ class OrderService {
         const sellerOrders = await SellerOrder.aggregate([
             {
                 $match: {
+                    ...matchStage,
                     orderDocId: new mongoose.Types.ObjectId(baseOrderId),
                 },
             },
