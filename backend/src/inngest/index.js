@@ -165,10 +165,6 @@ const sendOrderUpdate = inngest.createFunction(
     async ({ event, step }) => {
         const { data, order } = event.data;
 
-        console.log("EVENT: ---------> \n");
-
-        console.log(event.data);
-
         const notification = await step.run(
             "create-order-notification",
             async () =>

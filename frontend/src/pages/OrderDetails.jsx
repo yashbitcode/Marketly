@@ -9,6 +9,9 @@ import DeliveryProgressBar from "../components/features/order/DeliveryProgressBa
 import InfoRow from "../components/features/order/InfoRow";
 import { useAuth } from "../hooks";
 import { STATUS_STEPS } from "../utils/constants";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { useRef } from "react";
 
 const Loading = () => (
     <div className="min-h-screen flex items-center justify-center">
@@ -16,23 +19,25 @@ const Loading = () => (
     </div>
 );
 
-const Error = ({isError, error}) => {
-if (isError) ErrorToast(error);
+const Error = ({ isError, error }) => {
+    if (isError) ErrorToast(error);
 
-        return (
-            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-400">
-                <Package size={48} className="mb-3 opacity-20" />
-                <p>Order not found</p>
-            </div>
-        );
-}
+    return (
+        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-400">
+            <Package size={48} className="mb-3 opacity-20" />
+            <p>Order not found</p>
+        </div>
+    );
+};
 
 const OrderDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const {user} = useAuth();
+    const { user } = useAuth();
+    const ioRef = useRef(null);
 
-    const { loading, isError, error, order, statusUpdateLoading, handleUpdateStatus } = useOrderDetails(id);
+    const { loading, isError, error, order, setUpdatedOrders, statusUpdateLoading, handleUpdateStatus } =
+        useOrderDetails(id);
 
     const onStatusChange = async (sellerOrderId, newStatus) => {
         if (statusUpdateLoading) return;
@@ -51,23 +56,58 @@ const OrderDetails = () => {
         }
     };
 
+    useEffect(() => {
+        if (!ioRef.current && order?.sellerOrders?.length > 0) {
+            const ioInst = io(import.meta.env.VITE_BACKEND_URL + "/order", {
+                withCredentials: true,
+            });
+            ioRef.current = ioInst;
+
+            console.log(ioRef)
+
+            order?.sellerOrders?.forEach((so) => {
+                ioInst.emit("join", so._id);
+            });
+
+            ioInst.on("delivery-update", (update) => {
+                console.log(update);
+                // console.log(order)
+
+                setUpdatedOrders((prevOrder) => {
+                    const sellerOrders = [...prevOrder.sellerOrders].map((so) => {
+                        if (so._id === update._id) return { ...so, deliveryStatus: update.deliveryStatus };
+                        return so;
+                    });
+                    return { ...prevOrder, sellerOrders };
+                });
+            });
+        }
+    }, [ioRef, order, setUpdatedOrders]);
+
     if (loading) return <Loading />;
 
-    if (isError || !order) return <Error isError={isError} error={error} />
+    if (isError || !order) return <Error isError={isError} error={error} />;
 
     const { baseOrder, sellerOrders } = order;
 
-    const vendorAmount = sellerOrders?.length > 0 ? sellerOrders[0].products.reduce((acc, product) => {
-        const price = product?.product?.price || 0;
-        const quantity = product?.quantity || 0;
-        return acc + (price * quantity);
-    }, 0) : 0;
+    console.log(order)
+
+    const vendorAmount =
+        sellerOrders?.length > 0
+            ? sellerOrders[0].products.reduce((acc, product) => {
+                  const price = product?.product?.price || 0;
+                  const quantity = product?.quantity || 0;
+                  return acc + price * quantity;
+              }, 0)
+            : 0;
 
     return (
         <div className="min-h-screen font-inter">
             <div className="max-w-2xl mx-auto px-4 py-8">
                 <Button
-                    onClick={() => navigate("/orders")}
+                    onClick={() =>
+                        navigate(user.currentRole === "user" ? "/orders" : "/vendor/orders")
+                    }
                     className="flex bg-transparent p-0 items-center gap-2 text-sm text-gray-500 hover:text-orange transition-colors mb-5"
                 >
                     <ArrowLeft size={16} /> Back to Orders
@@ -79,7 +119,10 @@ const OrderDetails = () => {
                         <div>
                             <p className="text-xs text-gray-400 font-medium">{baseOrder.orderId}</p>
                             <p className="text-2xl font-black text-gray-900 mt-1.5">
-                                ₹{user?.currentRole === "vendor" ? (formatPrice(vendorAmount)) : formatPrice(baseOrder.amount / 100)}
+                                ₹
+                                {user?.currentRole === "vendor"
+                                    ? formatPrice(vendorAmount)
+                                    : formatPrice(baseOrder.amount / 100)}
                             </p>
                         </div>
                         <span
@@ -111,10 +154,7 @@ const OrderDetails = () => {
                 </div>
 
                 {(sellerOrders || []).map((so, i) => (
-                    <div
-                        key={so._id || i}
-                        className="bg-white rounded-lg p-5 shadow-base mb-4"
-                    >
+                    <div key={so._id || i} className="bg-white rounded-lg p-5 shadow-base mb-4">
                         <div className="flex items-center gap-2 mb-1">
                             <Truck size={14} className="text-orange" />
                             <p className="text-sm font-bold text-gray-800">Shipment {i + 1}</p>
@@ -155,7 +195,10 @@ const OrderDetails = () => {
                 <div className="bg-white rounded-lg p-5 shadow-base mb-4">
                     <p className="text-sm font-bold text-gray-800 mb-3">Order Summary</p>
                     <InfoRow label="Order ID" value={baseOrder.orderId} />
-                    <InfoRow label="Total Amount" value={`₹${user?.currentRole === "vendor" ? (formatPrice(vendorAmount)) : formatPrice(baseOrder.amount / 100)}`} />
+                    <InfoRow
+                        label="Total Amount"
+                        value={`₹${user?.currentRole === "vendor" ? formatPrice(vendorAmount) : formatPrice(baseOrder.amount / 100)}`}
+                    />
                     <InfoRow label="Currency" value={baseOrder.currency} />
                     <InfoRow label="Placed on" value={formatDate(baseOrder.createdAt)} />
                 </div>

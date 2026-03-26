@@ -55,7 +55,7 @@ class NotificationService {
 
     async sendOrderDeliveryUpdateNotification(orders) {
         const io = await initEmitter();
-                io.nsp = "/order"
+        io.nsp = "/order"
 
         orders.forEach((order) =>
             io
