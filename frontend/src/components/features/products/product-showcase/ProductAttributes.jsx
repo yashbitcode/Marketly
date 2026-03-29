@@ -3,7 +3,7 @@ import { Button } from "../../../common";
 
 const ProductAttributes = ({ handleSetAttributes, attributes, productAttributes }) => {
     return productAttributes?.map((attr) => (
-        <div className="mb-6">
+        <div className="mb-6" key={attr.name}>
             <p className="text-sm font-semibold text-slate-900 mb-2.5">
                 <span className="text-slate-400 font-normal">{attr.name}: </span>
             </p>

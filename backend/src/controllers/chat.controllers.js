@@ -1,12 +1,33 @@
-// import notificationQueue from "../queues/notification.queue";
 import { inngest } from "../inngest/index.js";
 import chatService from "../services/chat.service.js";
 import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createChatRequest = asyncHandler(async (req, res) => {
-    const payload = req.body;
-    const chatReq = await chatService.createChatReq(payload);
+    const { vendor } = req.body;
+    const user = req.user;
+    const chatReq = await chatService.createChatReq({ vendor, user: user._id });
+
+    // console.log(user)
+    // console.log(chatReq)
+
+    const notificationPayload = {
+        receiverId: chatReq.vendor,
+        docModel: "vendors",
+        notificationType: "CHAT_REQUEST_UPDATE",
+        title: "New Chat Request",
+        message: `New Chat Request From: ${user.fullname}`,
+        data: {
+            chatReqId: chatReq._id,
+        },
+    };
+
+    await inngest
+        .send({
+            name: "notification/send-chat-update",
+            data: { notificationPayload, isVendor: true, chatReq },
+        })
+        .catch((err) => next(err));
 
     res.json(
         new ApiResponse(201, chatReq, "Chat request created successfully"),
@@ -27,26 +48,16 @@ const updateChatRequest = asyncHandler(async (req, res, next) => {
 
     const notificationPayload = {
         receiverId: chatReq.user,
-        docModel: "user",
+        docModel: "users",
         notificationType: "CHAT_REQUEST_UPDATE",
         title: "Chat Request Update",
         message: `Your Recent Chat Request Is: ${status}`,
     };
 
-    // await notificationQueue.add(
-    //     "chat-update",
-    //     { notificationPayload, chatReq: updatedChatReq.chatReq },
-    //     {
-    //         removeOnComplete: true,
-    //         removeOnFail: true,
-    //         attempts: 3,
-    //     },
-    // );
-
     await inngest
         .send({
             name: "notification/send-chat-update",
-            data: notificationPayload,
+            data: { notificationPayload, isVendor: false, chatReq },
         })
         .catch((err) => next(err));
 
@@ -58,21 +69,6 @@ const updateChatRequest = asyncHandler(async (req, res, next) => {
         ),
     );
 });
-
-// const getAllUserChats = asyncHandler(async (req, res) => {
-
-//     const { _id } = req.user;
-//     const allChatReqs = await chatService.getAllChatReqs({ user: _id });
-
-//     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
-// });
-
-// const getAllVendorChats = asyncHandler(async (req, res) => {
-//     const { _id } = req.user.vendor;
-//     const allChatReqs = await chatService.getAllChatReqs({ vendor: _id });
-
-//     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
-// });
 
 const getAllChatsReqs = asyncHandler(async (req, res) => {
     const { page } = req.params;
@@ -87,16 +83,21 @@ const getAllChatsReqs = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, allChatReqs, "Chats fetched successfully"));
 });
 
-export {
-    createChatRequest,
-    updateChatRequest,
-    getAllChatsReqs,
-};
+const getMessages = asyncHandler(async (req, res) => {
+    const user = req.user;
+    const { chatId } = req.params;
 
-// const createMessage = asyncHandler(async (req, res) => {
-//     const payload = req.body;
+    const filters = {
+        chatId,
+        status: {
+            $ne: "pending",
+        },
+    };
+    if (user.currentRole === "user") filters.user = user._id;
+    else if (user.currentRole === "vendor") filters.vendor = user.vendorId._id;
 
-//     const message = await chatService.createMessage(payload);
+    const data = await chatService.getMessages(chatId, filters);
+    res.json(new ApiResponse(200, data, "Messages fetched successfully"));
+});
 
-//     res.json(new ApiResponse(201, message, "Message created successfully"));
-// });
+export { createChatRequest, updateChatRequest, getAllChatsReqs, getMessages };

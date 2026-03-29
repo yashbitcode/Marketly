@@ -25,18 +25,8 @@ const verifyToken = async (authHeader) => {
     return decoded;
 };
 
-const isAuthenticated = asyncHandler(async (req, res, next) => {
-    const token =
-        req.get("Authorization") ||
-        (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
-
-    // console.log("TOKEN: ", token);
-
-    const { _id, vendorId, currentRole, tokenVersion } =
-        await verifyToken(token);
-
-        // console.log("DEC: ", { _id, vendorId, currentRole, tokenVersion })
-
+const getPayload = async (decoded) => {
+    const { _id, vendorId, currentRole } = decoded;
     let payload;
 
     if (currentRole === "vendor") {
@@ -57,6 +47,24 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
             await redisClient.set(`user:${_id}`, JSON.stringify(payload));
         }
     }
+
+    return payload;
+}
+
+const isAuthenticated = asyncHandler(async (req, res, next) => {
+    const token =
+        req.get("Authorization") ||
+        (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
+
+    // console.log("TOKEN: ", token);
+
+    const { _id, vendorId, currentRole, tokenVersion } =
+        await verifyToken(token);
+
+        // console.log("DEC: ", { _id, vendorId, currentRole, tokenVersion })
+    
+    const payload = await getPayload({_id, vendorId, currentRole})
+    
 
     if (!payload || payload.tokenVersion !== tokenVersion) {
         res.clearCookie("accessToken");
@@ -105,12 +113,13 @@ const isSocketAuthenticated = async (socket, next) => {
     try {
         const decoded = await verifyToken(token ? "Bearer " + token : "");
 
-        const user = await userService.getUserById(
-            decoded._id,
-            GENERAL_USER_FIELDS,
-        );
-
-        if (user.role !== "super-admin") socket.user = user;
+        const payload = await getPayload(decoded);
+        
+        if (payload.role !== "super-admin") {
+            socket.user = payload;
+            socket.user.currentRole = decoded.currentRole;
+        }
+        
         next();
     } catch (error) {
         console.log(error)

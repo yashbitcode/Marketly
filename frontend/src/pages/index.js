@@ -10,3 +10,4 @@ export { default as Order } from "./Order";
 export { default as OrderDetails } from "./OrderDetails";
 export { default as VendorProducts } from "./VendorProducts";
 export { default as VendorOrders } from "./VendorOrders";
+export { default as Chat } from "./Chat";

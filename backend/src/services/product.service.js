@@ -39,7 +39,7 @@ class ProductService {
             ...baseProductPipeline,
         ]);
 
-        console.log(product);
+        // console.log(product);
 
         return product;
     }

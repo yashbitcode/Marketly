@@ -9,12 +9,12 @@ export const getAllNotifications = asyncHandler(async (req, res) => {
     if (req.user.currentRole === "vendor")
         filters.receiverId = req.user.vendorId._id;
 
-    console.log(filters)
+    // console.log("NOT: ", filters)
 
     const allNotifications =
         await notificationService.getAllNotification(filters);
 
-        console.log(allNotifications)
+        // console.log(allNotifications)
 
     res.json(new ApiResponse(200, allNotifications, "Notifications fetched successfully"));
 });

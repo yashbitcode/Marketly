@@ -2,7 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Package, MapPin, FileText, Truck } from "lucide-react";
 import { formatDate, formatPrice } from "../utils/helpers";
 import { useOrderDetails } from "../hooks";
-import { Button } from "../components/common";
+import { Button, Error } from "../components/common";
 import { ErrorToast, SuccessToast } from "../utils/toasts";
 import ProductRow from "../components/features/order/ProductRow";
 import DeliveryProgressBar from "../components/features/order/DeliveryProgressBar";
@@ -12,23 +12,8 @@ import { STATUS_STEPS } from "../utils/constants";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useRef } from "react";
+import Loader from "../components/loadings/Loader";
 
-const Loading = () => (
-    <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-orange border-t-transparent rounded-full" />
-    </div>
-);
-
-const Error = ({ isError, error }) => {
-    if (isError) ErrorToast(error);
-
-    return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-gray-400">
-            <Package size={48} className="mb-3 opacity-20" />
-            <p>Order not found</p>
-        </div>
-    );
-};
 
 const OrderDetails = () => {
     const { id } = useParams();
@@ -84,9 +69,9 @@ const OrderDetails = () => {
         }
     }, [ioRef, order, setUpdatedOrders]);
 
-    if (loading) return <Loading />;
+    if (loading) return <Loader />;
 
-    if (isError || !order) return <Error isError={isError} error={error} />;
+    if (isError || error) return <Error error={error} />;
 
     const { baseOrder, sellerOrders } = order;
 

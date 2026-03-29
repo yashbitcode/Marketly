@@ -15,7 +15,7 @@ const ProductCard = ({ name, brandName, price, slug, images, avgRating }) => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-                <h1>{trimStr(name, 22)}</h1>
+                <h1 className="truncate">{name}</h1>
                 <h2 className="text-gray-600 italic">{brandName}</h2>
                 <span className="font-medium">₹{formatPrice(price)}</span>
 
@@ -25,13 +25,5 @@ const ProductCard = ({ name, brandName, price, slug, images, avgRating }) => {
         </div>
     );
 };
-
-/* 
-    avg-rating: 0 - 5
-    
-    avg - 4
-    (3 - 3.5 = 4)
-    3 <= 4 => 100
-*/
 
 export default ProductCard;

@@ -15,19 +15,42 @@ const setupSocketIO = (io) => {
     chatNamespace.use(isSocketAuthenticated);
     orderNamespace.use(isSocketAuthenticated);
     notificationNamespace.use(isSocketAuthenticated);
+
+    const onlineUser = {};
     
     chatNamespace.on("connection", (socket) => {
+        const baseId = socket.user.currentRole === "vendor" ? socket.user.vendorId._id : socket.user._id;
+
         socket.on("join", (chatId) => {
             socket.join("chat:" + chatId);
+            socket.chatId = chatId;
+
+            onlineUser[baseId] = socket.id;
+            chatNamespace.to("chat:" + socket.chatId).emit("online-users", Object.keys(onlineUser));
         });
 
-        socket.on("chat-message", async (payload) => {
+        socket.on("send-message", async (payload) => {
             const validation = createMessageValidations.safeParse(payload);
 
             if (!validation.success) return;
 
-            const message = await chatService.createMessage(validation.success);
+            const message = await chatService.createMessage(validation.data);
+
+            chatNamespace.to("chat:" + socket.chatId).emit("receive-message", message);
         });
+
+        socket.on("end-chat", async () => {
+            const chatReq = await chatService.endChat(socket.chatId);
+
+            chatNamespace.to("chat:" + socket.chatId).emit("chat-ended", chatReq);
+        })
+
+        socket.on("disconnect", async () => {
+            delete onlineUser[baseId];
+
+            console.log("DISCONNECT: ", socket.id);
+            chatNamespace.to("chat:" + socket.chatId).emit("online-users", Object.keys(onlineUser));
+        })
     });
 
     orderNamespace.on("connection", (socket) => {

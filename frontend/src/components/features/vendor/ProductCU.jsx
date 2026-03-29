@@ -61,7 +61,7 @@ const ProductCU = () => {
             description: product.description,
             attributes:
                 product.attributes?.length > 0
-                    ? product.attributes.map((el) => ({ ...el, value: el.value?.join(",") }))
+                    ? product.attributes.map((el) => ({ ...el, value: el.isVariant ? el.value?.join(",") : el.value.toString() }))
                     : [],
             pros: product.pros,
             cons: product.cons,

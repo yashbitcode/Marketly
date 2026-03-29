@@ -12,6 +12,7 @@ const ADDRESS_TYPE = ["home", "work", "other"];
 const ACCOUNT_STATUS = ["active", "suspended", "banned"];
 const VENDOR_APPLICATION_STATUS = ["pending", "accepted", "rejected"];
 const PRODUCT_APPROVAL_STATUS = ["pending", "accepted", "rejected"];
+const CHAT_REQUEST_STATUS = ["pending", "accepted", "rejected", "ended"];
 const MESSAGE_DOC_MODEL_TYPES = ["users", "vendors"];
 const ALLOWED_FILETYPES = [
     "image/jpeg",
@@ -103,4 +104,5 @@ export {
     COMMISSION_RATE,
     BUSINESS_SIZE,
     REFUND_APPLICATION_STATUS,
+    CHAT_REQUEST_STATUS
 };

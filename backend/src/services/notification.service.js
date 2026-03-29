@@ -6,6 +6,8 @@ class NotificationService {
         const { receiverId, docModel, notificationType, title, message, data } =
             payload;
 
+        // console.log("PAYLOAD: ", payload)
+
         const notification = new Notification({
             receiverId,
             docModel,
@@ -33,12 +35,12 @@ class NotificationService {
         return notification;
     }
 
-    async sendChatUpdateNotification(chatReq, notification) {
+    async sendChatUpdateNotification(chatReq, notification, isVendor = false) {
         const io = await initEmitter();
-        io.nsp = "/notification"
+        io.nsp = "/notification";
 
         io.of("/notification")
-            .to("notification:" + chatReq.user)
+            .to("notification:" + (isVendor ? chatReq.vendor : chatReq.user))
             .emit("chat-request-update", notification);
     }
 

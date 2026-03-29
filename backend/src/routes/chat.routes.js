@@ -5,6 +5,7 @@ import {
     getAllChatsReqs,
     createChatRequest,
     updateChatRequest,
+    getMessages
 } from "../controllers/chat.controllers.js";
 import {
     createChatReqValidations,
@@ -14,10 +15,12 @@ const router = Router();
 
 router.get(
     "/:page",
-    // isAuthenticated,
-    // authorise("super-admin", "vendor", "user"),
+    isAuthenticated,
+    authorise("super-admin", "vendor", "user"),
     getAllChatsReqs,
 );
+
+router.get("/message/:chatId", isAuthenticated, authorise("super-admin", "vendor", "user"), getMessages)
 
 router.post(
     "/user",

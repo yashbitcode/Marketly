@@ -2,17 +2,11 @@ import z from "zod";
 import {
     MESSAGE_DOC_MODEL_TYPES,
     PRODUCT_APPROVAL_STATUS as APPROVAL_STATUS,
+    REGEX,
 } from "../constants.js";
 import { baseMediaValidations } from "../baseValidations.js";
 
 const createChatReqValidations = z.object({
-    user: z
-        .string({
-            error: (iss) => !iss.input && "User ID is required",
-        })
-        .refine((val) => REGEX.objectId.test(val), {
-            message: "Invalid user ID",
-        }),
     vendor: z
         .string({
             error: (iss) => !iss.input && "Vendor ID is required",
@@ -48,10 +42,10 @@ const createMessageValidations = z.object({
     chatId: z.string({
         error: (iss) => !iss.input && "Chat ID is required",
     }),
-    attachments: z
-        .array(baseMediaValidations)
-        .min(1, "Minimum 1 attachment required")
-        .optional(),
+    // attachments: z
+    //     .array(baseMediaValidations)
+    //     .min(1, "Minimum 1 attachment required")
+    //     .optional(),
 });
 
 export {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Share2, ShoppingCart, Zap, Plus, Minus, Tag, Info } from "lucide-react";
+import { Share2, ShoppingCart, Zap, Plus, Minus, Tag, Info, MessageCircle } from "lucide-react";
 import { Button, Container, Error } from "../components/common";
 import { useParams } from "react-router";
 import Loader from "../components/loadings/Loader";
@@ -8,12 +8,15 @@ import { tabs } from "../utils/constants";
 import { getFormatedStr } from "../utils/helpers";
 import ProductAttributes from "../components/features/products/product-showcase/ProductAttributes";
 import TabVendor from "../components/features/products/product-showcase/TabVendor";
-import { useProduct, useReviews } from "../hooks";
+import { useProduct, useReviews, useAuth } from "../hooks";
 import TabReviews from "../components/features/products/product-showcase/TabReviews";
 import TabDescription from "../components/features/products/product-showcase/TabDescription";
-import { ErrorToast } from "../utils/toasts";
+import { ErrorToast, SuccessToast } from "../utils/toasts";
+import { ChatApi } from "../apis";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ProductPage() {
+    const { user } = useAuth();
     const { slug } = useParams();
     const { reviews, loading: reviewLoading } = useReviews(slug);
     const [activeImage, setActiveImage] = useState(0);
@@ -27,15 +30,11 @@ export default function ProductPage() {
         return stored ? JSON.parse(stored) : {};
     });
 
-    // const {
-    //     isPending,
-    //     isError,
-    //     error,
-    //     data: product,
-    // } = useQuery({
-    //     queryKey: ["specific-product", slug],
-    //     queryFn: () => ProductApi.getSpecific(slug),
-    // });
+    const mutation = useMutation({
+        mutationFn: () => ChatApi.createChatRequest({vendor: product.data.vendor._id}),
+        onSuccess: (res) => SuccessToast(res?.message || "Chat request submitted"),
+        onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
+    });
 
     const {product, loading, isError, error} = useProduct(slug);
 
@@ -217,6 +216,16 @@ export default function ProductPage() {
                             <Button className="flex-1 h-12 px-5 rounded-xl font-bold cursor-pointer flex items-center justify-center gap-2 text-amber-200 transition-all duration-200 hover:opacity-90 shadow-lg min-w-32.5 bg-green border-2 border-green">
                                 <Zap size={16} fill="#f0c040" /> Buy Now
                             </Button>
+                            {/* Contact Seller */}
+                            {user?.currentRole !== "vendor" && (
+                                <Button className="flex-1 md:flex-none h-12 px-5 bg-white border-2 border-stone-200 rounded-xl font-bold text-slate-900 cursor-pointer flex items-center justify-center gap-2 hover:bg-stone-50 transition-all duration-200 min-w-32.5" onClick={() => {
+                                    if(confirm("Do you want to contact the seller?")) mutation.mutate();
+
+                                    console.log(product.data.vendor._id)
+                                }}>
+                                    <MessageCircle size={16} className="text-slate-600" /> Contact Seller
+                                </Button>
+                            )}
                         </div>
 
                         {/* Share */}

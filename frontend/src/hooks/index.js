@@ -13,3 +13,5 @@ export { default as useNotifications } from "./useNotifications";
 export { default as useBaseProducts } from "./useBaseProducts";
 export { default as useProduct } from "./useProduct";
 export { default as useProductMutations } from "./useProductMutations";
+export { default as useMessages } from "./useMessages";
+export { default as useChat } from "./useChat";

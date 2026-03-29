@@ -22,10 +22,12 @@ const MessageSchema = new mongoose.Schema({
         required: [true, "Message is required"],
         min: [10, "Minimum length should be 10"],
     },
-    attachments: {
-        type: [new mongoose.Schema(mediaSchema, { _id: false })],
-        default: undefined,
-    },
+    // attachments: {
+    //     type: [new mongoose.Schema(mediaSchema, { _id: false })],
+    //     default: undefined,
+    // },
+}, {
+    timestamps: true
 });
 
 const Message = mongoose.model("messages", MessageSchema);

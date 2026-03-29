@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import Message from "../models/message.models.js";
 import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
+import ApiError from "../utils/api-error.js";
 
 class ChatService {
     async createChatReq(payload) {
@@ -91,18 +92,38 @@ class ChatService {
     }
 
     async createMessage(payload) {
-        const { senderId, docModel, message, chatId, attachments } = payload;
+        const { senderId, docModel, message, chatId } = payload;
         const msgDoc = new Message({
             senderId,
             docModel,
             message,
             chatId,
-            attachments,
         });
 
         await msgDoc.save();
 
         return msgDoc;
+    }
+
+    async getMessages(chatId, filters = {}) {
+        const chatReq = await this.getChatReq(filters);
+
+        if (!chatReq) throw new ApiError(400, "Chat request doesn't exist");
+
+        const messages = await Message.find({chatId}).sort({createdAt: 1});
+        return {messages, chatReq};
+    }
+
+    async endChat(chatId) {
+        const chatReq = await this.getChatReq({chatId});
+
+        if (!chatReq) throw new ApiError(400, "Chat request doesn't exist");
+
+        chatReq.status = "ended";
+
+        await chatReq.save();
+
+        return chatReq;
     }
 }
 

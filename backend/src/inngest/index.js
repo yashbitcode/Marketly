@@ -138,7 +138,9 @@ const sendChatUpdate = inngest.createFunction(
     { id: "send-chat-update" },
     { event: "notification/send-chat-update" },
     async ({ event, step }) => {
-        const { chatReq, notificationPayload } = event.data;
+        const { chatReq, notificationPayload, isVendor } = event.data;
+
+        console.log("EVENT: ", event.data)
 
         const notification = await step.run(
             "create-chat-notification",
@@ -154,6 +156,7 @@ const sendChatUpdate = inngest.createFunction(
                 await notificationService.sendChatUpdateNotification(
                     chatReq,
                     notification,
+                    isVendor
                 ),
         );
     },

@@ -5,6 +5,7 @@ import { useCallback } from "react";
 
 const useNotifications = () => {
     const { user } = useAuth();
+    // console.log(user);
     const queryClient = useQueryClient();
 
     const { isPending, error, isError, data } = useQuery({

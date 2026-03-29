@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -52,6 +52,10 @@ const App = () => {
                             <Route path="checkout" element={<Checkout />} />
                             <Route path="orders" element={<OrdersPage />} />
                             <Route path="orders/:id" element={<OrderDetailPage />} />
+                        </Route>
+
+                        <Route element={<Protected allowedRoles={["user", "vendor", "admin"]} />}>
+                            <Route path="chat/:chatId" element={<Chat />} />
                         </Route>
 
                         <Route path="vendor" element={<Protected allowedRoles={["vendor"]} />}>

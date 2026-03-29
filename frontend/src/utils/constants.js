@@ -73,6 +73,11 @@ export const apiEndpoints = {
     support: {
         createTicket: "/support",
     },
+    chat: {
+        createChatRequest: "/chat/user",
+        updateChatRequest: "/chat",
+        getMessages: "/chat/message"
+    }
 };
 
 export const deliveryStatusStyles = {
