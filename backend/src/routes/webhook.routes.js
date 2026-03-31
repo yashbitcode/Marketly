@@ -2,6 +2,8 @@ import express from "express";
 import { Router } from "express";
 import { Stripe } from "stripe";
 import vendorPayoutService from "../services/vendorPayout.service.js";
+import vendorService from "../services/vendor.service.js";
+import Vendor from "../models/vendor.models.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const router = Router();
@@ -20,18 +22,22 @@ router.post(
         const payload = req.body.toString();
         const payloadObj = JSON.parse(payload);
 
+        console.log(payload)
+// transfer.created -> endpointSecretPlatform, payout.paid -> endpointSecretConnect
         try {
-            if (payloadObj && payloadObj.event === "transfer.created") {
-                event = stripe.webhooks.constructEvent(
-                    payload,
-                    signature,
-                    endpointSecretConnect,
-                );
-            } else {
+            if (payloadObj && (payloadObj.type === "transfer.created" || payloadObj.type === "account.updated")) {
+                console.log("ACCCC")
                 event = stripe.webhooks.constructEvent(
                     payload,
                     signature,
                     endpointSecretPlatform,
+                );
+            } else {
+                console.log("KKkk")
+                event = stripe.webhooks.constructEvent(
+                    payload,
+                    signature,
+                    endpointSecretConnect,
                 );
             }
         } catch (err) {
@@ -51,6 +57,18 @@ router.post(
                 metadata.vendorPayoutId,
                 { transfer: id },
             );
+        } else if (event.type === "account.updated") {
+            const account = event.data.object;
+
+            console.log(account);
+            if (account.details_submitted) {
+                const vendor = await Vendor.findOne({ stripeAccountId: account.id });
+                if (vendor && !vendor.stripeAccountOnboarded) {
+                    await vendorService.updateVendorDetails(vendor._id, {
+                        stripeAccountOnboarded: true,
+                    });
+                }
+            }
         }
 
         res.send();

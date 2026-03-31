@@ -179,7 +179,18 @@ const useProductMutations = (categories, setDeleteImages, slug, setError, produc
         onError: (e) => ErrorToast(e?.response?.data?.message || e?.message),
     });
 
-    return {addProductMutation, updateProductMutation};
+    const updateProductStatusMutation = useMutation({
+        mutationFn: async ({ slug, payload }) => {
+            const res = await ProductApi.updateStatus(slug, payload);
+            return res;
+        },
+        onSuccess: (res) => {
+            SuccessToast(res?.message || "Product status updated");
+        },
+        onError: (e) => ErrorToast(e?.response?.data?.message || e?.message),
+    });
+
+    return { addProductMutation, updateProductMutation, updateProductStatusMutation };
 };
 
 export default useProductMutations;

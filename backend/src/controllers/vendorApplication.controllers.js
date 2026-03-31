@@ -53,7 +53,7 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
             ),
         );
 
-    const { vendor } =
+    const { vendor, user } =
         await vendorApplicationService.createVendorAndUpdateUser(
             updatedApplication,
         );
@@ -62,7 +62,7 @@ const updateVendorApplicationStatus = asyncHandler(async (req, res) => {
 
     await updatedApplication.save();
 
-    await redisClient.del(`user:${mainUser._id}`);
+    await redisClient.del(`user:${user._id}`);
 
     res.json(
         new ApiResponse(

@@ -10,6 +10,7 @@ import {
     Menu,
     X,
     ShoppingCart,
+    MessageSquare,
 } from "lucide-react";
 import { useAuth } from "../../hooks/";
 import { AuthApi } from "../../apis";
@@ -38,7 +39,7 @@ const BaseHeader = () => {
 
     const isUser = user?.currentRole === "user" || (user && !user.currentRole);
     const isVendor = user?.currentRole === "vendor";
-    const isAdmin = user?.currentRole === "admin";
+    const isSuperAdmin = user?.currentRole === "super-admin";
 
     return (
         <div className="py-4 px-6 shadow-2xs w-full font-inter">
@@ -99,6 +100,13 @@ const BaseHeader = () => {
                                     </Link>
                                     <Link
                                         className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/all-chats"}
+                                        title="Messages"
+                                    >
+                                        <MessageSquare strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
                                         to={"/checkout"}
                                     >
                                         <ShoppingCart strokeWidth={1.8} />
@@ -122,10 +130,23 @@ const BaseHeader = () => {
                                         All Products
                                     </Link>
                                     <Link
-                                        className="text-gray-500 hover:text-orange transition-all font-medium"
+                                        className="text-gray-500 hover:text-orange transition-all font-medium text-sm"
                                         to={"/vendor/orders"}
                                     >
                                         All Orders
+                                    </Link>
+                                    <Link
+                                        to={"/vendor/profile"}
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        title="Profile"
+                                    >
+                                        <User strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="text-gray-500 hover:text-orange transition-all font-medium text-sm"
+                                        to={"/all-chats"}
+                                    >
+                                        Messages
                                     </Link>
                                     <Button
                                         onClick={handleLogout}
@@ -137,19 +158,28 @@ const BaseHeader = () => {
                                 </>
                             )}
 
-                            {isAdmin && (
+                            {isSuperAdmin && (
                                 <>
                                     <Link
-                                        className="text-gray-500 hover:text-orange transition-all font-medium"
-                                        to={"/admin/dashboard"}
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/admin/products"}
+                                        title="Manage Products"
                                     >
-                                        Admin Panel
+                                        <ShoppingBag strokeWidth={1.8} />
                                     </Link>
                                     <Link
-                                        className="text-gray-500 hover:text-orange transition-all font-medium"
-                                        to={"/admin/users"}
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/admin/vendor-applications"}
+                                        title="Vendor Applications"
                                     >
-                                        Users
+                                        <BadgeQuestionMark strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/admin/vendor-payouts"}
+                                        title="Vendor Payouts"
+                                    >
+                                        <Handshake strokeWidth={1.8} />
                                     </Link>
                                     <Button
                                         onClick={handleLogout}
@@ -287,6 +317,14 @@ const BaseHeader = () => {
 
                                     <Link
                                         className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
+                                        to={"/vendor/profile"}
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        <User size={20} strokeWidth={1.8} />
+                                        <span>Profile</span>
+                                    </Link>
+                                    <Link
+                                        className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
                                         to={"/vendor/orders"}
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
@@ -308,22 +346,33 @@ const BaseHeader = () => {
                                 </>
                             )}
 
-                            {isAdmin && (
+                            {isSuperAdmin && (
                                 <>
                                     <Link
                                         className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
-                                        to={"/admin/dashboard"}
+                                        to={"/admin/products"}
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
-                                        <span>Admin Panel</span>
+                                        <ShoppingBag size={20} strokeWidth={1.8} />
+                                        <span>Manage Products</span>
                                     </Link>
 
                                     <Link
                                         className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
-                                        to={"/admin/users"}
+                                        to={"/admin/vendor-applications"}
                                         onClick={() => setIsSidebarOpen(false)}
                                     >
-                                        <span>Manage Users</span>
+                                        <BadgeQuestionMark size={20} strokeWidth={1.8} />
+                                        <span>Applications</span>
+                                    </Link>
+
+                                    <Link
+                                        className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
+                                        to={"/admin/vendor-payouts"}
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        <Handshake size={20} strokeWidth={1.8} />
+                                        <span>Payouts</span>
                                     </Link>
 
                                     <div className="mt-4">

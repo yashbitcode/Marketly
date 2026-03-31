@@ -51,7 +51,7 @@ router.post(
     resetPassword,
 );
 
-router.post("/logout", isAuthenticated, authorise("user", "vendor"), logout);
+router.post("/logout", isAuthenticated, authorise("user", "super-admin", "vendor"), logout);
 
 router.get("/verify-email/:sessionId", verifyEmailSessionId);
 

@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat, AllChats, VendorProfile, SuperAdminProducts, SuperAdminProductDetails, SuperAdminVendorApplications, SuperAdminVendorPayouts } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -17,9 +17,11 @@ import OrderDetailPage from "./pages/OrderDetails";
 import ProductCU from "./components/features/vendor/ProductCU";
 
 const App = () => {
-    const { loading } = useAuth();
+    const { loading, user } = useAuth();
 
     if (loading) return <PageLoader />;
+console.log(user)
+
 
     return (
         <>
@@ -54,16 +56,25 @@ const App = () => {
                             <Route path="orders/:id" element={<OrderDetailPage />} />
                         </Route>
 
-                        <Route element={<Protected allowedRoles={["user", "vendor", "admin"]} />}>
+                        <Route element={<Protected allowedRoles={["user", "vendor", "super-admin"]} />}>
                             <Route path="chat/:chatId" element={<Chat />} />
+                            <Route path="all-chats" element={<AllChats />} />
                         </Route>
 
                         <Route path="vendor" element={<Protected allowedRoles={["vendor"]} />}>
+                            <Route path="profile" element={<VendorProfile />} />
                             <Route path="products" element={<VendorProducts />} />
                             <Route path="products/add" element={<ProductCU />} />
                             <Route path="products/update/:slug" element={<ProductCU />} />
                             <Route path="orders" element={<VendorOrders />} />
                             <Route path="orders/:id" element={<OrderDetailPage />} />
+                        </Route>
+
+                        <Route path="admin" element={<Protected allowedRoles={["super-admin"]} />}>
+                            <Route path="products" element={<SuperAdminProducts />} />
+                            <Route path="product/:slug" element={<SuperAdminProductDetails />} />
+                            <Route path="vendor-applications" element={<SuperAdminVendorApplications />} />
+                            <Route path="vendor-payouts" element={<SuperAdminVendorPayouts />} />
                         </Route>
                     </Route>
                 </Routes>

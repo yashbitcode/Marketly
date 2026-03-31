@@ -10,12 +10,13 @@ const useBaseProducts = () => {
     console.log(user)
 
     const { isPending, isError, error, data } = useQuery({
-        queryKey: ["all-products", user.vendorId?._id, page],
+        queryKey: ["all-products", user.vendorId?._id || user._id, page],
         queryFn: async () => {
             const { data } = await ProductApi.getAll(page);
 
-            if (Math.ceil(data?.totalCount || 1 / PAGINATION_LIMIT) >= page)
-                return data?.data ? data : [];
+            const totalPages = Math.ceil((data?.totalCount || 1) / PAGINATION_LIMIT);
+            if (totalPages >= page || page === 1)
+                return data;
             else throw new Error("Invalid Page Number");
         },
         staleTime: 0

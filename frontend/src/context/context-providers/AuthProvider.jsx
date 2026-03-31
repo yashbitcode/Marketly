@@ -14,8 +14,6 @@ const AuthProvider = ({ children }) => {
         },
     });
 
-    // console.log({ isError, isPending, error, data });
-
     const setUser = useCallback(
         (mainUser) => {
             console.log(mainUser);

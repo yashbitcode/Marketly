@@ -42,3 +42,13 @@ export const formatDate = (date, timeSpecific = true) => {
     day: "2-digit", month: "long", year: "numeric", ...(timeSpecific && {hour: "2-digit", minute: "2-digit"})
   })
 }
+
+export const getChatStatusStyle = (status) => {
+    const styles = {
+        pending: "bg-yellow-100 text-yellow-700",
+        accepted: "bg-green-100 text-green-700",
+        rejected: "bg-red-100 text-red-700",
+        ended: "bg-gray-100 text-gray-700",
+    };
+    return styles[status?.toLowerCase()] || "bg-gray-100 text-gray-700";
+};

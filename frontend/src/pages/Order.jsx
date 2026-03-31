@@ -6,7 +6,7 @@ import OrdersLoading from "../components/loadings/OrdersLoading";
 import OrderCard from "../components/features/order/OrderCard";
 import Pagination from "../components/common/Pagination";
 
-const OrdersPage = () => {
+const Orders = () => {
     const navigate = useNavigate();
     const {
         orders,
@@ -64,4 +64,4 @@ const OrdersPage = () => {
     );
 };
 
-export default OrdersPage;
+export default Orders;

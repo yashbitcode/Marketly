@@ -32,6 +32,8 @@ export const apiEndpoints = {
     vendorApplication: {
         createApplication: "/vendor-application/me",
         getAllUserApplications: "/vendor-application/me",
+        getAll: "/vendor-application",
+        updateStatus: "/vendor-application/vendor-status",
     },
     user: {
         me: "/me",
@@ -53,7 +55,8 @@ export const apiEndpoints = {
         cart: "/product/cart",
         create: "/product/vendor",
         getAll: "/product",
-        update: "/product/vendor"
+        update: "/product/vendor",
+        updateStatus: "/product/approval"
     },
     review: {
         getAll: "/review/product",
@@ -76,8 +79,39 @@ export const apiEndpoints = {
     chat: {
         createChatRequest: "/chat/user",
         updateChatRequest: "/chat",
-        getMessages: "/chat/message"
+        getMessages: "/chat/message",
+        getAllChatsReqs: "/chat"
+    },
+    vendorPayout: {
+        getAll: "/vendor-payout",
     }
+};
+
+export const typeConfig = {
+    ORDER_UPDATE: {
+        pill: "bg-orange-100 text-orange-500",
+        dot: "bg-orange-500",
+        card: "bg-orange-50",
+        icon: "🛒",
+    },
+    CHAT_REQUEST_UPDATE: {
+        pill: "bg-blue-100 text-blue-500",
+        dot: "bg-blue-500",
+        card: "bg-blue-50",
+        icon: "💬",
+    },
+    GENERAL_UPDATE: {
+        pill: "bg-gray-100 text-gray-500",
+        dot: "bg-gray-500",
+        card: "bg-gray-50",
+        icon: "🔔",
+    },
+    DEFAULT: {
+        pill: "bg-sky-100 text-sky-500",
+        dot: "bg-sky-500",
+        card: "bg-sky-50",
+        icon: "🔔",
+    },
 };
 
 export const deliveryStatusStyles = {

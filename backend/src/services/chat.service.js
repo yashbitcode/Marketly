@@ -108,6 +108,8 @@ class ChatService {
     async getMessages(chatId, filters = {}) {
         const chatReq = await this.getChatReq(filters);
 
+        console.log(chatReq)
+
         if (!chatReq) throw new ApiError(400, "Chat request doesn't exist");
 
         const messages = await Message.find({chatId}).sort({createdAt: 1});

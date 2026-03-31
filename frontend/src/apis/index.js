@@ -9,3 +9,4 @@ export { default as VendorApplicationApi } from "./vendorApplicationApi";
 export { default as AddressesApi } from "./addressesApi";
 export { default as ReviewApi } from "./reviewApi";
 export { default as ChatApi } from "./chatApi";
+export { default as VendorPayoutApi } from "./vendorPayoutApi";

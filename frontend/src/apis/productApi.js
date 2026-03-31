@@ -17,6 +17,7 @@ const ProductApi = {
     addProduct: async (payload) =>
         (await axiosClient.post(apiEndpoints.product.create, payload)).data,
     updateProduct: async (slug, payload) => (await axiosClient.patch(apiEndpoints.product.update + `/${slug}`, payload)).data,
+    updateStatus: async (slug, payload) => (await axiosClient.patch(apiEndpoints.product.updateStatus + `/${slug}`, payload)).data,
 };
 
 export default ProductApi;

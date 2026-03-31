@@ -7,33 +7,7 @@ import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ChatApi } from "../../../apis";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";
-
-const typeConfig = {
-    ORDER_UPDATE: {
-        pill: "bg-orange-100 text-orange-500",
-        dot: "bg-orange-500",
-        card: "bg-orange-50",
-        icon: "🛒",
-    },
-    CHAT_REQUEST_UPDATE: {
-        pill: "bg-blue-100 text-blue-500",
-        dot: "bg-blue-500",
-        card: "bg-blue-50",
-        icon: "💬",
-    },
-    GENERAL_UPDATE: {
-        pill: "bg-gray-100 text-gray-500",
-        dot: "bg-gray-500",
-        card: "bg-gray-50",
-        icon: "🔔",
-    },
-    DEFAULT: {
-        pill: "bg-sky-100 text-sky-500",
-        dot: "bg-sky-500",
-        card: "bg-sky-50",
-        icon: "🔔",
-    },
-};
+import { typeConfig } from "../../../utils/constants";
 
 const NotificationBar = () => {
     const { user } = useAuth();
@@ -157,7 +131,7 @@ const NotificationBar = () => {
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setNotificationAsRead(n._id);
-                                                            mutation.mutate({chatReqId: n.chatReqId, status: "accepted"});
+                                                            mutation.mutate({chatReqId: n?.data?.chatReqId, status: "rejected"});
                                                             setOpen(false);
                                                         }}
                                                     >

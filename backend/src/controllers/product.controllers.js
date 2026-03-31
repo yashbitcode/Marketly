@@ -156,6 +156,8 @@ const updateProductStatus = asyncHandler(async (req, res) => {
 
     if (!product) throw new ApiError(404, "Product not found");
 
+    await redisClient.del(`product:${slug}`)
+
     res.json(new ApiResponse(200, product, "Product updated successfully"));
 });
 

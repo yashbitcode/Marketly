@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { inngest } from "../inngest/index.js";
 import chatService from "../services/chat.service.js";
 import ApiResponse from "../utils/api-response.js";
@@ -73,10 +74,9 @@ const updateChatRequest = asyncHandler(async (req, res, next) => {
 const getAllChatsReqs = asyncHandler(async (req, res) => {
     const { page } = req.params;
     const matchStage = {};
-
-    // if (req.user.currentRole === "user") matchStage.user = req.user._id;
-    // if (req.user.currentRole === "vendor")
-    //     matchStage.vendor = req.user.vendorId._id;
+    if (req.user.currentRole === "user") matchStage.user = new mongoose.Types.ObjectId(req.user._id);
+    if (req.user.currentRole === "vendor")
+        matchStage.vendor = new mongoose.Types.ObjectId(req.user.vendorId?._id);
 
     const allChatReqs = await chatService.getAllChatReqs(matchStage, page);
 
@@ -95,6 +95,8 @@ const getMessages = asyncHandler(async (req, res) => {
     };
     if (user.currentRole === "user") filters.user = user._id;
     else if (user.currentRole === "vendor") filters.vendor = user.vendorId._id;
+
+    console.log(filters)
 
     const data = await chatService.getMessages(chatId, filters);
     res.json(new ApiResponse(200, data, "Messages fetched successfully"));

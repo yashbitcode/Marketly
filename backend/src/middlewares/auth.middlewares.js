@@ -29,22 +29,24 @@ const getPayload = async (decoded) => {
     const { _id, vendorId, currentRole } = decoded;
     let payload;
 
+    // console.log(decoded)
+
     if (currentRole === "vendor") {
-        payload = JSON.parse(await redisClient.get(`vendor:${vendorId}`));
+        // payload = JSON.parse(await redisClient.get(`vendor:${vendorId}`));
 
         if (!payload) {
             payload = await userService.getUserWithVendor(
                 { _id },
                 GENERAL_USER_FIELDS,
             );
-            await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
+            // await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
         }
     } else {
-        payload = JSON.parse(await redisClient.get(`user:${_id}`));
+        // payload = JSON.parse(await redisClient.get(`user:${_id}`));
 
         if (!payload) {
             payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
-            await redisClient.set(`user:${_id}`, JSON.stringify(payload));
+            // await redisClient.set(`user:${_id}`, JSON.stringify(payload));
         }
     }
 
@@ -80,21 +82,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, "Un-authenticated token invalidated");
     }
 
-    // if (!payload) throw new ApiError(401, "Un-Authenticated");
-
-    // if (payload.tokenVersion !== tokenVersion) {
-    //     res.clearCookie("accessToken");
-    //     res.clearCookie("refreshToken");
-
-    //     const keyToDelete = currentRole === "vendor" ?`vendor:${vendorId}` : `user:${_id}`;
-
-    //     await redisClient.del(keyToDelete);
-
-    //     throw new ApiError(401, "Un-authenticated token invalidated");
-    // }
-
-    req.user = payload;
-    req.user.currentRole = currentRole;
+    req.user = {...payload?._doc, currentRole};
 
     next();
 });
@@ -129,6 +117,7 @@ const isSocketAuthenticated = async (socket, next) => {
 
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
+        console.log("AUTH: ", req.user)
         if (!allowedRoles.includes(req.user.currentRole))
             throw new ApiError(403, "Forbidden: insufficient permissions");
 

@@ -11,7 +11,7 @@ const createConnectedAccountValidations = z.object({
         .trim(),
     businessCategory: z.string({
         error: (iss) => !iss.input && "Business category is required",
-    }),
+    }).min(1, "Business category is required"),
     businessSize: z.enum(BUSINESS_SIZE),
 });
 

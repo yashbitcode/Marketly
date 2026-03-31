@@ -22,7 +22,7 @@ const useChat = () => {
         setChatInfo,
     } = useMessages(chatId);
 
-    const participantName = user?.currentRole === "vendor" ? chatReq?.vendor?.fullname : chatReq?.user?.fullname;
+    const participantName = user?.currentRole === "vendor" ? chatReq?.user?.fullname : chatReq?.vendor?.storeName || chatReq?.vendor?.fullname;
 
     const formattedMessages = useMemo(() => {
         const baseMsgs = {};

@@ -20,7 +20,7 @@ router.get(
     getUserSpecificApplications,
 );
 
-router.get("/:page", authorise("super-admin"), getAllApplications);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllApplications);
 
 router.post(
     "/me",
