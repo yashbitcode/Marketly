@@ -30,10 +30,6 @@ const orderFulfillment = inngest.createFunction(
     async ({ event, step }) => {
         const { user, status, products, orderDocId } = event.data;
 
-        // console.log("MAINUSER: ", user);
-
-        // need to change the order of the (order & sellerOrder)
-
         if (status !== "paid") return;
 
         const sellerOrder = await step.run(

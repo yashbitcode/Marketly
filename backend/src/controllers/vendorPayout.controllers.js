@@ -48,7 +48,7 @@ const makeTransfer = asyncHandler(async (req, res) => {
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
 
-    if (vendorPayout.order.refundApplication)
+    if (vendorPayout?.order?.refundApplication)
         throw new ApiError(404, "This order have refund application");
 
     const transfer = await stripeService.makePaymentTransfer(

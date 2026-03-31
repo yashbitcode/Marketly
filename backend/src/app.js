@@ -46,16 +46,6 @@ app.use(BASE_ENDPOINT + "/webhook", webhookRouter);
 app.use(express.json());
 app.use(cookieParser());
 
-// app.get("/", function (req, res) {
-//     res.sendFile(__dirname + "/index.html");
-// });
-
-// app.post("/inn", async (req, res) => {
-//     const ab = await Review.insertMany(req.body);
-
-//     res.json(ab);
-// });
-
 app.use(BASE_ENDPOINT + "/health-check", healthRouter);
 app.use(BASE_ENDPOINT + "/auth", authRouter);
 app.use(BASE_ENDPOINT + "/user", userRouter);

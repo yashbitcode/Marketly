@@ -25,7 +25,7 @@ router.post(
         console.log(payload)
 // transfer.created -> endpointSecretPlatform, payout.paid -> endpointSecretConnect
         try {
-            if (payloadObj && (payloadObj.type === "transfer.created" || payloadObj.type === "account.updated")) {
+            if (payloadObj && (payloadObj.type === "transfer.created")) {
                 console.log("ACCCC")
                 event = stripe.webhooks.constructEvent(
                     payload,
@@ -53,11 +53,14 @@ router.post(
                 { isPaid: true, payoutId: id },
             );
         } else if (event.type === "transfer.created") {
-            await vendorPayoutService.updateVendorPayout(
+            console.log("transFER");
+
+            const ab = await vendorPayoutService.updateVendorPayout(
                 metadata.vendorPayoutId,
-                { transfer: id },
-            );
-        } else if (event.type === "account.updated") {
+                { transferId: id });
+
+            console.log(ab)
+        } else if (event.type === "account.updated" && event?.data?.object?.charges_enabled) {
             const account = event.data.object;
 
             console.log(account);

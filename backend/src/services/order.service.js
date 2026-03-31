@@ -323,7 +323,7 @@ class OrderService {
             vendorPayoutsPayload.push({
                 vendor: el._id,
                 sellerOrder: sellerOrderId,
-                amount: el.totalAmount,
+                amount: +el.totalAmount * 0.8,
                 order: orderDocId,
             });
         });

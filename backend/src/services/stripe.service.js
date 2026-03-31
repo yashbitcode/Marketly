@@ -185,6 +185,12 @@ class StripeService {
 
         return balanceSettings;
     }
+
+    async createLoginLink(accountId) {
+        const accountLink = await this.stripe.accounts.createLoginLink(accountId);
+
+        return accountLink;
+    }
 }
 
 export default new StripeService();

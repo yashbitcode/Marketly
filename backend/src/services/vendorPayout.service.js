@@ -86,7 +86,7 @@ class VendorPayoutService {
                 path: "vendor",
             },
             {
-                path: "orderId",
+                path: "order",
             },
         ]);
 
@@ -94,6 +94,7 @@ class VendorPayoutService {
     }
 
     async updateVendorPayout(id, payload) {
+        console.log(id, payload);
         const vendorPayout = await VendorPayout.findByIdAndUpdate(id, payload, {
             new: true,
         });

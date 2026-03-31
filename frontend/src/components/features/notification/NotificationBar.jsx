@@ -20,7 +20,7 @@ const NotificationBar = () => {
         mutationFn: (payload) => ChatApi.updateChatRequest(payload),
         onSuccess: (res) => {
             SuccessToast(res.message);
-            if(res?.data?.status === "accepted") navigate(`/chat/${res.data.chatId}`);
+            if (res?.data?.status === "accepted") navigate(`/chat/${res.data.chatId}`);
         },
         onError: (err) => ErrorToast(err?.response?.data?.message || "Something went wrong"),
     });
@@ -36,11 +36,11 @@ const NotificationBar = () => {
             ioInst.emit("join", user.currentRole === "vendor" ? user.vendorId._id : user._id);
 
             ioInst.on("order-place-update", (notification) => {
-                setNewNotification?.(notification)
+                setNewNotification?.(notification);
             });
 
             ioInst.on("chat-request-update", (notification) => {
-                setNewNotification?.(notification)
+                setNewNotification?.(notification);
             });
         }
     }, [user, setNewNotification]);
@@ -110,17 +110,21 @@ const NotificationBar = () => {
 
                                         {/* Actions */}
                                         <div className="mt-2.5 pl-12 flex gap-2">
-                                            {n.notificationType === "CHAT_REQUEST_UPDATE" ? (
+                                            {n.notificationType === "CHAT_REQUEST_UPDATE" &&
+                                            user.currentRole !== "user" ? (
                                                 <>
                                                     <Button
                                                         className="text-[10px] h-7 px-3 bg-green-500 hover:bg-green-600 border-none"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
 
-                                                            console.log(n)
-                                                            // setNotificationAsRead(n._id);
-                                                            mutation.mutate({chatReqId: n?.data?.chatReqId, status: "accepted"});
-                                                            // setOpen(false);
+                                                            console.log(n);
+                                                            setNotificationAsRead(n._id);
+                                                            mutation.mutate({
+                                                                chatReqId: n?.data?.chatReqId,
+                                                                status: "accepted",
+                                                            });
+                                                            setOpen(false);
                                                         }}
                                                     >
                                                         Accept
@@ -131,7 +135,10 @@ const NotificationBar = () => {
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setNotificationAsRead(n._id);
-                                                            mutation.mutate({chatReqId: n?.data?.chatReqId, status: "rejected"});
+                                                            mutation.mutate({
+                                                                chatReqId: n?.data?.chatReqId,
+                                                                status: "rejected",
+                                                            });
                                                             setOpen(false);
                                                         }}
                                                     >
@@ -151,6 +158,13 @@ const NotificationBar = () => {
                                                             navigate(
                                                                 "/orders/" + n.data.orderDocId,
                                                             );
+                                                        }
+                                                        if (
+                                                            n.notificationType ===
+                                                                "CHAT_REQUEST_UPDATE" &&
+                                                            n.data?.chatId
+                                                        ) {
+                                                            navigate("/chat/" + n.data.chatId);
                                                         }
                                                         setNotificationAsRead(n._id);
                                                         setOpen(false);

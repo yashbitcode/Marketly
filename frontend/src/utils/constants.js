@@ -84,6 +84,8 @@ export const apiEndpoints = {
     },
     vendorPayout: {
         getAll: "/vendor-payout",
+        makeTransfer: "/vendor-payout/transfer",
+        makePayout: "/vendor-payout/payout",
     }
 };
 

@@ -5,6 +5,11 @@ import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { pubClient as redisClient } from "../config/redis/connection.js";
 
+const test = asyncHandler(async (req, res) => {
+    const login = await stripeService.createLoginLink(req.user.vendorId.stripeAccountId);
+    res.json(new ApiResponse(200, { login }));
+})
+
 const createStripeConnectedAcc = asyncHandler(async (req, res) => {
     const vendor = req.user.vendorId;
     const detailsPayload = req.body;
@@ -79,5 +84,6 @@ const checkStripeAccountStatus = asyncHandler(async (req, res) => {
 export { 
     createStripeConnectedAcc, 
     getStripeOnboardingLink,
-    checkStripeAccountStatus
+    checkStripeAccountStatus,
+    test
 };
