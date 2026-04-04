@@ -138,7 +138,7 @@ export default function ProductPage() {
 
                     {/* Rating Row */}
                     <div className="flex flex-wrap items-center max-lg:justify-center gap-3 mb-5 ">
-                        <RenderStars avgRating={product.data.avgRating.toFixed(1)} size={10} />
+                        <RenderStars avgRating={product?.data?.avgRating?.toFixed(1)} size={10} />
                         <span className="text-green-700 font-semibold bg-green-50 px-2.5 py-1 rounded-full border text-xs mt-1 border-green-200">
                             {product.data.stockQuantity} in stock
                         </span>

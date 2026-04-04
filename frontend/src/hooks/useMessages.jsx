@@ -7,14 +7,20 @@ const useMessages = (chatId) => {
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ["messages", chatId],
         queryFn: () => ChatApi.getMessages(chatId),
+        // enabled: !!chatId,
+        // staleTime: 0
     });
 
     const setChatInfo = useCallback(
-        (payload) => {
-            queryClient.setQueryData(["messages", chatId], (prev) => ({
-                ...prev,
-                data: payload,
-            }));
+        (updater) => {
+            queryClient.setQueryData(["messages", chatId], (prev) => {
+                const currentData = prev?.data;
+                const newData = typeof updater === "function" ? updater(currentData) : updater;
+                return {
+                    ...prev,
+                    data: newData,
+                };
+            });
         },
         [chatId, queryClient],
     );

@@ -111,6 +111,8 @@ class OrderService {
             _id: baseOrderId,
         }).populate("shippingAddress");
 
+        // console.log("1. ", baseOrder);
+
         if (!baseOrder) return;
 
         if (baseOrder.status === "created") {
@@ -128,6 +130,8 @@ class OrderService {
                     { status: "failed" },
                     { new: true },
                 );
+
+            // console.log("2. ", baseOrder);
         }
 
         if(baseOrder.status === "failed") return { baseOrder};
@@ -255,6 +259,8 @@ class OrderService {
             // },
         ]);
 
+        // console.log("3. ", sellerOrders)
+
         return { baseOrder, sellerOrders };
     }
 
@@ -311,6 +317,7 @@ class OrderService {
 
         groupedProducts.forEach((el) => {
             const sellerOrderId = new mongoose.Types.ObjectId();
+            console.log((+el.totalAmount) + ":   " + (+el.totalAmount * 0.8))
 
             sellerOrdersPayload.push({
                 _id: sellerOrderId,

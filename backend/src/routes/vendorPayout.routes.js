@@ -8,7 +8,7 @@ import {
 import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
-router.get("/", isAuthenticated, authorise("super-admin"), getAllVendorPayouts);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllVendorPayouts);
 router.get(
     "/:vendorPayoutId",
     isAuthenticated,

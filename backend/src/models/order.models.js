@@ -81,11 +81,11 @@ const OrderSchema = new mongoose.Schema(
             ref: Address,
             required: [true, "Shipping address ID is required"],
         },
-        refundApplication: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: OrderRefundApplication,
-        },
-        refundId: String,
+        // refundApplication: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: OrderRefundApplication,
+        // },
+        // refundId: String,
     },
     {
         timestamps: true,

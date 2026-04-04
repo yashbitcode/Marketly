@@ -5,10 +5,14 @@ import { AuthApi } from "../../../apis";
 import toast from "react-hot-toast";
 import { TOKEN_LENGTH } from "../../../utils/constants";
 import { useTokenInput } from "../../../hooks";
+import { ErrorToast } from "../../../utils/toasts";
 
 const VerifyEmail = () => {
     const { sessionId } = useParams();
-    const { loading, navigate } = useVerifyToken(AuthApi.verifyEmailSession, sessionId);
+    const { loading, navigate, isError, error } = useVerifyToken(
+        AuthApi.verifyEmailSession,
+        sessionId,
+    );
     const { setCurrentInp, tokenError, setTokenError, handleKeyPress, inputRefs, handleChange } =
         useTokenInput();
 
@@ -25,13 +29,15 @@ const VerifyEmail = () => {
         try {
             const res = await AuthApi.verifyEmailToken(sessionId, token);
 
-            if (res.data.success) {
-                toast.success(res.data.message, {
+            console.log(res);
+
+            if (res.success) {
+                toast.success(res.message, {
                     position: "right-top",
                 });
                 setTimeout(() => navigate("/login", { replace: true }), 500);
             } else {
-                toast.error(res.data.message);
+                toast.error(res.message);
             }
         } catch (err) {
             toast.error(err?.response?.data?.message || "Something went wrong", {
@@ -41,6 +47,11 @@ const VerifyEmail = () => {
     };
 
     if (loading) return <div>loading...</div>;
+    console.log(isError, error);
+    if (isError) {
+        ErrorToast(error?.response?.data?.message || "Something went wrong");
+        navigate("/login", { replace: true });
+    }
 
     return (
         <Container className="font-inter flex px-4 gap-15 max-w-5xl py-7 justify-center items-center h-screen m-auto">

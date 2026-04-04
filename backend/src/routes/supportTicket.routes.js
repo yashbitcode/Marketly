@@ -8,7 +8,7 @@ import { validate } from "../middlewares/validate.middlewares.js";
 import { addSupportTicketValidations } from "../../../shared/validations/supportTicket.validations.js";
 const router = Router();
 
-router.get("/:page", getAllTickets);
+router.get("/:page", isAuthenticated, authorise("super-admin"), getAllTickets);
 
 router.post("/", validate(addSupportTicketValidations), createTicket);
 

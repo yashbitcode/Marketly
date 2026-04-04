@@ -34,7 +34,7 @@ const SupportTicketSchema = new mongoose.Schema({
         type: [new mongoose.Schema(mediaSchema, { _id: false })],
         default: undefined,
     },
-});
+}, { timestamps: true });
 
 const SupportTicket = mongoose.model("support-tickets", SupportTicketSchema);
 

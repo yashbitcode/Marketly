@@ -12,6 +12,7 @@ const AllChats = () => {
     const { data: chats, isLoading, isError, error } = useQuery({
         queryKey: ["all-chats", page],
         queryFn: () => ChatApi.getAllChatsReqs(page),
+        staleTime: 0
     });
 
     const pageHandler = useCallback((pageNum) => {

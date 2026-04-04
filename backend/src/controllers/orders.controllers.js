@@ -9,6 +9,8 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js"
 import mongoose from "mongoose";
 import addressService from "../services/address.service.js";
 import { inngest } from "../inngest/index.js";
+import { createInvoice } from "../utils/helpers.js";
+import imageKitService from "../services/imageKit.service.js";
 
 const getAllVendorOrders = asyncHandler(async (req, res) => {
     const { _id } = req.user.vendorId;
@@ -222,6 +224,91 @@ const webhook = asyncHandler(async (req, res, next) => {
     }
 });
 
+const generateTestInvoice = asyncHandler(async (req, res) => {
+    const sampleData = {
+        baseOrder: {
+            orderId: "ORD_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+            paymentId: "PAY_" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+            amount: 9298,
+            createdAt: new Date(),
+            shippingAddress: {
+                fullname: "John Smith",
+                addressLine1: "42 Galaxy Towers, Sector 12",
+                city: "Bangalore",
+                state: "Karnataka",
+                country: "India",
+            }
+        },
+        sellerOrders: [
+            {
+                vendor: { storeName: "Eco-Friendly Co." },
+                products: [
+                    {
+                        product: { name: "Activated Charcoal Face Wash", price: 299 },
+                        quantity: 1
+                    }
+                ]
+            },
+            {
+                vendor: { storeName: "Modern Home Decor" },
+                products: [
+                    {
+                        product: { name: "Handcrafted Oak Study Desk", price: 8999 },
+                        quantity: 1
+                    }
+                ]
+            },
+            {
+                vendor: { storeName: "Eco-Friendly Co." },
+                products: [
+                    {
+                        product: { name: "Activated Charcoal Face Wash", price: 299 },
+                        quantity: 1
+                    }
+                ]
+            },
+            {
+                vendor: { storeName: "Modern Home Decor" },
+                products: [
+                    {
+                        product: { name: "Handcrafted Oak Study Desk", price: 8999 },
+                        quantity: 1
+                    }
+                ]
+            },
+            {
+                vendor: { storeName: "Modern Home Decor" },
+                products: [
+                    {
+                        product: { name: "Handcrafted Oak Study Desk", price: 8999 },
+                        quantity: 1
+                    }
+                ]
+            },
+            {
+                vendor: { storeName: "Modern Home Decor" },
+                products: [
+                    {
+                        product: { name: "Handcrafted Oak Study Desk", price: 8999 },
+                        quantity: 1
+                    }
+                ]
+            },
+        ]
+    };
+
+    const pdfBuffer = await createInvoice(sampleData);
+    
+    // We pass the buffer directly to imageKitService.upload
+    const uploadResult = await imageKitService.upload(pdfBuffer);
+
+    res.json(new ApiResponse(200, {
+        url: uploadResult.url,
+        fileId: uploadResult.fileId,
+        dataUsed: sampleData
+    }, "Test invoice generated and uploaded successfully"));
+});
+
 export {
     createOrder,
     getOrderByOrderId,
@@ -229,5 +316,6 @@ export {
     getAllOrders,
     webhook,
     updateOrderDeliveryStatus,
-    getAllVendorOrders
+    getAllVendorOrders,
+    generateTestInvoice
 };

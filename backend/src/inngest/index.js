@@ -51,16 +51,20 @@ const orderFulfillment = inngest.createFunction(
                     ),
             );
 
-        let order = await step.run(
+        let {baseOrder, sellerOrders} = await step.run(
             "run-order",
-            async () => await orderService.getOrderById({ orderDocId: new mongoose.Types.ObjectId(orderDocId) }),
+            async () => await orderService.getOrderById(orderDocId, {}, {}),
+            // async () => await orderService.getOrderById(orderDocId, {}, { orderDocId: new mongoose.Types.ObjectId(orderDocId) }),
         );
 
+        // console.log(baseOrder);
+        // console.log(sellerOrders);
+
         
-        if (!order.invoice) {
+        if (!baseOrder.invoice) {
             const pdfBuffer = await step.run(
                 "create-invoice",
-                async () => await createInvoice(order),
+                async () => await createInvoice({baseOrder, sellerOrders}),
             );
 
             const { fileId, name, url } = await step.run(
@@ -68,9 +72,9 @@ const orderFulfillment = inngest.createFunction(
                 async () => await imageKitService.upload(pdfBuffer),
             );
 
-            order = await step.run("update-order", async () => {
+            baseOrder = await step.run("update-order", async () => {
                 return await orderService.updateParentOrder(
-                    { _id: order._id },
+                    { _id: baseOrder._id },
                     {
                         invoice: {
                             fileId,
@@ -85,7 +89,7 @@ const orderFulfillment = inngest.createFunction(
             const emailData = {
                 emailContent: orderPlacedInvoiceMailContent(
                     user.fullname,
-                    order.orderId,
+                    baseOrder.orderId,
                     url,
                 ),
                 from: process.env.MARKETLY_EMAIL,
@@ -103,19 +107,19 @@ const orderFulfillment = inngest.createFunction(
             });
         }
 
-        console.log(order);
+        console.log("reciver ID: ", baseOrder.user);
 
         const notificationPayload = {
-            receiverId: order.user._id.toString(),
+            receiverId: baseOrder.user,
             docModel: "users",
             notificationType: "ORDER_UPDATE",
             title: "Order Update",
             message:
-                order.status === "paid"
-                    ? `Your Order Is Placed: ${order.orderId}`
-                    : `Your Order Placing Failed: ${order.orderId}`,
+                baseOrder.status === "paid"
+                    ? `Your Order Is Placed: ${baseOrder.orderId}`
+                    : `Your Order Placing Failed: ${baseOrder.orderId}`,
             data: {
-                orderDocId: order._id
+                orderDocId: baseOrder._id
             }
         };
 
@@ -123,7 +127,7 @@ const orderFulfillment = inngest.createFunction(
             await inngest
                 .send({
                     name: "notification/send-order-update",
-                    data: {data: notificationPayload, order}
+                    data: {data: notificationPayload, order: baseOrder}
                 })
                 .catch((err) => {});
         });
@@ -163,6 +167,8 @@ const sendOrderUpdate = inngest.createFunction(
     { event: "notification/send-order-update" },
     async ({ event, step }) => {
         const { data, order } = event.data;
+
+        console.log("EVENT: ", event.data)
 
         const notification = await step.run(
             "create-order-notification",

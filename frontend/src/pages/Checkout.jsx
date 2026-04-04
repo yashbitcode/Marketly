@@ -9,6 +9,7 @@ import { formatPrice } from "../utils/helpers";
 import { useMutation } from "@tanstack/react-query";
 import OrderApi from "../apis/orderApi";
 import { useRazorpay} from "react-razorpay";
+import { useNavigate } from "react-router";
 
 
 const CheckoutPage = () => {
@@ -30,6 +31,7 @@ const CheckoutPage = () => {
 
     const { products: productsCart } = useCartProducts();
     const { Razorpay } = useRazorpay();
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationKey: ["order", user._id],
@@ -51,7 +53,9 @@ const CheckoutPage = () => {
                 notes,
                 handler: (response) => {
                     console.log(response);
-                    alert("This step of Payment Succeeded");
+                    navigate("/orders");
+
+                    localStorage.setItem("cart", "{}");
                 },
                 key: rzpId,
                 amount: data?.amount,
@@ -122,7 +126,7 @@ const CheckoutPage = () => {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
                         <AddressSection sideEffect={addressSideEffect} />
                         {errors?.shippingAddressId?.message && (
                             <span className="text-red-500 text-[0.8rem] -mt-1">

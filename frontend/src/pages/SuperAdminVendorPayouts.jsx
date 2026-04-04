@@ -1,16 +1,22 @@
-import { Container } from "../components/common";
+import { Container, Pagination } from "../components/common";
 import VendorPayoutsTable from "../components/features/super-admin/VendorPayoutsTable";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VendorPayoutApi } from "../apis";
 import { useQuery } from "@tanstack/react-query";
 import { ErrorToast } from "../utils/toasts";
 
 const SuperAdminVendorPayouts = () => {
+     const [page, setPage] = useState(1);
     const { data: payoutsData, isLoading, isError, error } = useQuery({
-        queryKey: ["vendor-payouts"],
-        queryFn: () => VendorPayoutApi.getAll(),
+        queryKey: ["vendor-payouts", page],
+        queryFn: () => VendorPayoutApi.getAll(page),
         staleTime: 0
     });
+
+     const pageHandler = useCallback((pageNum) => {
+            setPage(pageNum);
+        }, []);
+
 
     console.log(payoutsData)
 
@@ -40,6 +46,16 @@ const SuperAdminVendorPayouts = () => {
                         <VendorPayoutsTable payouts={payoutsData?.data?.vendorPayouts} />
                     )}
                 </div>
+
+                {!isLoading && payoutsData?.data?.vendorPayouts?.length > 0 && (
+                                    <div className="flex justify-center mt-6">
+                                        <Pagination
+                                            page={page}
+                                            totalCount={payoutsData?.data?.totalCount}
+                                            pageHandler={pageHandler}
+                                        />
+                                    </div>
+                                )}
             </Container>
         </div>
     );

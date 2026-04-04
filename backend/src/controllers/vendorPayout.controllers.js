@@ -5,7 +5,8 @@ import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const getAllVendorPayouts = asyncHandler(async (req, res) => {
-    const { data, totalCount } = await vendorPayoutService.getAll();
+    const {page} = req.params;
+    const { data, totalCount } = await vendorPayoutService.getAll({}, page);
 
     res.json(
         new ApiResponse(
@@ -48,8 +49,8 @@ const makeTransfer = asyncHandler(async (req, res) => {
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
 
-    if (vendorPayout?.order?.refundApplication)
-        throw new ApiError(404, "This order have refund application");
+    // if (vendorPayout?.order?.refundApplication)
+    //     throw new ApiError(404, "This order have refund application");
 
     const transfer = await stripeService.makePaymentTransfer(
         vendorPayoutId,

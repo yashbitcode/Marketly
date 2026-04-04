@@ -325,7 +325,7 @@ const verifyRazorpaySignature = (orderId, paymentId, signature) => {
     return expectedSignature === signature;
 };
 
-const createInvoice = (invoice) => {
+const createInvoice = ({baseOrder, sellerOrders}) => {
     return new Promise((resolve) => {
         const doc = new PDFDocument();
         const chunks = [];
@@ -339,54 +339,68 @@ const createInvoice = (invoice) => {
         });
 
         generateHeader(doc);
-        generateCustomerInformation(doc, invoice);
+        generateCustomerInformation(doc, baseOrder);
 
-        doc.fontSize(12);
+        let currentY = 280;
 
         generateTableRow(
             doc,
-            topMargin,
+            currentY,
             "Item",
             "Store Name",
             "Unit Cost",
             "Quantity",
             "Total",
+            true
         );
 
-        let counter = 0;
+        currentY += 30;
 
         doc.font("Helvetica");
 
-        invoice.sellerOrders.forEach((el) => {
+        sellerOrders.forEach((el) => {
             el.products.forEach(({ product, quantity }) => {
-                if (topMargin + counter++ * 10 > 650) {
-                    topMargin = 50;
-                    counter = 0;
-
+                if (currentY > 750) {
                     doc.addPage();
+                    currentY = 50;
+                    generateTableRow(
+                        doc,
+                        currentY,
+                        "Item",
+                        "Store Name",
+                        "Unit Cost",
+                        "Quantity",
+                        "Total",
+                        true
+                    );
+                    currentY += 30;
                 }
 
                 generateTableRow(
                     doc,
-                    topMargin + counter++ * 10,
+                    currentY,
                     product.name,
                     el.vendor.storeName,
                     "Rs. " + product.price,
                     quantity,
                     "Rs. " + product.price * quantity,
+                    false
                 );
+                currentY += 25;
             });
         });
 
-        doc.fontSize(14);
+        currentY += 10;
+        doc.fontSize(12).font("Helvetica-Bold");
         generateTableRow(
             doc,
-            topMargin + counter++ * 10,
+            currentY,
             "",
             "",
             "Total Amount",
             "",
-            "Rs. " + invoice.order.amount,
+            "Rs. " + baseOrder.amount,
+            true
         );
 
         doc.end();

@@ -40,6 +40,7 @@ const NotificationBar = () => {
             });
 
             ioInst.on("chat-request-update", (notification) => {
+                console.log(notification)
                 setNewNotification?.(notification);
             });
         }
@@ -61,14 +62,14 @@ const NotificationBar = () => {
 
             {/* Dropdown Panel */}
             {open && (
-                <div className="absolute -right-10 top-13 w-80 max-h-70 bg-white rounded-lg shadow-base z-50 flex flex-col overflow-hidden">
+                <div className="absolute -right-10 top-13 w-80 max-h-75 bg-white rounded-lg shadow-base z-50 flex flex-col overflow-hidden">
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                         <span className="font-bold text-sm text-gray-900">Notifications</span>
                     </div>
 
                     {/* List */}
-                    <div className="overflow-y-auto flex-1">
+                    <div className="overflow-y-auto scrollbar-thin-custom flex-1">
                         {notifications.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-10 text-gray-400">
                                 <Bell size={32} className="mb-2 opacity-30" />
@@ -161,10 +162,9 @@ const NotificationBar = () => {
                                                         }
                                                         if (
                                                             n.notificationType ===
-                                                                "CHAT_REQUEST_UPDATE" &&
-                                                            n.data?.chatId
+                                                                "CHAT_REQUEST_UPDATE" 
                                                         ) {
-                                                            navigate("/chat/" + n.data.chatId);
+                                                            navigate(n.data?.chatId ? ("/chat/" + n.data.chatId) : "/all-chats");
                                                         }
                                                         setNotificationAsRead(n._id);
                                                         setOpen(false);

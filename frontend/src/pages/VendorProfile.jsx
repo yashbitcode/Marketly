@@ -59,12 +59,12 @@ const CreateAccountModal = ({ onClose, userEmail }) => {
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                     <h3 className="text-lg font-bold text-dark">Initialize Stripe Account</h3>
-                    <button 
+                    <Button 
                         onClick={onClose}
                         className="p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-dark"
                     >
                         <X size={20} />
-                    </button>
+                    </Button>
                 </div>
                 
                 <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
@@ -137,7 +137,7 @@ const VendorProfile = () => {
         mutationFn: vendorStripeApi.getOnboardingLink,
         onSuccess: (res) => {
             console.log(res.data)
-            // if(res.success) window.location.href = res.data.onboardLink;
+            if(res.success) window.location.href = res.data.onboardLink;
         },
         onError: (err) => {
             ErrorToast(err?.response?.data?.message || "Failed to onboard vendor");

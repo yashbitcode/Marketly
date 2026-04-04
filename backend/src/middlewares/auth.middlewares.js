@@ -39,14 +39,14 @@ const getPayload = async (decoded) => {
                 { _id },
                 GENERAL_USER_FIELDS,
             );
-            // await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
+            await redisClient.set(`vendor:${_id}`, JSON.stringify(payload));
         }
     } else {
         // payload = JSON.parse(await redisClient.get(`user:${_id}`));
 
         if (!payload) {
             payload = await userService.getUserById(_id, GENERAL_USER_FIELDS);
-            // await redisClient.set(`user:${_id}`, JSON.stringify(payload));
+            await redisClient.set(`user:${_id}`, JSON.stringify(payload));
         }
     }
 
@@ -110,14 +110,14 @@ const isSocketAuthenticated = async (socket, next) => {
         
         next();
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         next(new ApiError(error.statusCode), error.message);
     }
 };
 
 const authorise = (...allowedRoles) => {
     return asyncHandler(async (req, res, next) => {
-        console.log("AUTH: ", req.user)
+        // console.log("AUTH: ", req.user)
         if (!allowedRoles.includes(req.user.currentRole))
             throw new ApiError(403, "Forbidden: insufficient permissions");
 

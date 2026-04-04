@@ -75,6 +75,7 @@ export const apiEndpoints = {
     },
     support: {
         createTicket: "/support",
+        getAllTickets: "/support",
     },
     chat: {
         createChatRequest: "/chat/user",

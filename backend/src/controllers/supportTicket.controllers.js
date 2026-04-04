@@ -6,12 +6,12 @@ const getAllTickets = asyncHandler(
     async (req, res) => {
         const { page } = req.params;
 
-        const allTickets = await supportTicketService.getAll({}, +page);
+        const { data, totalCount } = await supportTicketService.getAll({}, +page);
 
         res.json(
             new ApiResponse(
                 200,
-                allTickets,
+                { tickets: data, totalCount },
                 "Support tickets fetched successfully",
             ),
         );

@@ -39,18 +39,22 @@ class NotificationService {
         const io = await initEmitter();
         io.nsp = "/notification";
 
+        console.log("notification:" + notification.receiverId)
+
         io.of("/notification")
-            .to("notification:" + (isVendor ? chatReq.vendor : chatReq.user))
+            .to("notification:" + notification.receiverId)
             .emit("chat-request-update", notification);
     }
 
     async sendOrderUpdateNotification(order, notification) {
+        console.log(order);
         const io = await initEmitter();
 
         io.nsp = "/notification"
 
         io.of("/notification")
-            .to("notification:" + order.user._id)
+            .to("notification:" + (order.user._id || order.user))
+            // .to("notification:" + order.user._id)
             .emit("order-place-update", notification);
 
     }

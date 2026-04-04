@@ -94,6 +94,9 @@ const ProductAttributes = ({ register, errors, watch, setValue, control }) => {
                     + Add New Attribute
                 </Button>
             </div>
+            {errors?.attributes?.root?.message && (
+                <p className="text-red-500 text-center text-xs mt-2">{errors.attributes.root.message}</p>
+            )}
         </div>
     );
 };

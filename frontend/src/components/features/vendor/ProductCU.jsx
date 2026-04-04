@@ -34,10 +34,13 @@ const ProductCU = () => {
         resolver: zodResolver(slug ? updateProductClient : addProductClient),
     });
 
-    const files = useWatch({
+    const {files, attributes}= useWatch({
         control,
-        name: "files",
+        name: ["files", "attributes"],
     });
+
+    console.log(attributes)
+    console.log(errors)
 
     const {
         product: { data: product } = {},
@@ -62,7 +65,7 @@ const ProductCU = () => {
             attributes:
                 product.attributes?.length > 0
                     ? product.attributes.map((el) => ({ ...el, value: el.isVariant ? el.value?.join(",") : el.value.toString() }))
-                    : [],
+                    : undefined,
             pros: product.pros,
             cons: product.cons,
         });

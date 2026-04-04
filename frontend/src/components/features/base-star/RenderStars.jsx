@@ -17,7 +17,9 @@ const RenderStars = ({ avgRating, starSize = 15 }) => {
                 return <Star key={idx} size={starSize} fill={fill} />;
             })}
 
-            <span className="text-gray-500 ">({avgRating})</span>
+            {
+                avgRating && <span className="text-gray-500">({avgRating})</span>
+            }
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import useAuth from "./useAuth";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRef } from "react";
 import useMessages from "./useMessages";
 import { useMemo } from "react";
@@ -38,7 +38,7 @@ const useChat = () => {
         return baseMsgs;
     }, [messages]);
 
-    const handleSend = (e) => {
+    const handleSend = useCallback((e) => {
         e.preventDefault();
 
         if (!message.trim()) return;
@@ -53,7 +53,9 @@ const useChat = () => {
         });
 
         setMessage("");
-    };
+    }, [user, ioRef, message, setMessage, chatId]);
+
+    console.log(messages)
 
     const handleEndChat = () => {
         if (user?.currentRole !== "vendor") return;
@@ -68,12 +70,11 @@ const useChat = () => {
         ioRef.current = io(import.meta.env.VITE_BACKEND_URL + "/chat", {
             withCredentials: true,
         });
-        console.log(chatId);
 
         ioRef.current.emit("join", chatId);
 
         ioRef.current.on("receive-message", (message) => {
-            setChatInfo?.({ messages: [...messages, message], chatReq });
+            setChatInfo?.((prev) => ({ ...prev, messages: [...(prev?.messages || []), message] }));
         });
 
         ioRef.current.on("online-users", (users) => {
@@ -81,15 +82,17 @@ const useChat = () => {
         });
 
         ioRef.current.on("chat-ended", (updatedChatReq) => {
-            console.log(updatedChatReq)
-            setChatInfo?.({ messages: [...messages], chatReq: updatedChatReq });
+            setChatInfo?.((prev) => ({ ...prev, chatReq: updatedChatReq }));
             ioRef.current.disconnect();
         });
 
         return () => {
-            ioRef.current.disconnect();
+             if (ioRef.current) {
+                 ioRef.current.disconnect();
+                 ioRef.current = null;
+             }
         };
-    }, [loading, isError, user, chatId, setChatInfo, messages, chatReq]);
+    }, [loading, isError, user, chatId, setChatInfo]);
 
     useEffect(() => {
         if (messagesEndRef.current)

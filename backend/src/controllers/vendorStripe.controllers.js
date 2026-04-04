@@ -14,6 +14,8 @@ const createStripeConnectedAcc = asyncHandler(async (req, res) => {
     const vendor = req.user.vendorId;
     const detailsPayload = req.body;
 
+    console.log(req.user);
+
     const account = await stripeService.createConnectedAccount(
         vendor,
         detailsPayload,
@@ -31,7 +33,7 @@ const createStripeConnectedAcc = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to update vendor with Stripe account");
 
     // Invalidate cache
-    await redisClient.del(`vendor:${req.user._id}`);
+    await redisClient.del(`vendor:${req?.user?.vendorId?._id}`);
 
     res.status(201).json(
         new ApiResponse(

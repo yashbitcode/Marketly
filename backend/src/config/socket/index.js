@@ -61,6 +61,7 @@ const setupSocketIO = (io) => {
 
     notificationNamespace.on("connection", (socket) => {
         socket.on("join", (userId) => {
+            console.log("notification:" + userId)
             socket.join("notification:" + userId);
         });
     });

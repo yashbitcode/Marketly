@@ -8,6 +8,7 @@ import {
     getOrderByOrderId,
     getAllOrders,
     getAllVendorOrders,
+    generateTestInvoice
 } from "../controllers/orders.controllers.js";
 import {
     verifyPaymentValidations,
@@ -17,6 +18,8 @@ import {
 import { validate } from "../middlewares/validate.middlewares.js";
 import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();
+
+router.get("/test-invoice", generateTestInvoice);
 
 router.get(
     "/specific/:orderId",

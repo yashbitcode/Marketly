@@ -12,12 +12,12 @@ const addProductValidations = baseProductValidations
     .extend({
         attributes: baseProductAttributeValidations
             .min(1, "Atleast 1 attribute should be there")
-            .optional(),
+            // .optional(),
     })
     .strict();
 
 const addProductClient = baseProductValidations.extend({
-    attributes: z.array(clientSideAttributesValidations).optional(),
+    attributes: z.array(clientSideAttributesValidations).min(1, "Atleast 1 attribute should be there"),
     files: clientSideFileValidations(4, true),
     category: z.string().min(1, "Category is required")
 }).omit({

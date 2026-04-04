@@ -107,8 +107,8 @@ class StripeService {
 
         const accountLink =  await this.stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${FRONTEND_URL}/dashboard?onboarding=refresh`,
-      return_url: `${FRONTEND_URL}/dashboard?onboarding=complete`,
+      refresh_url: `${FRONTEND_URL}/vendor/profile`,
+      return_url: `${FRONTEND_URL}/vendor/onboarding-success`,
       type: "account_onboarding",
     });
 

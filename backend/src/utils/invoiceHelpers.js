@@ -6,75 +6,82 @@ const generateTableRow = (
     unitCost,
     quantity,
     total,
+    isHeader = false
 ) => {
-    doc.text(item, 50, y)
-        .text(storeName, 150, y)
-        .text(unitCost, 265, y, { width: 90, align: "right" })
-        .text(quantity, 370, y, { width: 90, align: "right" })
-        .text(total, 0, y, { align: "right" });
+    doc.fontSize(isHeader ? 10 : 9)
+       .font(isHeader ? "Helvetica-Bold" : "Helvetica")
+       .fillColor(isHeader ? "#2C3E50" : "#444444");
 
-    generateHr(doc, y + 15);
+    doc.text(item, 50, y, { width: 140, height: 15, ellipsis: true })
+        .text(storeName, 195, y, { width: 100, height: 15, ellipsis: true })
+        .text(unitCost, 300, y, { width: 80, align: "right" })
+        .text(quantity, 385, y, { width: 50, align: "right" })
+        .text(total, 440, y, { width: 110, align: "right" });
+
+    if (!isHeader) {
+        generateHr(doc, y + 15);
+    } else {
+        doc.lineWidth(1.5);
+        generateHr(doc, y + 20);
+        doc.lineWidth(1);
+    }
 };
 
 const generateHeader = (doc) => {
-    doc.fillColor("#444444")
-        .fontSize(20)
-        .text("Marketly Inc.", 110, 57)
+    doc.fillColor("#2C3E50")
+        .fontSize(24)
+        .font("Helvetica-Bold")
+        .text("Marketly", 50, 45)
+        .fillColor("#7F8C8D")
         .fontSize(10)
+        .font("Helvetica")
         .text("Marketly Inc.", 200, 50, { align: "right" })
-        .text("Online Platform", 200, 65, { align: "right" })
-        .text("Multi-Vendor E-Commerce", 200, 80, { align: "right" })
+        .text("123 Business Avenue", 200, 65, { align: "right" })
+        .text("support@marketly.com", 200, 80, { align: "right" })
         .moveDown();
 };
 
 const generateCustomerInformation = (doc, invoice) => {
     const {
-        order: {
             orderId,
             paymentId,
             shippingAddress: { city, state, country, fullname, addressLine1 },
             createdAt,
-        },
     } = invoice;
 
-    generateHr(doc, 145);
+    doc.fillColor("#2C3E50")
+        .fontSize(16)
+        .font("Helvetica-Bold")
+        .text("Invoice Information", 50, 130);
 
-    doc.fillColor("#444444").fontSize(20).text("User Info", 50, 160).moveDown();
+    generateHr(doc, 155);
 
-    let customerInformationTop = 200;
+    const customerInformationTop = 175;
 
-    doc.fontSize(13)
+    doc.fontSize(10)
+        .fillColor("#7F8C8D")
+        .font("Helvetica")
         .text("Order ID:", 50, customerInformationTop)
-        .text("Payment ID:", 50, customerInformationTop + 20)
-        .text("Invoice Date:", 50, customerInformationTop + 40)
+        .text("Payment ID:", 50, customerInformationTop + 15)
+        .text("Invoice Date:", 50, customerInformationTop + 30)
+        .fillColor("#2C3E50")
         .font("Helvetica-Bold")
         .text(orderId, 150, customerInformationTop)
-        .text(paymentId, 150, customerInformationTop + 20)
-        .text(formatDate(new Date(createdAt)), 150, customerInformationTop + 40)
-        .moveDown();
-
-    doc.fillColor("#444444")
-        .fontSize(20)
+        .text(paymentId || "N/A", 150, customerInformationTop + 15)
+        .text(formatDate(new Date(createdAt)), 150, customerInformationTop + 30)
+        
+        .fillColor("#7F8C8D")
         .font("Helvetica")
-        .text("Shipping Info", 50, 290)
-        .moveDown();
-
-    customerInformationTop = 330;
-
-    doc.fontSize(13)
-        .text("Fullname:", 50, customerInformationTop)
-        .text("City:", 50, customerInformationTop + 20)
-        .text("State:", 50, customerInformationTop + 40)
-        .text("Country:", 50, customerInformationTop + 60)
-        .text("Address Line:", 50, customerInformationTop + 80)
+        .text("Bill To:", 330, customerInformationTop)
+        .fillColor("#2C3E50")
         .font("Helvetica-Bold")
-        .text(fullname, 150, customerInformationTop)
-        .text(city, 150, customerInformationTop + 20)
-        .text(state, 150, customerInformationTop + 40)
-        .text(country, 150, customerInformationTop + 60)
-        .text(addressLine1, 150, customerInformationTop + 80);
+        .text(fullname, 400, customerInformationTop)
+        .font("Helvetica")
+        .text(`${addressLine1}`, 400, customerInformationTop + 15)
+        .text(`${city}, ${state}`, 400, customerInformationTop + 30)
+        .text(country, 400, customerInformationTop + 45);
 
-    generateHr(doc, 427);
+    generateHr(doc, 250);
 };
 
 const generateHr = (doc, y) => {

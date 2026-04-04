@@ -19,6 +19,7 @@ const useBaseOrders = () => {
                 return data?.data ? data : [];
             else throw new Error("Invalid Page Number");
         },
+        staleTime: 0
     });
 
     const pageHandler = useCallback((pageNum) => {

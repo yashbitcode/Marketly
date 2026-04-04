@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat, AllChats, VendorProfile, SuperAdminProducts, SuperAdminProductDetails, SuperAdminVendorApplications, SuperAdminVendorPayouts } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat, AllChats, VendorProfile, SuperAdminProducts, SuperAdminProductDetails, SuperAdminVendorApplications, SuperAdminVendorPayouts, SuperAdminSupportTickets, OnboardingSuccess } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -68,6 +68,7 @@ console.log(user)
                             <Route path="products/update/:slug" element={<ProductCU />} />
                             <Route path="orders" element={<VendorOrders />} />
                             <Route path="orders/:id" element={<OrderDetailPage />} />
+                            <Route path="onboarding-success" element={<OnboardingSuccess />} />
                         </Route>
 
                         <Route path="admin" element={<Protected allowedRoles={["super-admin"]} />}>
@@ -75,6 +76,7 @@ console.log(user)
                             <Route path="product/:slug" element={<SuperAdminProductDetails />} />
                             <Route path="vendor-applications" element={<SuperAdminVendorApplications />} />
                             <Route path="vendor-payouts" element={<SuperAdminVendorPayouts />} />
+                            <Route path="support-tickets" element={<SuperAdminSupportTickets />} />
                         </Route>
                     </Route>
                 </Routes>
