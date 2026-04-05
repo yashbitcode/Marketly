@@ -34,7 +34,7 @@ const VendorPayoutSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
-});
+}, {timestamps: true});
 
 const VendorPayout = mongoose.model("vendor-payouts", VendorPayoutSchema);
 

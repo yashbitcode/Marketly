@@ -152,6 +152,7 @@ export const STATUS_STYLE = {
     paid: { label: "Paid", bg: "bg-green-100", text: "text-green-700" },
     pending: { label: "Pending", bg: "bg-yellow-100", text: "text-yellow-700" },
     failed: { label: "Failed", bg: "bg-red-100", text: "text-red-600" },
+    refunded: { label: "Refunded", bg: "bg-gray-100", text: "text-gray-700" }
 };
 
 export const tabs = ["Description", "Vendor", "Reviews"];

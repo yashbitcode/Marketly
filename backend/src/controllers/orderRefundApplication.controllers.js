@@ -16,7 +16,7 @@ const createRefundApplication = asyncHandler(async (req, res) => {
     if (!baseOrder) throw new ApiError(404, "Order not found");
     if (baseOrder.status !== "paid" || !baseOrder.paymentId)
         throw new ApiError(400, "Invalid refund application");
-
+    if(baseOrder.refundApplication) throw new ApiError(400, "Refund application already exists");
     if(baseOrder.deliveryStatus === "returned") throw new ApiError(400, "Order is already returned");
     if((new Date() - baseOrder.createdAt) > 7 * 24 * 60 * 60 * 1000) throw new ApiError(400, "Order is older than 7 days");
 
@@ -25,6 +25,12 @@ const createRefundApplication = asyncHandler(async (req, res) => {
         order,
         reason,
         attachments,
+    });
+
+    await orderService.updateParentOrder({
+        _id: order,
+    }, {
+        refundApplication: application._id,
     });
 
     res.json(new ApiResponse(201, application, "Refund application created"));

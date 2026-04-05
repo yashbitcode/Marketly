@@ -223,7 +223,7 @@ const updateOrderRefundApplication = inngest.createFunction(
         const baseOrder = await step.run("mark-order-refunded-status", async () => {
             return await orderService.updateParentOrder(
                 { _id: orderDocId },
-                { status: "refunded" },
+                { status: "refunded", refundId },
             );
         });
 

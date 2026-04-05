@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Button, Error } from "../../components/common";
+import { Container, Button } from "../../components/common";
 import { LayoutGrid, Plus, Edit2, Trash2, ArrowLeft, Tags, Folder } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCategoriesManager } from "../../hooks";
@@ -39,7 +39,9 @@ const SuperAdminCategories = () => {
             else if (mode === "editSub") await updateSubMutation.mutateAsync({ slug: initialData.slug, payload: data });
             
             handleCloseModal();
-        } catch {}
+        } catch {
+            // 
+        }
     };
 
     const handleDelete = (id, type) => {

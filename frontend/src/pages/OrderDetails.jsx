@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Package, MapPin, FileText, Truck } from "lucide-react";
+import { ArrowLeft, MapPin, FileText, Truck, Upload, X } from "lucide-react";
 import { formatDate, formatPrice } from "../utils/helpers";
-import { useOrderDetails } from "../hooks";
+import { useOrderDetails, useImageKitUpload } from "../hooks";
 import { Button, Error } from "../components/common";
 import { ErrorToast, SuccessToast } from "../utils/toasts";
 import ProductRow from "../components/features/order/ProductRow";
@@ -9,7 +9,7 @@ import DeliveryProgressBar from "../components/features/order/DeliveryProgressBa
 import InfoRow from "../components/features/order/InfoRow";
 import { useAuth } from "../hooks";
 import { STATUS_STEPS } from "../utils/constants";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import Loader from "../components/loadings/Loader";
 import { RefundApplicationApi } from "../apis";
@@ -25,9 +25,25 @@ const OrderDetails = () => {
     const { loading, isError, error, order, setUpdatedOrders, statusUpdateLoading, handleUpdateStatus } =
         useOrderDetails(id);
 
+    const { handleUpload, progress } = useImageKitUpload();
     const [showRefundForm, setShowRefundForm] = useState(false);
     const [refundReason, setRefundReason] = useState("");
     const [refundLoading, setRefundLoading] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [isUploadPending, setIsUploadPending] = useState(false);
+
+    const filePreviews = useMemo(() => {
+        return selectedFiles.map(file => ({
+            id: Math.random().toString(36).substr(2, 9),
+            url: URL.createObjectURL(file)
+        }));
+    }, [selectedFiles]);
+
+    useEffect(() => {
+        return () => {
+            filePreviews.forEach(preview => URL.revokeObjectURL(preview.url));
+        };
+    }, [filePreviews]);
 
     const onStatusChange = async (sellerOrderId, newStatus) => {
         if (statusUpdateLoading) return;
@@ -46,23 +62,48 @@ const OrderDetails = () => {
         }
     };
 
+    const handleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (selectedFiles.length + files.length > 5) {
+            return ErrorToast("Maximum 5 attachments allowed");
+        }
+        setSelectedFiles(prev => [...prev, ...files]);
+    };
+
+    const removeAttachment = (index) => {
+        setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
     const handleRefundRequest = async () => {
         if (!refundReason.trim()) return ErrorToast("Please provide a reason for the refund");
         if (refundReason.trim().length < 10) return ErrorToast("Reason must be at least 10 characters long");
 
         setRefundLoading(true);
+        setIsUploadPending(selectedFiles.length > 0);
+
         try {
+            let uploadedAttachments = [];
+            
+            if (selectedFiles.length > 0) {
+                const uploadPromises = await handleUpload(selectedFiles, {}, "refund-attachments");
+                uploadedAttachments = await Promise.all(uploadPromises);
+            }
+
             await RefundApplicationApi.create({
                 order: order?.baseOrder?._id,
                 reason: refundReason,
+                attachments: uploadedAttachments
             });
+
             SuccessToast("Refund application submitted successfully");
             setShowRefundForm(false);
             setRefundReason("");
+            setSelectedFiles([]);
         } catch (err) {
             ErrorToast(err?.response?.data?.message || "Failed to submit refund application");
         } finally {
             setRefundLoading(false);
+            setIsUploadPending(false);
         }
     };
 
@@ -73,16 +114,11 @@ const OrderDetails = () => {
             });
             ioRef.current = ioInst;
 
-            console.log(ioRef)
-
             order?.sellerOrders?.forEach((so) => {
                 ioInst.emit("join", so._id);
             });
 
             ioInst.on("delivery-update", (update) => {
-                console.log(update);
-                // console.log(order)
-
                 setUpdatedOrders((prevOrder) => {
                     const sellerOrders = [...prevOrder.sellerOrders].map((so) => {
                         if (so._id === update._id) return { ...so, deliveryStatus: update.deliveryStatus };
@@ -100,8 +136,6 @@ const OrderDetails = () => {
 
     const { baseOrder, sellerOrders } = order;
 
-    console.log(order)
-
     const vendorAmount =
         sellerOrders?.length > 0
             ? sellerOrders[0].products.reduce((acc, product) => {
@@ -110,6 +144,8 @@ const OrderDetails = () => {
                   return acc + price * quantity;
               }, 0)
             : 0;
+
+    const allDelivered = sellerOrders?.length > 0 && sellerOrders.every((so) => so.deliveryStatus === "delivered");
 
     return (
         <div className="min-h-screen font-inter">
@@ -140,7 +176,8 @@ const OrderDetails = () => {
                                 baseOrder.status === "paid"
                                     ? "bg-green-100 text-green-700"
                                     : baseOrder.status === "failed"
-                                      ? "bg-red-100 text-red-600"
+                                      ? "bg-red-100 text-red-600" 
+                                      : baseOrder.status === "refunded" ? "bg-gray-100 text-gray-700" 
                                       : "bg-yellow-100 text-yellow-700"
                             }`}
                         >
@@ -201,7 +238,6 @@ const OrderDetails = () => {
                     </div>
                 ))}
 
-                {/* Order summary */}
                 <div className="bg-white rounded-lg p-5 shadow-base mb-4">
                     <p className="text-sm font-bold text-gray-800 mb-3">Order Summary</p>
                     <InfoRow label="Order ID" value={baseOrder.orderId} />
@@ -213,9 +249,9 @@ const OrderDetails = () => {
                     <InfoRow label="Placed on" value={formatDate(baseOrder.createdAt)} />
 
                     {user?.currentRole === "user" &&
-                        sellerOrders?.length > 0 &&
-                        sellerOrders.every((so) => so.deliveryStatus === "delivered") && (
-                            <div className="mt-4 pt-4 border-t border-gray-100">
+                        allDelivered &&
+                        baseOrder.status === "paid" && !baseOrder.refundApplication && (
+                            <div className="mt-4 pt-4">
                                 {!showRefundForm ? (
                                     <Button
                                         onClick={() => setShowRefundForm(true)}
@@ -224,28 +260,71 @@ const OrderDetails = () => {
                                         Request Refund / Return
                                     </Button>
                                 ) : (
-                                    <div className="space-y-3">
-                                        <p className="text-xs font-bold text-gray-700">Reason for Return</p>
+                                    <div className="space-y-4">
+                                        <p className="text-xs font-bold text-gray-700">Reason for Request</p>
                                         <Textarea
                                             value={refundReason}
                                             onChange={(e) => setRefundReason(e.target.value)}
-                                            placeholder="Please describe the reason for returning the product(s)..."
+                                            placeholder="Please describe why you are requesting a refund or return..."
                                             rows={3}
-                                            className="text-sm border-gray-200 focus:border-orange focus:ring-orange/20 transition-all"
+                                            className="text-sm border-gray-200 focus:border-orange focus:ring-orange/20 transition-all rounded-lg"
                                         />
-                                        <div className="flex gap-2">
+                                        
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Supporting Images (Optional)</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {filePreviews.map((preview, index) => (
+                                                    <div key={preview.id} className="relative size-16 group">
+                                                        <img 
+                                                            src={preview.url} 
+                                                            className="w-full h-full object-cover rounded-lg border border-gray-100"
+                                                            alt="refund preview"
+                                                        />
+                                                        <button 
+                                                            onClick={() => removeAttachment(index)}
+                                                            className="absolute -top-1 -right-1 bg-white shadow-md rounded-full p-0.5 text-red-500 hover:text-red-600 transition-colors"
+                                                        >
+                                                            <X size={12} strokeWidth={3} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                                {selectedFiles.length < 5 && (
+                                                    <label className={`size-16 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-lg cursor-pointer hover:bg-gray-50 transition-all ${isUploadPending ? 'opacity-50 pointer-events-none' : ''}`}>
+                                                        <Upload size={16} className="text-gray-300" />
+                                                        <span className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Add</span>
+                                                        <input 
+                                                            type="file" 
+                                                            multiple 
+                                                            onChange={handleFileChange} 
+                                                            className="hidden" 
+                                                            accept="image/*"
+                                                        />
+                                                    </label>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-2 pt-2">
                                             <Button
-                                                onClick={() => setShowRefundForm(false)}
-                                                className="flex-1 bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors py-2"
+                                                onClick={() => {
+                                                    setShowRefundForm(false);
+                                                    setSelectedFiles([]);
+                                                }}
+                                                className="flex-1 bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors py-2.5 rounded-lg font-bold text-xs"
                                             >
                                                 Cancel
                                             </Button>
                                             <Button
-                                                disabled={refundLoading}
+                                                disabled={refundLoading || isUploadPending}
                                                 onClick={handleRefundRequest}
-                                                className="flex-2 bg-orange hover:bg-orange/90 transition-colors text-white py-2"
+                                                className="flex-1 bg-orange hover:bg-orange/90 transition-colors text-white py-2.5 rounded-lg font-bold text-xs shadow-md shadow-orange/10"
                                             >
-                                                {refundLoading ? "Submitting..." : "Submit Request"}
+                                                {refundLoading ? (
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <div className="size-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                        <span>{isUploadPending ? "Uploading..." : "Submitting..."}</span>
+                                                    </div>
+                                                ) : "Submit Refund Request"}
                                             </Button>
                                         </div>
                                     </div>
@@ -295,3 +374,7 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
+
+/* 
+checkout -> email (invoices) -> order(realtime) -> chat -> vendor-application -> admin approvals -> vendor flow -> stripe flow -> payouts -> refunds -> super admin flows
+*/
