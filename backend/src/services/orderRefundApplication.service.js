@@ -1,5 +1,6 @@
 import OrderRefundApplication from "../models/orderRefundApplication.models.js";
 import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class OrderRefundApplicationService {
     async createApplication(payload) {
@@ -14,6 +15,17 @@ class OrderRefundApplicationService {
 
         await application.save();
 
+        return application;
+    }
+
+    async getOrderRefundApplication(applicationId) {
+        const application = await OrderRefundApplication.findById(applicationId).populate({
+            path: "order",
+            populate: {
+                path: "user",
+                select: GENERAL_USER_FIELDS,
+            },
+        });
         return application;
     }
 
@@ -44,6 +56,14 @@ class OrderRefundApplicationService {
             },
             {
                 $lookup: {
+                    from: "orders",
+                    localField: "order",
+                    foreignField: "_id",
+                    as: "order",
+                },
+            },
+            {
+                $lookup: {
                     from: "users",
                     localField: "user",
                     foreignField: "_id",
@@ -59,6 +79,7 @@ class OrderRefundApplicationService {
                 $addFields: {
                     vendor: { $arrayElemAt: ["$vendor", 0] },
                     user: { $arrayElemAt: ["$user", 0] },
+                    order: { $arrayElemAt: ["$order", 0] },
                 },
             },
             ...basePagination,

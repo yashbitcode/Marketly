@@ -1,5 +1,5 @@
 import { Inngest } from "inngest";
-import { sendMail, orderPlacedInvoiceMailContent } from "../utils/mail.js";
+import { sendMail, orderPlacedInvoiceMailContent, refundSuccessfulMailContent } from "../utils/mail.js";
 import orderService from "../services/order.service.js";
 import imageKitService from "../services/imageKit.service.js";
 import notificationService from "../services/notification.service.js";
@@ -207,7 +207,9 @@ const updateOrderRefundApplication = inngest.createFunction(
     { id: "update-refund-application" },
     { event: "refund/mark-refund" },
     async ({ event, step }) => {
-        const { refundId, refundDocId, amount } = event.data;
+        const { refundId, refundDocId, amount, orderDocId } = event.data;
+
+        console.log("EIYEU: ", event.data)
 
         const refundApplication = await step.run(
             "mark-refund",
@@ -218,14 +220,23 @@ const updateOrderRefundApplication = inngest.createFunction(
                 ),
         );
 
+        const baseOrder = await step.run("mark-order-refunded-status", async () => {
+            return await orderService.updateParentOrder(
+                { _id: orderDocId },
+                { status: "refunded" },
+            );
+        });
+
+        console.log(baseOrder)
+
         const emailData = {
             emailContent: refundSuccessfulMailContent(
                 refundApplication.order,
                 refundId,
-                amount,
+                (+amount || 0) / 100,
             ),
             from: process.env.MARKETLY_EMAIL,
-            to: user.email,
+            to: baseOrder?.user?.email,
             subject: "Your Amount Is Refunded Successfully",
         };
 

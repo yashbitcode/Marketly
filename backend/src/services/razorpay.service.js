@@ -8,14 +8,12 @@ class RazorpayService {
         return order;
     }
 
-    async refundAmount(paymentId, amount, refundId) {
+    async refundAmount(paymentId, amount, notes) {
         try {
             const refund = await rzp.payments.refund(paymentId, {
                 speed: "optimum",
                 amount,
-                notes: {
-                    refundId,
-                },
+                notes,
             });
 
             return refund;

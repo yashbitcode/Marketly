@@ -9,10 +9,11 @@ import DeliveryProgressBar from "../components/features/order/DeliveryProgressBa
 import InfoRow from "../components/features/order/InfoRow";
 import { useAuth } from "../hooks";
 import { STATUS_STEPS } from "../utils/constants";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import { useRef } from "react";
 import Loader from "../components/loadings/Loader";
+import { RefundApplicationApi } from "../apis";
+import { Textarea } from "../components/common";
 
 
 const OrderDetails = () => {
@@ -23,6 +24,10 @@ const OrderDetails = () => {
 
     const { loading, isError, error, order, setUpdatedOrders, statusUpdateLoading, handleUpdateStatus } =
         useOrderDetails(id);
+
+    const [showRefundForm, setShowRefundForm] = useState(false);
+    const [refundReason, setRefundReason] = useState("");
+    const [refundLoading, setRefundLoading] = useState(false);
 
     const onStatusChange = async (sellerOrderId, newStatus) => {
         if (statusUpdateLoading) return;
@@ -38,6 +43,26 @@ const OrderDetails = () => {
             SuccessToast("Status updated successfully");
         } catch (err) {
             ErrorToast(err?.response?.data?.message || "Failed to update status");
+        }
+    };
+
+    const handleRefundRequest = async () => {
+        if (!refundReason.trim()) return ErrorToast("Please provide a reason for the refund");
+        if (refundReason.trim().length < 10) return ErrorToast("Reason must be at least 10 characters long");
+
+        setRefundLoading(true);
+        try {
+            await RefundApplicationApi.create({
+                order: order?.baseOrder?._id,
+                reason: refundReason,
+            });
+            SuccessToast("Refund application submitted successfully");
+            setShowRefundForm(false);
+            setRefundReason("");
+        } catch (err) {
+            ErrorToast(err?.response?.data?.message || "Failed to submit refund application");
+        } finally {
+            setRefundLoading(false);
         }
     };
 
@@ -155,7 +180,7 @@ const OrderDetails = () => {
                                             {step.label}
                                         </option>
                                     ))}
-                                    <option value="cancelled">Cancelled</option>
+                                    <option value="returned">Returned</option>
                                 </select>
                             ) : (
                                 <span className="ml-auto text-xs bg-orange-50 text-orange font-semibold px-2 py-0.5 rounded-full capitalize">
@@ -186,6 +211,47 @@ const OrderDetails = () => {
                     />
                     <InfoRow label="Currency" value={baseOrder.currency} />
                     <InfoRow label="Placed on" value={formatDate(baseOrder.createdAt)} />
+
+                    {user?.currentRole === "user" &&
+                        sellerOrders?.length > 0 &&
+                        sellerOrders.every((so) => so.deliveryStatus === "delivered") && (
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                {!showRefundForm ? (
+                                    <Button
+                                        onClick={() => setShowRefundForm(true)}
+                                        className="w-full bg-orange-50 text-orange border border-orange/20 hover:bg-orange/10 transition-colors font-bold py-2.5"
+                                    >
+                                        Request Refund / Return
+                                    </Button>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <p className="text-xs font-bold text-gray-700">Reason for Return</p>
+                                        <Textarea
+                                            value={refundReason}
+                                            onChange={(e) => setRefundReason(e.target.value)}
+                                            placeholder="Please describe the reason for returning the product(s)..."
+                                            rows={3}
+                                            className="text-sm border-gray-200 focus:border-orange focus:ring-orange/20 transition-all"
+                                        />
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={() => setShowRefundForm(false)}
+                                                className="flex-1 bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors py-2"
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                disabled={refundLoading}
+                                                onClick={handleRefundRequest}
+                                                className="flex-2 bg-orange hover:bg-orange/90 transition-colors text-white py-2"
+                                            >
+                                                {refundLoading ? "Submitting..." : "Submit Request"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                 </div>
 
                 {/* Shipping address */}

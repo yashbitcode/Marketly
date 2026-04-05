@@ -207,10 +207,13 @@ const webhook = asyncHandler(async (req, res, next) => {
                 refund: { entity },
             } = payload;
 
+            console.log(entity)
+
             await inngest.send({
                 name: "refund/mark-refund",
                 data: {
                     refundDocId: entity.notes.refundId,
+                    orderDocId: entity.notes.orderDocId,
                     refundId: entity.id,
                     amount: entity.amount,
                 },

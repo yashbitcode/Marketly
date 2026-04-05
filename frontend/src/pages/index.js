@@ -17,5 +17,7 @@ export { default as SuperAdminProducts } from "./SuperAdminProducts";
 export { default as SuperAdminProductDetails } from "./SuperAdminProductDetails";
 export { default as SuperAdminVendorApplications } from "./SuperAdminVendorApplications";
 export { default as SuperAdminVendorPayouts } from "./SuperAdminVendorPayouts";
-export { default as SuperAdminSupportTickets } from "./SuperAdminSupportTickets";
+export { default as SuperAdminRefundApplications } from "./super-admin/SuperAdminRefundApplications";
+export { default as SuperAdminCategories } from "./super-admin/SuperAdminCategories";
 export { default as OnboardingSuccess } from "./OnboardingSuccess";
+export { default as SuperAdminSupportTickets } from "./SuperAdminSupportTickets";

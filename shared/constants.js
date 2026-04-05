@@ -30,7 +30,7 @@ const ORDER_DELIVERY_STATUS = [
     "shipped",
     "out of delivery",
     "delivered",
-    // "returned",
+    "returned",
 ];
 const NOTIFICATION_TYPES = [
     "CHAT_REQUEST_UPDATE",

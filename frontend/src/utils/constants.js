@@ -41,6 +41,14 @@ export const apiEndpoints = {
     },
     category: {
         getAll: "/category/all",
+        getParent: "/category",
+        getSub: "/category/sub",
+        addParent: "/category",
+        addSub: "/category/sub",
+        updateParent: "/category",
+        updateSub: "/category/sub",
+        deleteParent: "/category",
+        deleteSub: "/category/sub",
     },
     addresses: {
         getAll: "/address",
@@ -87,6 +95,10 @@ export const apiEndpoints = {
         getAll: "/vendor-payout",
         makeTransfer: "/vendor-payout/transfer",
         makePayout: "/vendor-payout/payout",
+    },
+    orderRefundApplication: {
+        create: "/order-refund-application",
+        getAll: "/order-refund-application",
     }
 };
 
@@ -133,6 +145,7 @@ export const STATUS_STEPS = [
     { key: "shipped", label: "Shipped" },
     { key: "out of delivery", label: "Out Of Delivery" },
     { key: "delivered", label: "Delivered" },
+    // { key: "delivered", label: "Returned" },
 ];
 
 export const STATUS_STYLE = {

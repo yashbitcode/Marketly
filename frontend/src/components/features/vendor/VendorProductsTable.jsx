@@ -1,6 +1,5 @@
 import { Edit, Trash2 } from "lucide-react";
 import { formatPrice, getFormatedStr } from "../../../utils/helpers";
-import { Button } from "../../common";
 import { Link } from "react-router";
 
 const VendorProductsTable = ({ products }) => {
@@ -98,13 +97,13 @@ const VendorProductsTable = ({ products }) => {
                                         >
                                             <Edit size={16} />
                                         </Link>
-                                        <Link
+                                        {/* <Link
                                             to={`/vendor/products/${product.slug}/delete`}
                                             title="Delete Product"
                                             className="p-1.5 bg-transparent shadow-none text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                                         >
                                             <Trash2 size={16} />
-                                        </Link>
+                                        </Link> */}
                                     </div>
                                 </td>
                             </tr>

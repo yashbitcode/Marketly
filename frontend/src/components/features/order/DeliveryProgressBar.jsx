@@ -2,13 +2,17 @@ import { CheckCircle2, Circle } from "lucide-react";
 import { STATUS_STEPS } from "../../../utils/constants";
 
 const DeliveryProgressBar = ({ status }) => {
-    const currentIdx = STATUS_STEPS.findIndex((s) => s.key === status);
+    const steps = [...STATUS_STEPS];
+    if (status === "returned") {
+        steps.push({ key: "returned", label: "Returned" });
+    }
+    const currentIdx = steps.findIndex((s) => s.key === status);
     return (
         <div className="py-4">
             <div className="flex items-start">
-                {STATUS_STEPS.map((step, i) => {
+                {steps.map((step, i) => {
                     const done = i <= currentIdx;
-                    const isLast = i === STATUS_STEPS.length - 1;
+                    const isLast = i === steps.length - 1;
                     return (
                         <div key={step.key} className="flex-1 flex flex-col items-center relative">
                             {/* Connector line */}

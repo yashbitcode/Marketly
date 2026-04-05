@@ -1,12 +1,14 @@
 import orderService from "../services/order.service.js";
 import orderRefundApplicationService from "../services/orderRefundApplication.service.js";
+import razorpayService from "../services/razorpay.service.js";
+import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createRefundApplication = asyncHandler(async (req, res) => {
-    const { order, reason, attachments, status } = req.body;
+    const { order, reason, attachments } = req.body;
 
-    const baseOrder = orderService.getBaseOrder({
+    const baseOrder = await orderService.getBaseOrder({
         user: req.user._id,
         _id: order,
     });
@@ -15,12 +17,14 @@ const createRefundApplication = asyncHandler(async (req, res) => {
     if (baseOrder.status !== "paid" || !baseOrder.paymentId)
         throw new ApiError(400, "Invalid refund application");
 
+    if(baseOrder.deliveryStatus === "returned") throw new ApiError(400, "Order is already returned");
+    if((new Date() - baseOrder.createdAt) > 7 * 24 * 60 * 60 * 1000) throw new ApiError(400, "Order is older than 7 days");
+
     const application = await orderRefundApplicationService.createApplication({
         user: req.user._id,
         order,
         reason,
         attachments,
-        status,
     });
 
     res.json(new ApiResponse(201, application, "Refund application created"));
@@ -37,21 +41,33 @@ const getAllRefundApplications = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, allApplications));
 });
 
-// const markRefunded = asyncHandler(async (req, res) => {
-//     const { orderApplicationId } = req.params;
+const makeRefund = asyncHandler(async (req, res) => {
+    const { applicationId } = req.params;
 
-//     const application = await orderRefundApplicationService.updateApplication(
-//         { _id: orderApplicationId },
-//         { status: "refunded" },
-//     );
+    const application = await orderRefundApplicationService.getOrderRefundApplication(applicationId);
 
-//     res.json(
-//         new ApiResponse(
-//             200,
-//             application,
-//             "Application marked refunded successfully",
-//         ),
-//     );
-// });
+    if(!application) throw new ApiError(404, "Application not found");
+    
 
-export { createRefundApplication, getAllRefundApplications };
+    const refund = await razorpayService.refundAmount(application.order.paymentId, application.order.amount, {refundId: applicationId, orderDocId: application.order._id});
+
+    res.json(
+        new ApiResponse(
+            200,
+            refund,
+            "Application marked refunded successfully",
+        ),
+    );
+});
+
+const getSpecificApplication = asyncHandler(async (req, res) => {
+    const { applicationId } = req.params;
+
+    const application = await orderRefundApplicationService.getOrderRefundApplication(applicationId);
+
+    if(!application) throw new ApiError(404, "Application not found");
+
+    res.json(new ApiResponse(200, application));
+});
+
+export { createRefundApplication, getAllRefundApplications, makeRefund, getSpecificApplication };

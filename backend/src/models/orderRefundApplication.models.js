@@ -33,7 +33,7 @@ const OrderRefundApplicationSchema = new mongoose.Schema({
         default: "under-process",
     },
     refundId: String,
-});
+}, { timestamps: true });
 
 const OrderRefundApplication = mongoose.model(
     "order-refund-applications",

@@ -11,6 +11,8 @@ import {
     X,
     ShoppingCart,
     MessageSquare,
+    RotateCcw,
+    LayoutGrid,
 } from "lucide-react";
 import { useAuth } from "../../hooks/";
 import { AuthApi } from "../../apis";
@@ -187,6 +189,20 @@ const BaseHeader = () => {
                                         title="Support Tickets"
                                     >
                                         <MessageSquare strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/admin/refund-applications"}
+                                        title="Refund Requests"
+                                    >
+                                        <RotateCcw strokeWidth={1.8} />
+                                    </Link>
+                                    <Link
+                                        className="bg-base-white flex text-gray-500 hover:text-white transition-all hover:bg-orange  justify-center items-center p-2 rounded-full"
+                                        to={"/admin/categories"}
+                                        title="Manage Categories"
+                                    >
+                                        <LayoutGrid strokeWidth={1.8} />
                                     </Link>
                                     <Button
                                         onClick={handleLogout}
@@ -388,6 +404,14 @@ const BaseHeader = () => {
                                     >
                                         <MessageSquare size={20} strokeWidth={1.8} />
                                         <span>Support Tickets</span>
+                                    </Link>
+                                    <Link
+                                        className="flex gap-3 text-gray-600 hover:text-orange transition-all items-center p-3 rounded-xl hover:bg-orange/10"
+                                        to={"/admin/refund-applications"}
+                                        onClick={() => setIsSidebarOpen(false)}
+                                    >
+                                        <RotateCcw size={20} strokeWidth={1.8} />
+                                        <span>Refund Requests</span>
                                     </Link>
 
                                     <div className="mt-4">

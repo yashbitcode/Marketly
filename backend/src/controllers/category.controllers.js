@@ -31,21 +31,21 @@ const getAllParentCategories = asyncHandler(async (req, res) => {
 });
 
 const getAllCategories = asyncHandler(async (req, res) => {
-    let allCategories = await redisClient.get("all:categories");
+    // let allCategories = await redisClient.get("all:categories");
 
-    if (allCategories)
-        return res.json(
-            new ApiResponse(
-                200,
-                JSON.parse(allCategories),
-                "All categories fetched successfully",
-            ),
-        );
+    // if (allCategories)
+    //     return res.json(
+    //         new ApiResponse(
+    //             200,
+    //             JSON.parse(allCategories),
+    //             "All categories fetched successfully",
+    //         ),
+    //     );
 
-    allCategories = await categoryService.getAll();
+    const allCategories = await categoryService.getAll();
 
-    await redisClient.set("all:categories", JSON.stringify(allCategories));
-    await redisClient.expire("all:categories", 10 * 60);
+    // await redisClient.set("all:categories", JSON.stringify(allCategories));
+    // await redisClient.expire("all:categories", 10 * 60);
 
     res.json(
         new ApiResponse(

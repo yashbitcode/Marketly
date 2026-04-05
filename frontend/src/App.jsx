@@ -1,4 +1,4 @@
-import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat, AllChats, VendorProfile, SuperAdminProducts, SuperAdminProductDetails, SuperAdminVendorApplications, SuperAdminVendorPayouts, SuperAdminSupportTickets, OnboardingSuccess } from "./pages";
+import { Homepage, ProductReviews, Products, ProductShowcase, Support, Checkout, PaymentSuccess, PaymentFailed, VendorProducts, VendorOrders, Chat, AllChats, VendorProfile, SuperAdminProducts, SuperAdminProductDetails, SuperAdminVendorApplications, SuperAdminVendorPayouts, SuperAdminSupportTickets, SuperAdminRefundApplications, SuperAdminCategories, OnboardingSuccess } from "./pages";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Login from "./components/features/auth/Login";
@@ -77,6 +77,8 @@ console.log(user)
                             <Route path="vendor-applications" element={<SuperAdminVendorApplications />} />
                             <Route path="vendor-payouts" element={<SuperAdminVendorPayouts />} />
                             <Route path="support-tickets" element={<SuperAdminSupportTickets />} />
+                            <Route path="refund-applications" element={<SuperAdminRefundApplications />} />
+                            <Route path="categories" element={<SuperAdminCategories />} />
                         </Route>
                     </Route>
                 </Routes>

@@ -1,12 +1,14 @@
 import z from "zod";
+import { baseMediaValidations } from "../baseValidations.js";
+import { REGEX } from "../constants.js";
 
 const createOrderRefundApplicationValidations = z.object({
-    vendor: z
+    order: z
         .string({
-            error: (iss) => !iss.input && "Vendor ID is required",
+            error: (iss) => !iss.input && "Order ID is required",
         })
         .refine((val) => REGEX.objectId.test(val), {
-            message: "Invalid vendor ID",
+            message: "Invalid order ID",
         }),
     reason: z
         .string({
