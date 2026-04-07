@@ -10,7 +10,7 @@ import {
     createVendorValidations,
     updateVendorValidations,
     updateVendorAccStatusValidations,
-} from "../../../shared/validations/vendor.validations.js";
+} from "shared/validations/vendor.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 const router = Router();
 

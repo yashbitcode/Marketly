@@ -1,5 +1,5 @@
 import { useFieldArray } from "react-hook-form";
-import { ATTRIBUTE_DATATYPES } from "../../../../../../shared/constants";
+import { ATTRIBUTE_DATATYPES } from "shared/constants";
 import { ListPlus, X } from "lucide-react";
 import { Button, Dropdown, Input } from "../../../common";
 

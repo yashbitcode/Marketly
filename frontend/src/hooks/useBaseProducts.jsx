@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { PAGINATION_LIMIT } from "../../../shared/constants";
+import { PAGINATION_LIMIT } from "shared/constants";
 import { ProductApi } from "../apis";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "./useAuth";

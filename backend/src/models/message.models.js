@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MESSAGE_DOC_MODEL_TYPES } from "../../../shared/constants.js";
+import { MESSAGE_DOC_MODEL_TYPES } from "shared/constants.js";
 import { mediaSchema } from "../utils/baseSchemas.js";
 
 const MessageSchema = new mongoose.Schema({

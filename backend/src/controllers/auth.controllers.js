@@ -7,7 +7,7 @@ import {
     COOKIE_OPTIONS,
     FRONTEND_URL,
     GENERAL_USER_FIELDS,
-} from "../../../shared/constants.js";
+} from "shared/constants.js";
 import superAdminService from "../services/superAdmin.service.js";
 import {
     registrationCodeMailContent,

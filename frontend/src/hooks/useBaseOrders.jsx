@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react"
 import OrderApi from "../apis/orderApi";
-import { PAGINATION_LIMIT } from "../../../shared/constants";
+import { PAGINATION_LIMIT } from "shared/constants";
 import useAuth from "./useAuth";
 
 const useBaseOrders = () => {

@@ -1,5 +1,5 @@
 import OrderRefundApplication from "../models/orderRefundApplication.models.js";
-import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS } from "shared/constants.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class OrderRefundApplicationService {

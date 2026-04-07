@@ -11,7 +11,7 @@ import { validate } from "../middlewares/validate.middlewares.js";
 import {
     addAddressValidations,
     updateAddressValidations,
-} from "../../../shared/validations/address.validations.js";
+} from "shared/validations/address.validations.js";
 const router = Router();
 
 router.get("/", isAuthenticated, authorise("user"), getAllUserAddresses);

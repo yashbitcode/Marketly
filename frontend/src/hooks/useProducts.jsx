@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useSearchParams } from "react-router";
-import { PAGINATION_LIMIT } from "../../../shared/constants";
+import { PAGINATION_LIMIT } from "shared/constants";
 import { ProductApi } from "../apis";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 

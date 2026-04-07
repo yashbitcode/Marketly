@@ -16,7 +16,7 @@ import {
     addSubCategoryValidations,
     updateParentCategoryValidations,
     updateSubCategoryValidations,
-} from "../../../shared/validations/category.validations.js";
+} from "shared/validations/category.validations.js";
 import { authorise, isAuthenticated } from "../middlewares/auth.middlewares.js";
 const router = Router();
 

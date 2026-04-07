@@ -4,7 +4,7 @@ import Product from "../models/product.models.js";
 import SellerOrder from "../models/sellerOrder.models.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
 import vendorPayoutService from "./vendorPayout.service.js";
-import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS } from "shared/constants.js";
 
 class OrderService {
     async createOrder(payload) {

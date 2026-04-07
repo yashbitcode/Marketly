@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import http from "node:http";
-import { BASE_ENDPOINT } from "../../shared/constants.js";
+import { BASE_ENDPOINT } from "shared/constants.js";
 import { handleError } from "./middlewares/errorHandling.middlewares.js";
 import cookieParser from "cookie-parser";
 import { initSocket } from "./config/socket/socket.manager.js";

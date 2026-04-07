@@ -4,7 +4,7 @@ import { UserApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
 import { useAuth, useImageKitUpload } from "../../../hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateUserClient } from "../../../../../shared/validations/user.validations";
+import { updateUserClient } from "shared/validations/user.validations";
 import { useMutation } from "@tanstack/react-query";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 

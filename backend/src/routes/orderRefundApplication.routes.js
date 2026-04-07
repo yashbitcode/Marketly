@@ -7,7 +7,7 @@ import {
     makeRefund,
 } from "../controllers/orderRefundApplication.controllers.js";
 import { validate } from "../middlewares/validate.middlewares.js";
-import { createOrderRefundApplicationValidations } from "../../../shared/validations/orderRefundApplication.validations.js";
+import { createOrderRefundApplicationValidations } from "shared/validations/orderRefundApplication.validations.js";
 const router = Router();
 
 router.get(

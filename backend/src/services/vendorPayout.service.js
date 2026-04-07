@@ -1,5 +1,5 @@
 import VendorPayout from "../models/vendorPayout.models.js";
-import { GENERAL_USER_FIELDS, VENDOR_TYPE } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS, VENDOR_TYPE } from "shared/constants.js";
 import {
     getPaginationBasePipeline,
     getVendorPayoutFilterationPipeline,

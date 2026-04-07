@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import SubCategory from "./subCategory.models.js";
 import Vendor from "./vendor.models.js";
-import { PRODUCT_APPROVAL_STATUS } from "../../../shared/constants.js";
+import { PRODUCT_APPROVAL_STATUS } from "shared/constants.js";
 import { generateUniqueSlug } from "../utils/helpers.js";
 import { productAttributeSchema, mediaSchema } from "../utils/baseSchemas.js";
 

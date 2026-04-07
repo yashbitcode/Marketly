@@ -1,6 +1,6 @@
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createOrderValidations } from "../../../shared/validations/order.validations";
+import { createOrderValidations } from "shared/validations/order.validations";
 import { Input, Textarea, Button } from "../components/common";
 import { useCallback, useEffect } from "react";
 import AddressSection from "../components/features/address/AddressSection";

@@ -4,7 +4,7 @@ import {
     ACCOUNT_STATUS,
     ATTRIBUTE_DATATYPES,
     ATTRIBUTE_SCHEMA_TYPES,
-} from "../../../shared/constants.js";
+} from "shared/constants.js";
 import mongoose from "mongoose";
 
 const mediaSchema = {

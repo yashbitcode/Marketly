@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
     addProductClient,
     updateProductClient,
-} from "../../../../../shared/validations/product.validations";
+} from "shared/validations/product.validations";
 import ProductEssentials from "../products/vendor-product/ProductEssentials";
 import BasicInfo from "../products/vendor-product/BasicInfo";
 import PricingInfo from "../products/vendor-product/PricingInfo";
@@ -34,13 +34,13 @@ const ProductCU = () => {
         resolver: zodResolver(slug ? updateProductClient : addProductClient),
     });
 
-    const {files, attributes}= useWatch({
+    const files= useWatch({
         control,
-        name: ["files", "attributes"],
+        name: "files",
     });
 
-    console.log(attributes)
-    console.log(errors)
+    // console.log(attributes)
+    // console.log(errors)
 
     const {
         product: { data: product } = {},
@@ -75,6 +75,8 @@ const ProductCU = () => {
         ...Array.from(files || []),
         ...(existingImages ? existingImages.filter((el) => !deleteImages.includes(el.fileId)) : []),
     ];
+
+    console.log(allImages)
 
     const {addProductMutation, updateProductMutation} = useProductMutations(categories, setDeleteImages, slug, setError, product, existingImages, deleteImages, allImages);
 
@@ -215,7 +217,8 @@ const ProductCU = () => {
                                             <X className="text-white w-5 h-5" />
                                         </Button>
                                     </div>
-                                ))}
+                                )
+                                )}
                             </div>
                         </div>
 

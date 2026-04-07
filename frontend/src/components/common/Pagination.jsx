@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from ".";
-import { PAGINATION_LIMIT } from "../../../../shared/constants";
+import { PAGINATION_LIMIT } from "shared/constants";
 
 const Pagination = ({ page = 1, totalCount = 1, pageHandler }) => {
     const totalPages = Math.ceil(totalCount / PAGINATION_LIMIT) || 1;

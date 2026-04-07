@@ -1,5 +1,5 @@
 import { isSocketAuthenticated } from "../../middlewares/auth.middlewares.js";
-import { createMessageValidations } from "../../../../shared/validations/chat.validations.js";
+import { createMessageValidations } from "shared/validations/chat.validations.js";
 import chatService from "../../services/chat.service.js";
 
 const setupSocketIO = (io) => {

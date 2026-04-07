@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../hooks/";
 import { AuthApi } from "../../apis";
-import { ErrorToast, SuccessToast } from "../../utils/toasts";
 import { useMutation } from "@tanstack/react-query";
 import NotificationBar from "../features/notification/NotificationBar";
+import { ErrorToast, SuccessToast } from "../../utils/toasts";
 
 const BaseHeader = () => {
     const { user, setUser } = useAuth();

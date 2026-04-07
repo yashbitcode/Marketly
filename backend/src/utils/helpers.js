@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { TOKEN_LENGTH, PAGINATION_LIMIT } from "../../../shared/constants.js";
+import { TOKEN_LENGTH, PAGINATION_LIMIT } from "shared/constants.js";
 import slugify from "slugify";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";

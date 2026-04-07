@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../hooks";
 import { Container, Input, Button, Dropdown } from "../components/common";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createConnectedAccountValidations } from "../../../shared/validations/vendorStripe.validations";
-import { BUSINESS_SIZE } from "../../../shared/constants";
+import { createConnectedAccountValidations } from "shared/validations/vendorStripe.validations";
+import { BUSINESS_SIZE } from "shared/constants";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import vendorStripeApi from "../apis/vendorStripeApi";
 import { SuccessToast, ErrorToast } from "../utils/toasts";

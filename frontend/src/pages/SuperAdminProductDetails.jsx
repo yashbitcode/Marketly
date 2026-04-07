@@ -6,7 +6,7 @@ import { useProduct, useProductMutations } from "../hooks";
 import { ChevronLeft, CheckCircle, XCircle, Power, Info, Tag, User as UserIcon } from "lucide-react";
 
 import { useForm, useWatch } from "react-hook-form";
-import { updateProductStatusValidations } from "../../../shared/validations/product.validations";
+import { updateProductStatusValidations } from "shared/validations/product.validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const SuperAdminProductDetails = () => {

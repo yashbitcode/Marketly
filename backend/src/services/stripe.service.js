@@ -1,5 +1,5 @@
 import { Stripe } from "stripe";
-import { COMMISSION_RATE, FRONTEND_URL } from "../../../shared/constants.js";
+import { COMMISSION_RATE, FRONTEND_URL } from "shared/constants.js";
 
 class StripeService {
     constructor() {

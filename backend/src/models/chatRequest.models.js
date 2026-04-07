@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "./user.models.js";
 import Vendor from "./vendor.models.js";
-import { CHAT_REQUEST_STATUS } from "../../../shared/constants.js";
+import { CHAT_REQUEST_STATUS } from "shared/constants.js";
 
 const ChatRequestSchema = new mongoose.Schema(
     {

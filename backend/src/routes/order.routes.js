@@ -14,7 +14,7 @@ import {
     verifyPaymentValidations,
     updateOrderDeliveryStatusValidations,
     createOrderValidations,
-} from "../../../shared/validations/order.validations.js";
+} from "shared/validations/order.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 import { isAuthenticated, authorise } from "../middlewares/auth.middlewares.js";
 const router = Router();

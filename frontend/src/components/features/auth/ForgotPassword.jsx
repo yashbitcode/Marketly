@@ -1,7 +1,7 @@
 import { Button, Input } from "../../common";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgotPasswordLinkValidations } from "../../../../../shared/validations/auth.validations";
+import { forgotPasswordLinkValidations } from "shared/validations/auth.validations";
 import { AuthApi } from "../../../apis";
 import { Link } from "react-router";
 import { useMutation } from "@tanstack/react-query";

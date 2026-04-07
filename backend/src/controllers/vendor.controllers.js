@@ -6,7 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {
     ACCOUNT_STATUS,
     GENERAL_USER_FIELDS,
-} from "../../../shared/constants.js";
+} from "shared/constants.js";
 
 const getAllVendors = asyncHandler(async (req, res) => {
     const { page } = req.params;

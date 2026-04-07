@@ -6,7 +6,7 @@ import {
     generateBaseTokens,
     createHash,
 } from "../utils/helpers.js";
-import { REGEX, ROLES } from "../../../shared/constants.js";
+import { REGEX, ROLES } from "shared/constants.js";
 import Vendor from "./vendor.models.js";
 import { mediaSchema } from "../utils/baseSchemas.js";
 

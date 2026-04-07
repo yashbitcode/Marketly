@@ -19,6 +19,7 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "shared": "file:../shared",
     "@imagekit/nodejs": "^7.1.1",
     "@socket.io/redis-adapter": "^8.3.0",
     "@socket.io/redis-emitter": "^5.1.0",

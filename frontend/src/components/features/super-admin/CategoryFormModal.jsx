@@ -8,7 +8,7 @@ import {
     addSubCategoryValidations, 
     updateParentCategoryValidations, 
     updateSubCategoryValidations 
-} from "../../../../../shared/validations/category.validations";
+} from "shared/validations/category.validations";
 
 const CategoryFormModal = ({ mode, initialData, parentCategories, onClose, onSubmit, loading }) => {
     const isEdit = mode.includes("edit");

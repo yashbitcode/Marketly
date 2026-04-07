@@ -1,7 +1,7 @@
 import ChatRequest from "../models/chatRequest.models.js";
 import { nanoid } from "nanoid";
 import Message from "../models/message.models.js";
-import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS } from "shared/constants.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
 import ApiError from "../utils/api-error.js";
 

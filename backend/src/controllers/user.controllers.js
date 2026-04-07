@@ -1,7 +1,7 @@
 import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import userService from "../services/user.service.js";
-import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS } from "shared/constants.js";
 import { pubClient as redisClient } from "../config/redis/connection.js";
 import imageKitService from "../services/imageKit.service.js";
 

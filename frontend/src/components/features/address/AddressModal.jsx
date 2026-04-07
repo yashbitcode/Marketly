@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button, Dropdown } from "../../common";
-import { addAddressValidations } from "../../../../../shared/validations/address.validations";
-import { ADDRESS_TYPE } from "../../../../../shared/constants";
+import { addAddressValidations } from "shared/validations/address.validations";
+import { ADDRESS_TYPE } from "shared/constants";
 import { AddressesApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

@@ -3,7 +3,7 @@ import Vendor from "./vendor.models.js";
 import User from "./user.models.js";
 import Order from "./order.models.js";
 import { sellerOrderProductsSchema } from "../utils/baseSchemas.js";
-import { ORDER_DELIVERY_STATUS } from "../../../shared/constants.js";
+import { ORDER_DELIVERY_STATUS } from "shared/constants.js";
 
 const SellerOrderSchema = new mongoose.Schema(
     {

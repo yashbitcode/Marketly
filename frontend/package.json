@@ -20,6 +20,7 @@
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
     },
     "dependencies": {
+        "shared": "file:../shared",
         "@hookform/resolvers": "^5.2.2",
         "@imagekit/react": "^5.0.2",
         "@tailwindcss/vite": "^4.1.18",

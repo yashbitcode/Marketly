@@ -10,7 +10,7 @@ import {
 import {
     createChatReqValidations,
     updateChatReqStatusValidations,
-} from "../../../shared/validations/chat.validations.js";
+} from "shared/validations/chat.validations.js";
 const router = Router();
 
 router.get(

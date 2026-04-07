@@ -1,7 +1,7 @@
 import { Button, Input } from "../../common";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordValidations } from "../../../../../shared/validations/auth.validations";
+import { resetPasswordValidations } from "shared/validations/auth.validations";
 import { useParams } from "react-router";
 import { AuthApi } from "../../../apis";
 import { useVerifyToken } from "../../../hooks";
@@ -60,7 +60,7 @@ const ResetPassword = () => {
                 error={errors?.confirmPassword?.message}
             />
             <Button
-                className="rounded-[8px] py-3 mt-2 text-[1.1rem] bg-blue-400"
+                className="rounded-base py-3 mt-2 text-[1.1rem] bg-blue-400"
                 type="submit"
                 disabled={mutation.isPending}
             >

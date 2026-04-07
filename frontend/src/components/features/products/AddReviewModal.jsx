@@ -3,7 +3,7 @@ import { Button, Input } from "../../common";
 import { ReviewApi, UserApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addProductReviewValidations } from "../../../../../shared/validations/review.validations";
+import { addProductReviewValidations } from "shared/validations/review.validations";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ErrorToast, SuccessToast } from "../../../utils/toasts";
 

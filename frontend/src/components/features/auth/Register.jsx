@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Container, Input } from "../../common";
-import { registerValidations } from "../../../../../shared/validations/auth.validations";
+import { registerValidations } from "shared/validations/auth.validations";
 import { useForm } from "react-hook-form";
 import { AuthApi } from "../../../apis";
 import { Link, useNavigate } from "react-router";

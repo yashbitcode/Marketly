@@ -1,6 +1,6 @@
 import User from "../models/user.models.js";
 import ApiError from "../utils/api-error.js";
-import { GENERAL_USER_FIELDS } from "../../../shared/constants.js";
+import { GENERAL_USER_FIELDS } from "shared/constants.js";
 import { getPaginationBasePipeline } from "../utils/helpers.js";
 
 class UserService {

@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input, Button, Dropdown, Textarea } from "../../common";
-import { createVendorApplicationValidations } from "../../../../../shared/validations/vendorApplication.validations";
-import { VENDOR_TYPE } from "../../../../../shared/constants";
+import { createVendorApplicationValidations } from "shared/validations/vendorApplication.validations";
+import { VENDOR_TYPE } from "shared/constants";
 import { VendorApplicationApi } from "../../../apis";
 import Loader from "../../loadings/Loader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

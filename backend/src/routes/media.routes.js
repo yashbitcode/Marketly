@@ -7,7 +7,7 @@ import {
     deleteFiles,
     getFiles,
 } from "../controllers/media.controllers.js";
-import { getImageKitTokensValidations } from "../../../shared/validations/media.validations.js";
+import { getImageKitTokensValidations } from "shared/validations/media.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 
 router.post("/", validate(getImageKitTokensValidations), getAuthParams);

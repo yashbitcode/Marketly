@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { addSupportTicketClient } from "../../../shared/validations/supportTicket.validations";
+import { addSupportTicketClient } from "shared/validations/supportTicket.validations";
 import { Button, Container, Dropdown, Input, Textarea } from "../components/common";
-import { SUPPORT_QUERY_TYPES } from "../../../shared/constants";
+import { SUPPORT_QUERY_TYPES } from "shared/constants";
 import { useImageKitUpload } from "../hooks";
 import Loader from "../components/loadings/Loader";
 import { SupportApi } from "../apis";

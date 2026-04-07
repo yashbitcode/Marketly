@@ -5,7 +5,7 @@ import {
     changePasswordValidations,
     forgotPasswordLinkValidations,
     resetPasswordValidations,
-} from "../../../shared/validations/auth.validations.js";
+} from "shared/validations/auth.validations.js";
 import { validate } from "../middlewares/validate.middlewares.js";
 import {
     register,
