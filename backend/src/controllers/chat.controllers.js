@@ -4,7 +4,7 @@ import chatService from "../services/chat.service.js";
 import ApiResponse from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-const createChatRequest = asyncHandler(async (req, res) => {
+const createChatRequest = asyncHandler(async (req, res, next) => {
     const { vendor } = req.body;
     const user = req.user;
     const chatReq = await chatService.createChatReq({ vendor, user: user._id });
