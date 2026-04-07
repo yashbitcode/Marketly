@@ -1,5 +1,4 @@
 import { Stripe } from "stripe";
-import { COMMISSION_RATE, FRONTEND_URL } from "shared/constants.js";
 
 class StripeService {
     constructor() {
@@ -22,83 +21,27 @@ class StripeService {
         email: email,
         business_type: "individual",
 
-        // Request minimal capabilities
         capabilities: {
           card_payments: { requested: true },
           transfers: { requested: true },
         },
-
-        // Business profile (required for Express accounts)
         business_profile: {
           product_description: "Online marketplace sales",
-          mcc: "5699", // Miscellaneous specialty retail
+          mcc: "5699",
         },
 
-        // KEY: Set manual payouts until full onboarding complete
         settings: {
           payouts: {
             schedule: {
-              interval: "manual", // Prevents automatic payouts
+              interval: "manual",
             },
           },
         },
 
-        // Minimal individual info (optional but helpful)
-        // ...(firstName &&
-        //   lastName && {
-        //     individual: {
-        //       first_name: firstName,
-        //       last_name: lastName,
-        //       email: email,
-        //       address: {
-        //         country: country,
-        //       },
-        //     },
-        //   }),
-
-        // Metadata for tracking
         metadata: {
           onboarding_type: "deferred",
-        //   platform_user_id: userId,
         },
       });
-
-        // const account = await this.stripe.v2.core.accounts.create({
-        //     contact_email: email,
-        //     contact_phone: phoneNumber,
-        //     display_name: fullname,
-        //     identity: {
-        //         country: "us",
-        //         entity_type: vendorType === "business" ? "company" : vendorType,
-        //         business_details: {
-        //             registered_name: storeName,
-        //         },
-        //     },
-        //     configuration: {
-        //         merchant: {
-        //             capabilities: {
-        //                 card_payments: {
-        //                     requested: true,
-        //                 },
-        //             },
-        //         },
-        //     },
-        //     defaults: {
-        //         currency: "usd",
-        //         responsibilities: {
-        //             fees_collector: "stripe",
-        //             losses_collector: "stripe",
-        //         },
-        //     },
-        //     dashboard: "full",
-        //     // include: ["configuration.merchant", "identity", "defaults"],
-        //     metadata: {
-        //         vendor_id: vendorId,
-        //         commission_rate: COMMISSION_RATE + "%",
-        //         business_category: businessCategory,
-        //         business_size: businessSize,
-        //     },
-        // });
 
         return account;
     }
@@ -107,24 +50,10 @@ class StripeService {
 
         const accountLink =  await this.stripe.accountLinks.create({
       account: accountId,
-      refresh_url: `${FRONTEND_URL}/vendor/profile`,
-      return_url: `${FRONTEND_URL}/vendor/onboarding-success`,
+      refresh_url: `${process.env.FRONTEND_URL}/vendor/profile`,
+      return_url: `${process.env.FRONTEND_URL}/vendor/onboarding-success`,
       type: "account_onboarding",
     });
-
-        
-        
-        // await this.stripe.v2.core.accountLinks.create({
-        //     account: accountId,
-        //     use_case: {
-        //         type: "account_onboarding",
-        //         account_onboarding: {
-        //             configurations: ["merchant"],
-        //             refresh_url: FRONTEND_URL,
-        //             return_url: FRONTEND_URL + "/success",
-        //         },
-        //     },
-        // });
 
         return accountLink.url;
     }

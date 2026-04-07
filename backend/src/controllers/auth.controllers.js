@@ -5,8 +5,6 @@ import ApiError from "../utils/api-error.js";
 import ApiResponse from "../utils/api-response.js";
 import {
     COOKIE_OPTIONS,
-    FRONTEND_URL,
-    GENERAL_USER_FIELDS,
 } from "shared/constants.js";
 import superAdminService from "../services/superAdmin.service.js";
 import {
@@ -299,7 +297,7 @@ const verifyEmailCode = asyncHandler(async (req, res, next) => {
     const emailData = {
         emailContent: registrationMailContent(
             updatedUser.fullname,
-            FRONTEND_URL,
+            process.env.FRONTEND_URL,
         ),
         from: process.env.MARKETLY_EMAIL,
         to: updatedUser.email,
@@ -421,7 +419,7 @@ const forgotPasswordLink = asyncHandler(async (req, res, next) => {
     const emailData = {
         emailContent: passwordResetMailContent(
             user.fullname,
-            FRONTEND_URL + `/${resetToken}`,
+            process.env.FRONTEND_URL + `/${resetToken}`,
         ),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,
