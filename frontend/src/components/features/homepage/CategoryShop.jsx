@@ -8,6 +8,8 @@ import { Link } from "react-router";
 const CategoryShop = () => {
     const { categories, loading } = useCategories();
 
+    console.log(categories)
+
     return (
         <div className="text-center font-inter mb-20">
             <h1 className="text-5xl  max-sm:text-4xl text-center font-semibold text-dark">
@@ -18,7 +20,7 @@ const CategoryShop = () => {
             </p>
 
             <Container className="mx-auto gap-4 flex mt-8 px-4 justify-center flex-wrap items-center">
-                {!loading
+                {!loading && categories?.parentCategories
                     ? Array.from({ length: 5 }).map((_, idx) => (
                           <CategoryCard
                               key={categories.parentCategories[idx]._id}

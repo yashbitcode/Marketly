@@ -71,8 +71,6 @@ const getAllProducts = asyncHandler(async (req, res) => {
 //     );
 // });
 
-/* a */
-
 const getSpecificProduct = asyncHandler(async (req, res) => {
     const { slug } = req.params;
 

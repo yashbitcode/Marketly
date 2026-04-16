@@ -16,8 +16,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "preinstall": "rm -rf shared && cp -r ../shared shared && (cd shared && npm ci --production)"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "shared": "file:../shared",

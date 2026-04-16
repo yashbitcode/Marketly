@@ -53,7 +53,7 @@ const getPayload = async (decoded) => {
     return payload;
 }
 
-const isAuthenticated = asyncHandler(async (req, res, next) => {
+const baseAuthenticated = async (req, res, next) => {
     const token =
         req.get("Authorization") ||
         (req.cookies.accessToken && `Bearer ${req.cookies.accessToken}`);
@@ -85,12 +85,14 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
     req.user = {...payload?._doc, currentRole};
 
     next();
-});
+};
 
 const isAuthenticatedErrorHandler = async (req, res, next) => {
     try {
-        await isAuthenticated(req, res, next);
-    } catch {
+        await baseAuthenticated(req, res, next);
+    } catch(err) {
+
+        console.log(err)
         next();
     }
 };
@@ -125,4 +127,7 @@ const authorise = (...allowedRoles) => {
     });
 };
 
-export { isAuthenticated, isAuthenticatedErrorHandler,isSocketAuthenticated, authorise };
+const isAuthenticated = asyncHandler(baseAuthenticated);
+
+export { isAuthenticated, isAuthenticatedErrorHandler, isSocketAuthenticated, authorise };
+
