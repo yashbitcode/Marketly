@@ -25,15 +25,17 @@ router.post(
         console.log(payload)
 // transfer.created -> endpointSecretPlatform, payout.paid -> endpointSecretConnect
         try {
-            if (payloadObj && (payloadObj.type === "transfer.created")) {
-                console.log("ACCCC")
+            const isConnectEvent = !!payloadObj.account;
+            
+            if (payloadObj.type === "transfer.created" || payloadObj.type === "account.updated") {
+                console.log("Constructing Platform Event:", payloadObj.type);
                 event = stripe.webhooks.constructEvent(
                     payload,
                     signature,
                     endpointSecretPlatform,
                 );
             } else {
-                console.log("KKkk")
+                console.log("Constructing Connect Event:", payloadObj.type);
                 event = stripe.webhooks.constructEvent(
                     payload,
                     signature,
@@ -41,8 +43,17 @@ router.post(
                 );
             }
         } catch (err) {
-            console.log(`Webhook signature verification failed.`, err.message);
-            return res.sendStatus(400);
+            console.log(`Webhook signature verification failed for ${payloadObj.type}:`, err.message);
+            try {
+                const fallbackSecret = (payloadObj.type === "transfer.created" || payloadObj.type === "account.updated") 
+                    ? endpointSecretConnect 
+                    : endpointSecretPlatform;
+                
+                event = stripe.webhooks.constructEvent(payload, signature, fallbackSecret);
+                console.log("Verified using fallback secret.");
+            } catch (fallbackErr) {
+                return res.sendStatus(400);
+            }
         }
 
         const { metadata, id } = payloadObj.data.object;

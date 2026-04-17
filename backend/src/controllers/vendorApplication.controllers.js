@@ -77,6 +77,13 @@ const createVendorApplication = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const payload = req.body;
 
+    const existingApplication = await vendorApplicationService.getUserApplications(_id, { applicationStatus: { $ne: "rejected" } });
+
+    console.log(existingApplication)
+
+    if (existingApplication && existingApplication?.length > 0)
+        throw new ApiError(400, "Application already exists");
+
     const application = await vendorApplicationService.createApplication(
         _id,
         payload,

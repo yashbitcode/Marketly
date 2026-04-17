@@ -72,8 +72,8 @@ const makePayout = asyncHandler(async (req, res) => {
 
     if (!vendorPayout) throw new ApiError(400, "Vendor payout not found");
 
-    if (vendorPayout.order.refundApplication)
-        throw new ApiError(404, "This order have refund application");
+    // if (vendorPayout.order.refundApplication)
+    //     throw new ApiError(404, "This order have refund application");
 
     const payout = await stripeService.makePayout(
         vendorPayoutId,

@@ -20,8 +20,10 @@ import {
     Calendar,
     Globe,
     CheckCircle,
-    X
+    X,
+    ExternalLink
 } from "lucide-react";
+
 
 const CreateAccountModal = ({ onClose, userEmail }) => {
     const queryClient = useQueryClient();
@@ -133,7 +135,7 @@ const VendorProfile = () => {
     const { user } = useAuth();
     const [isInitModalOpen, setIsInitModalOpen] = useState(false);
 
-    const mutation = useMutation({
+    const onboardingMutation = useMutation({
         mutationFn: vendorStripeApi.getOnboardingLink,
         onSuccess: (res) => {
             console.log(res.data)
@@ -143,6 +145,19 @@ const VendorProfile = () => {
             ErrorToast(err?.response?.data?.message || "Failed to onboard vendor");
         },
     });
+
+    const payoutMutation = useMutation({
+        mutationFn: vendorStripeApi.getLoginLink,
+        onSuccess: (res) => {
+            if (res.success && res.data?.url) {
+                window.location.href = res.data.url;
+            }
+        },
+        onError: (err) => {
+            ErrorToast(err?.response?.data?.message || "Failed to get payout dashboard link");
+        }
+    });
+
 
     if (!user) return <Navigate to="/login" />;
 
@@ -247,13 +262,13 @@ const VendorProfile = () => {
 
                                 
                                 {vendor?.stripeAccountOnboarded ? (
-                                    <div className="flex items-center gap-2 bg-green text-white px-4 py-2 rounded-full text-sm font-bold">
+                                    <div className="flex items-center gap-2 bg-green/10 text-green px-4 py-2 rounded-full text-sm font-bold border border-green/20">
                                         <CheckCircle size={16} />
                                         <span>Onboarded</span>
                                     </div>
                                 ) : (
-                                    <Button className="bg-orange hover:bg-orange/90 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-lg shadow-orange/20 text-sm whitespace-nowrap" onClick={() => mutation.mutate()}>
-                                        Complete Onboarding
+                                    <Button className="bg-orange hover:bg-orange/90 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-lg shadow-orange/20 text-sm whitespace-nowrap" onClick={() => onboardingMutation.mutate()} disabled={onboardingMutation.isPending}>
+                                        {onboardingMutation.isPending ? <Loader /> : "Complete Onboarding"}
                                     </Button>
                                 )}
                                 
@@ -262,9 +277,22 @@ const VendorProfile = () => {
 
                         {/* Additional Details */}
                         <div className="bg-white rounded-lg border border-gray-100 shadow-base p-4">
-                            <div className="flex items-center gap-3 mb-6">
-                                <Calendar className="text-orange" />
-                                <h3 className="text-xl font-bold text-dark">Vendor Details</h3>
+                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div className="flex items-center gap-3">
+                                    <Calendar className="text-orange" />
+                                    <h3 className="text-xl font-bold text-dark">Vendor Details</h3>
+                                </div>
+                                
+                                {vendor?.stripeAccountOnboarded && (
+                                    <Button 
+                                        className="bg-dark hover:bg-dark/90 text-white px-6 py-2 rounded-lg font-bold transition-all shadow-lg shadow-dark/20 text-sm whitespace-nowrap flex items-center gap-2 w-fit"
+                                        onClick={() => payoutMutation.mutate()}
+                                        disabled={payoutMutation.isPending}
+                                    >
+                                        {payoutMutation.isPending ? <Loader /> : <ExternalLink size={16} />}
+                                        Check Payout Dashboard
+                                    </Button>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6">

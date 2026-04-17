@@ -31,9 +31,10 @@ class VendorApplicationService {
         return allApplications;
     }
 
-    async getUserApplications(userId) {
+    async getUserApplications(userId, filters = {}) {
         const allApplications = await VendorApplication.find({
             user: userId,
+            ...filters
         }).populate("vendor");
 
         return allApplications;
