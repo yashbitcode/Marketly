@@ -419,7 +419,7 @@ const forgotPasswordLink = asyncHandler(async (req, res, next) => {
     const emailData = {
         emailContent: passwordResetMailContent(
             user.fullname,
-            process.env.FRONTEND_URL + `/${resetToken}`,
+            process.env.FRONTEND_URL + "/reset-password" + `/${resetToken}`,
         ),
         from: process.env.MARKETLY_EMAIL,
         to: user.email,

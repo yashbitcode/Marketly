@@ -1,11 +1,10 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAILTRAP_HOST,
-    port: process.env.MAILTRAP_PORT,
+    service: "gmail",
     auth: {
-        user: process.env.MAILTRAP_USERNAME,
-        pass: process.env.MAILTRAP_PASSWORD,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
     },
 });
 

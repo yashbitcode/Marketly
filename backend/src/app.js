@@ -8,6 +8,7 @@ import { initSocket } from "./config/socket/socket.manager.js";
 import { setupSocketIO } from "./config/socket/index.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./inngest/index.js";
+import resend from "./config/resend/index.js";
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -36,6 +37,15 @@ import notificationRouter from "./routes/notification.routes.js";
 import orderRefundApplicationRouter from "./routes/orderRefundApplication.routes.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
 import ApiError from "./utils/api-error.js";
+import {
+    passwordResetMailContent,
+    registrationMailContent,
+    registrationCodeMailContent,
+    passwordChangedMailContent,
+    orderPlacedInvoiceMailContent,
+    refundSuccessfulMailContent,
+} from "./utils/mail.js";
+import userService from "./services/user.service.js";
 
 app.use(
     cors({

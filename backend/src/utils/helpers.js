@@ -399,7 +399,7 @@ const createInvoice = ({baseOrder, sellerOrders}) => {
             "",
             "Total Amount",
             "",
-            "Rs. " + baseOrder.amount,
+            "Rs. " + (baseOrder.amount / 100),
             true
         );
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Share2, ShoppingCart, Zap, Plus, Minus, Tag, Info, MessageCircle } from "lucide-react";
 import { Button, Container, Error } from "../components/common";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Loader from "../components/loadings/Loader";
 import RenderStars from "../components/features/base-star/RenderStars";
 import { tabs } from "../utils/constants";
@@ -213,9 +213,9 @@ export default function ProductPage() {
                             </Button>
 
                             {/* Buy Now */}
-                            <Button className="flex-1 h-12 px-5 rounded-xl font-bold cursor-pointer flex items-center justify-center gap-2 text-amber-200 transition-all duration-200 hover:opacity-90 shadow-lg min-w-32.5 bg-green border-2 border-green">
+                            <Link className="flex-1 h-12 px-5 rounded-xl font-bold cursor-pointer flex items-center justify-center gap-2 text-amber-200 transition-all duration-200 hover:opacity-90 shadow-lg min-w-32.5 bg-green border-2 border-green" to="/checkout">
                                 <Zap size={16} fill="#f0c040" /> Buy Now
-                            </Button>
+                            </Link>
                             {/* Contact Seller */}
                             {user?.currentRole !== "vendor" && (
                                 <Button className="flex-1 md:flex-none h-12 px-5 bg-white border-2 border-stone-200 rounded-xl font-bold text-slate-900 cursor-pointer flex items-center justify-center gap-2 hover:bg-stone-50 transition-all duration-200 min-w-32.5" onClick={() => {

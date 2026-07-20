@@ -83,11 +83,28 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre("save", async function () {
+    console.log(this.password)
     if (this.isModified("password"))
         this.password = await bcrypt.hash(
             this.password,
             +process.env.SALT_ROUNDS,
         );
+
+        
+    console.log(this.password)
+});
+
+UserSchema.pre("findOneAndUpdate", async function () {
+    const update = this.getUpdate();
+    console.log("UPATES")
+    console.log(update);
+
+     if (!update) return;
+
+    if(update.password) {
+        const hashedPassword = await bcrypt.hash(update.password, 10);
+        update.password = hashedPassword;
+    }
 });
 
 UserSchema.methods.generateAccessAndRefreshTokens = function (currentRole) {
