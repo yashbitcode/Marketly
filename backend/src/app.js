@@ -8,7 +8,6 @@ import { initSocket } from "./config/socket/socket.manager.js";
 import { setupSocketIO } from "./config/socket/index.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./inngest/index.js";
-import resend from "./config/resend/index.js";
 
 const app = express();
 const httpServer = http.createServer(app);
