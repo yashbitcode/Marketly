@@ -31,7 +31,7 @@ const sendMail = async (options) => {
         return info;
     } catch (e) {
         console.log(e);
-        throw new ApiError();
+        throw new ApiError(500, e.message);
     }
 };
 
