@@ -18,13 +18,6 @@ const sendMail = async (options) => {
 //   return data;
 //     console.log(options);
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-        throw new ApiError(
-            500,
-            "Email credentials are not configured on the server",
-        );
-    }
-
     const mail = {
         from:`"Marketly" <${process.env.EMAIL_USER}>`,
         to,
