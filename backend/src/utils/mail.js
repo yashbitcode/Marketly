@@ -4,35 +4,65 @@ import ApiError from "./api-error.js";
 
 const sendMail = async (options) => {
     const { to, subject, emailContent } = options;
-    
-//     const { data, error } = await resend.emails.send({
-//     from: "Acme <onboarding@resend.dev>",
-//     to: [to],
-//     subject: subject,
-//     html: emailContent
-//   });
-
-//   if (error)  throw new ApiError(error.statusCode, error.message);
-
-
-//   return data;
-//     console.log(options);
-
-    const mail = {
-        from:`"Marketly" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        // text: emailText,
-        html: emailContent,
-    };
 
     try {
-        const info = await transporter.sendMail(mail);
-        return info;
-    } catch (e) {
-        console.log(e);
-        throw new ApiError(500, e.message);
+        const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "api-key": process.env.BREVO_API_KEY,
+        },
+        body: JSON.stringify({
+            sender: {
+                name: "Marketly",
+                email: process.env.EMAIL_USER,
+            },
+            to: [
+                {
+                    email: to,
+                },
+            ],
+            subject,
+            htmlContent: emailContent,
+        }),
+    });
+
+
+    console.log(res)
+    return res;
+    } catch(err) {
+        console.log(err);
+        throw new ApiError(500, err.message);
     }
+    
+
+    //     const { data, error } = await resend.emails.send({
+    //     from: "Acme <onboarding@resend.dev>",
+    //     to: [to],
+    //     subject: subject,
+    //     html: emailContent
+    //   });
+
+    //   if (error)  throw new ApiError(error.statusCode, error.message);
+
+    //   return data;
+    //     console.log(options);
+
+    // const mail = {
+    //     from:`"Marketly" <${process.env.EMAIL_USER}>`,
+    //     to,
+    //     subject,
+    //     // text: emailText,
+    //     html: emailContent,
+    // };
+
+    // try {
+    //     const info = await transporter.sendMail(mail);
+    //     return info;
+    // } catch (e) {
+    //     console.log(e);
+    //     throw new ApiError(500, e.message);
+    // }
 };
 
 const passwordResetMailContent = (fullname, passwordResetLink) => {
